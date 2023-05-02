@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import ExerciseMain from './exercise.jsx';
+import ExerciseMain from './exercise/exerciseMain.jsx';
 import nutrition from './nutrition.jsx';
 
 const App = () => {
