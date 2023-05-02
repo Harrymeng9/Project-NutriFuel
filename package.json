@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "webpack": "webpack --mode development --watch",
+    "webpack-login": "webpack --mode development --watch --config webpack-login.config.js",
     "server": "npx nodemon --watch server server/server.js"
   },
   "repository": {
