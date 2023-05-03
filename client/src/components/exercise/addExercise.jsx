@@ -20,8 +20,13 @@ const AddExercise = () => {
         'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
       },
       contentType: 'application/json',
-      paramaters: {
-
+    })
+    .then(data => {
+      console.log(data);
+    })
+    .catch(err => {
+      if (err) {
+        console.log('fetchExercises err', err);
       }
     })
   }
@@ -31,16 +36,31 @@ const AddExercise = () => {
       <h1>Add Exercise</h1>
       <h2>Select muscle group</h2>
       <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        <nav aria-label="secondary mailbox folders">
+        <nav aria-label="body-part">
           <List>
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemText primary="Trash" />
+                <ListItemText primary="Chest" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton component="a" href="#simple-list">
-                <ListItemText primary="Spam" />
+              <ListItemButton >
+                <ListItemText primary="Back" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton >
+                <ListItemText primary="Shoulders" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton >
+                <ListItemText primary="Legs" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton >
+                <ListItemText primary="Arms" />
               </ListItemButton>
             </ListItem>
           </List>
