@@ -1,0 +1,76 @@
+
+*{
+  border:1px dashed red;
+  font-family: 'Konkhmer Sleokchher', cursive;
+}
+
+
+body {
+  margin:0px
+}
+
+#app{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width:100vw;
+  height: 100vh;
+}
+
+
+#LoginSection {
+
+  /* background-color: #e1e1e180;
+  border: 10px solid #157F1F;
+  border-radius: 10px; */
+
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* height: 25%;
+  width: 80%; */
+
+  margin-top: 25vh;
+}
+
+.TextBox {
+  background-color: #cfcfcf;
+  border: 5px inset #cfcfcf;
+  border-radius: 20px;
+
+  margin: 10px;
+  height: 20%;
+  width: 70%;
+}
+
+.TextBox > input {
+  background-color: #f1f1f1;
+
+  height: 100%;
+  width: 100%;
+  font-size: 400%;
+
+  border: 0;
+  padding: 0;
+  border-radius: 20px;
+}
+
+.Button{
+  width: 30%;
+  height: 20%;
+  background-color: #157F1F;
+
+  border-radius: 20px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  font-size: 400%;
+}
