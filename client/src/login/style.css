@@ -1,0 +1,102 @@
+
+*{
+  /* border:1px dashed red; */
+  font-family: 'Roboto', sans-serif;
+}
+
+
+body {
+  margin:0px;
+  background-color: #FAF9F6;
+}
+
+#app{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width:100vw;
+  height: 100vh;
+}
+
+#Title{
+  /* margin-top: 5vh; */
+  background-color: #157f1f;
+  color: #faf9f6d6;
+
+  width: 100vw;
+  font-size: 400%;
+
+  text-align: center;
+  padding: 3vh;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#LoginSection {
+
+  /* background-color: #e1e1e180;
+  border: 10px solid #157F1F;
+  border-radius: 10px; */
+
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 25%;
+  width: 80%;
+
+  margin-top: 30vh;
+
+
+}
+
+.TextBox {
+  background-color: #f1f1f1;
+  border: 3px inset #cfcfcf;
+  border-radius: 10px;
+
+  margin: 10px;
+  height: 20%;
+  width: 90%;
+
+  font-size: 170%;
+
+
+}
+
+
+.Button{
+  width: 30%;
+  height: 20%;
+  /* background-color: #157f1f; */
+  background-color: #1d263b;
+
+
+  border-radius: 10px;
+
+  display: flex;
+
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  font-size: 200%;
+  color: #faf9f6d6;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+.Button:active {
+  /* background-color: #157f20ea;
+  1d263bea
+  */
+  background-color: #1d263bd6;
+  box-shadow: none;
+
+  transform: translateY(2px);
+  transition: 25ms;
+}
