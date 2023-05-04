@@ -1,0 +1,33 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
+
+import TextBox from '../../components/interactables/TextBox.jsx'
+import Button from '../../components/interactables/Button.jsx'
+
+
+export default function App (){
+
+  return (
+    <>
+      <Title/>
+      <SignupSection/>
+    </>
+  )
+}
+
+
+var Title = function (){
+  return (
+    <div id='Title'>NutriFuel</div>
+  );
+};
+var SignupSection = function (){
+
+  return (
+    <div id="LoginSection" className="col-3">
+      <TextBox defaultText={'Username'}/>
+      <TextBox defaultText={'Password'} password={true}/>
+      <Button text={'Login'}/>
+    </div>
+  );
+};
