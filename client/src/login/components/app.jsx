@@ -9,20 +9,24 @@ export default function App (){
 
   return (
     <>
-      <h1>This is the login page</h1>
+      <Title/>
       <LoginSection/>
     </>
   )
 }
 
 
+var Title = function (){
+  return (
+    <div id='Title'>NutriFuel</div>
+  );
+};
 var LoginSection = function (){
 
   return (
-
     <div id="LoginSection" className="col-3">
       <TextBox defaultText={'Username'}/>
-      <TextBox defaultText={'Password'}/>
+      <TextBox defaultText={'Password'} password={true}/>
       <Button text={'Login'}/>
     </div>
   );
