@@ -13,6 +13,27 @@ app.get('/', (req, res) => {
   res.status(200).send('Main Get')
 });
 
+/* ------------------Exercise-------------------*/
+app.get('/exercise', async (req, res) => {
+  var muscle = req.query.name;
+  const options = {
+    method: 'GET',
+    url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
+    headers: {
+      'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+    },
+    contentType: 'application/json'
+  }
+
+  try {
+    const response = await axios.request(options);
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(404).send('Failed to connect to exercise API');
+  }
+})
+
 /* ------------------Nutrition------------------*/
 app.get('/Nutrition', async (req, res) => {
 

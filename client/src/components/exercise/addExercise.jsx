@@ -1,75 +1,47 @@
-import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
+import ExerciseCard from './exerciseCard.jsx';
 
 const AddExercise = () => {
+  const [exerciseList, setExerciseList] = useState([]);
 
   function fetchExercises (e) {
-    var muscle = e.target.value
-    axios({
-      method: 'get',
-      url: 'https://api-ninjas.com/api/exercises/v1/exercises?muscle=' + muscle,
-      headers: {
-        'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-      },
-      contentType: 'application/json',
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(err => {
-      if (err) {
-        console.log('fetchExercises err', err);
-      }
-    })
+    var muscle = e.target.id;
+    axios.get('/exercise', { params: { name: muscle } })
+      .then(data => {
+        console.log(data.data);
+        setExerciseList(data.data);
+      })
+      .catch(err => {
+        console.log('fetchExercise err', err);
+      })
+
   }
 
   return (
     <div>
       <h1>Add Exercise</h1>
       <h2>Select muscle group</h2>
-      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        <nav aria-label="body-part">
-          <List>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="Chest" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton >
-                <ListItemText primary="Back" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton >
-                <ListItemText primary="Shoulders" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton >
-                <ListItemText primary="Legs" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton >
-                <ListItemText primary="Arms" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </nav>
-      </Box>
       <div>
-        exercise list here
+        <button onClick={fetchExercises} id='chest'>Chest</button><br></br>
+        <button onClick={fetchExercises} id='lats'>Back</button><br></br>
+        <button onClick={fetchExercises} id='shoulders'>Shoulders</button><br></br>
+        <button onClick={fetchExercises} id='quadriceps'>Quadriceps</button><br></br>
+        <button onClick={fetchExercises} id='hamstrings'>Hamstrings</button><br></br>
+        <button onClick={fetchExercises} id='glutes'>Glutes</button><br></br>
+        <button onClick={fetchExercises} id='biceps'>Biceps</button><br></br>
+        <button onClick={fetchExercises} id='triceps'>Triceps</button><br></br>
       </div>
-      <button>Add Exercise to Log</button>
+      <div>
+        {exerciseList.map(entry => {
+          console.log(entry)
+          return (
+            <div className="exerciseCard" key={entry.name}>
+              <ExerciseCard exercise={entry}/>
+            </div>
+          );
+        })}
+      </div>
     </div>
   )
 }
