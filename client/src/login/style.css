@@ -95,5 +95,8 @@ body {
   1d263bea
   */
   background-color: #1d263bd6;
-  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+
+  transform: translateY(2px);
+  transition: 25ms;
 }
