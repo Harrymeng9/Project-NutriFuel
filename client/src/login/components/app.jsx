@@ -1,14 +1,33 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
+import TextBox from './interactables/TextBox.jsx'
+import Button from './interactables/Button.jsx'
 
-const App = () => {
+
+export default function App (){
 
   return (
-    <div>
-      <h1>This is the login page</h1>;
-    </div>
+    <>
+      <Title/>
+      <LoginSection/>
+    </>
   )
 }
 
-export default App;
+
+var Title = function (){
+  return (
+    <div id='Title'>NutriFuel</div>
+  );
+};
+var LoginSection = function (){
+
+  return (
+    <div id="LoginSection" className="col-3">
+      <TextBox defaultText={'Username'}/>
+      <TextBox defaultText={'Password'} password={true}/>
+      <Button text={'Login'}/>
+    </div>
+  );
+};
