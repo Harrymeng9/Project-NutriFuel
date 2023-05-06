@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const app = express();
 const PORT = 3000;
 const axios = require('axios');
+const db = require('../database/database.js');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -32,6 +33,20 @@ app.get('/exercise', async (req, res) => {
     console.error(error);
     res.status(404).send('Failed to connect to exercise API');
   }
+});
+
+app.get('/exerciseLog', async (req, res) => {
+  db.getExerciseLog(req.query.user_id)
+  .then(data => {
+    console.log('get data', data)
+    res.status(200).send(data)
+  })
+})
+
+app.post('/logExercise', async (req,res) => {
+  console.log('logExercise post req.bod', req.body.params)
+  var name = req.body.params.name;
+  var time = req.body.params.time;
 })
 
 /* ------------------Nutrition------------------*/
