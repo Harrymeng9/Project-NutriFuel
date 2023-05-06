@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const http = require('http').Server(app)
-const io = require('socket.io')(http)
+//const io = require('socket.io')(http)
 const PORT = 3000;
 const axios = require('axios');
 const db = require('../database/database.js');
@@ -76,9 +76,9 @@ app.get('/Nutrition', async (req, res) => {
   }
 });
 /*-----chat---------------------------------------*/
-io.on('connection', () => {
-  console.log('someone connected')
-})
+// io.on('connection', () => {
+//   console.log('someone connected')
+// })
 
 
 http.listen(PORT, () => {
