@@ -1,8 +1,17 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AddExercise from './addExercise.jsx';
 
 const ExerciseMain = () => {
+  const [exerciseLog, setExerciseLog] = UseState();
+
+  useEffect(() => {
+
+  }, []);
+
+  function addExercise () {
+    ReactDOM.render(<AddExercise />, document.getElementById('app'));
+  }
 
   return (
     <div>
@@ -10,6 +19,7 @@ const ExerciseMain = () => {
       <div>
         exercise log here
       </div>
+      <button onClick={addExercise}>Add Exercise</button>
     </div>
   )
 }
