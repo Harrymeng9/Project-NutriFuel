@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
 const PORT = 3000;
 const axios = require('axios');
 const db = require('../database/database.js');
@@ -73,8 +75,12 @@ app.get('/Nutrition', async (req, res) => {
     res.status(404).send('Failed to connect to nutrition API');
   }
 });
+/*-----chat---------------------------------------*/
+io.on('connection', () => {
+  console.log('someone connected')
+})
 
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
