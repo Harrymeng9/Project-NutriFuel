@@ -61,6 +61,8 @@ const AddNutrition = () => {
       <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
       <div>Total Calories: {totalCalories}</div>
       <button onClick={addFood}>Add Food</button>
+      <button>Home</button>
+      <button>Nutrition List</button>
     </div>
   )
 }
