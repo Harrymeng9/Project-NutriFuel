@@ -24,10 +24,12 @@ var Title = function (){
 var SignupSection = function (){
 
   return (
-    <div id="LoginSection" className="col-3">
+    <div id="SigninSection" className="col-3">
       <TextBox defaultText={'Username'}/>
+      <TextBox defaultText={'Email'}/>
       <TextBox defaultText={'Password'} password={true}/>
-      <Button text={'Login'}/>
+      <TextBox defaultText={'Confirm Password'} password={true}/>
+      <Button text={'Signup'}/>
     </div>
   );
 };
