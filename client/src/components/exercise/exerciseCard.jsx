@@ -11,7 +11,7 @@ const ExerciseCard = (props) => {
 
   function addToLog (name) {
     console.log(name, time)
-    axios.post('/logExercise', { params: { name: name, time: time }})
+    axios.post('/logExercise', { params: { user_id: 1, name: name, time: time }})
     .then(data => {
       console.log(data)
     })
