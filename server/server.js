@@ -104,6 +104,27 @@ app.get('/Nutrition', async (req, res) => {
 //   console.log('someone connected')
 // })
 
+/* ------------------Profile------------------*/
+
+app.get('/profile', (req, res) => {
+  var sample_user = {
+    user_id:"1",
+    username:"username",
+    photo:"https://picsum.photos/200",
+    email:"test@gmail.com",
+    password:"passord",
+    food_favor: "food",
+    exercise_favor:"exercise",
+    friends: [2,3]
+  }
+
+  res.status(200).send(sample_user);
+});
+
+app.put('/profile', (req, res) => {
+  res.status(200).send(req.body);
+});
+
 
 http.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
