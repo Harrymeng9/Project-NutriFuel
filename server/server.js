@@ -19,17 +19,16 @@ app.get('/', (req, res) => {
 /* ------------------Exercise-------------------*/
 app.get('/exercise', async (req, res) => {
   var muscle = req.query.name;
-  const options = {
-    method: 'GET',
-    url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
-    headers: {
-      'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-    },
-    contentType: 'application/json'
-  }
 
   try {
-    const response = await axios.request(options);
+    const response = await axios({
+      method: 'GET',
+      url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
+      headers: {
+        'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+      },
+      contentType: 'application/json'
+    });
     res.status(200).send(response.data);
   } catch (error) {
     console.error(error);
@@ -38,17 +37,42 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
+  var excersieLog;
   db.getExerciseLog(req.query.user_id)
-  .then(data => {
-    console.log('get data', data)
-    res.status(200).send(data)
+  .then(async (data) => {
+    //console.log('get data', data);
+    var time = 0;
+    data.map(entry => {
+      time = time + entry.time;
+    })
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+        headers: {
+          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+        },
+        contentType: 'application/json'
+      })
+      data.push({calories: response.data[0].total_calories})
+      //console.log(data)
+      res.status(200).send(data);
+    } catch (error) {
+      console.error(error);
+      res.status(404).send('Failed to connect to exercise API');
+    }
   })
-})
+});
 
 app.post('/logExercise', async (req,res) => {
-  console.log('logExercise post req.bod', req.body.params)
+  // console.log('logExercise post req.bod', req.body.params)
+  var user_id = req.body.params.user_id;
   var name = req.body.params.name;
   var time = req.body.params.time;
+  db.postExercise(user_id, name, time)
+  .then(data => {
+    res.status(200).send()
+  })
 })
 
 /* ------------------Nutrition------------------*/
