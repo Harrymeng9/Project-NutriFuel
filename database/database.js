@@ -20,11 +20,9 @@ const connectDb = async () => {
     await pool.query('CREATE TABLE IF NOT EXISTS exercise(\
       exercise_id INT PRIMARY KEY,\
       user_id INT,\
-      date TEXT,\
+      date DATE,\
       exercise_name TEXT,\
-      sets INT,\
-      reps INT,\
-      calories_burned INT\
+      time INT\
     )');
 
     // Create table nutrition
@@ -81,24 +79,27 @@ const getExerciseLog = async (user_id) => {
         console.log('getExerciseLog query err', err);
         reject(err)
       }
-      console.log('rows', result.rows)
+      //console.log('exercises', result.rows)
       resolve(result.rows);
     })
   })
 }
 
-const postExercise = (name, time) => {
+const postExercise = async (user_id, name, time) => {
   var date = new Date();
   date = date.toUTCString();
-  // return new Promise(function(resolve, reject) {
-  //   pool.query(INSERT INTO exerciseLog (name, time, date) VALUES (name, time)), (error, results) => {
-  //     if (error) {
-  //       reject(error)
-  //     }
-  //     resolve(results.rows);
-  //   })
-  // })
+  console.log('post things', user_id, name, date, time)
+  return new Promise(function(resolve, reject) {
+    pool.query(`INSERT INTO exerciseLog (user_id, name, date, time) VALUES (${user_id}, '${name}', '${date}', ${time})`, (error, results) => {
+      if (error) {
+        reject(error)
+      }
+      //console.log(results)
+      resolve(results.rows);
+    })
+  })
 }
+
 
 module.exports = {
   getExerciseLog,
