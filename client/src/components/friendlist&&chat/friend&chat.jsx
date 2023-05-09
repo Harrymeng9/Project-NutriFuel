@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Competition from "./competition.jsx";
 import Chat from "./chat.jsx";
 import FriendList from "./friendlist.jsx";
+import socket from "../../socket.js";
 
 class FriendNChat extends Component {
     constructor(props) {
@@ -9,6 +10,13 @@ class FriendNChat extends Component {
         this.state = {
             stat: 'friendlist'
         }
+    }
+    componentDidMount() {
+        console.log('hhh')
+        socket.on('connection', (a) => {
+            console.log('ajja')
+            console.log(a, 'hahah')
+        });
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat

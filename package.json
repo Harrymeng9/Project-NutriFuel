@@ -8,7 +8,6 @@
     "webpack": "webpack --mode development --watch",
     "webpack-login": "webpack --mode development --watch --config webpack-login.config.js",
     "webpack-signup": "webpack --mode development --watch --config webpack-signup.config.js",
-
     "server": "npx nodemon --watch server server/server.js"
   },
   "repository": {
@@ -30,6 +29,7 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "helmet": "^7.0.0",
     "jest": "^29.5.0",
     "pg": "^8.10.0",
     "postgresql": "^0.0.1",
@@ -37,7 +37,8 @@
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.11.0",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
