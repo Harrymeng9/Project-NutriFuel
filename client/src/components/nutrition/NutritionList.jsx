@@ -4,6 +4,7 @@ const axios = require('axios');
 import { useEffect, useState } from 'react';
 import NutritionEntry from './NutritionEntry.jsx';
 import Nutrition from './Nutrition.jsx';
+import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 
 const NutritionList = (props) => {
 
@@ -18,8 +19,15 @@ const NutritionList = (props) => {
       })
   }, [nutritionList])
 
-  function backToNutritionPage() {
-    ReactDOM.render(<Nutrition />, document.getElementById('app'));
+  const navigate = useNavigate();
+  // Navigate to the Nutrition page
+  function goToNutritionPage() {
+    navigate('/nutrition');
+  };
+
+  // Navigate to the Dashboard page
+  function goToDashboardPage() {
+    navigate('/');
   };
 
   return (
@@ -34,7 +42,8 @@ const NutritionList = (props) => {
           )
         })}
       </div>
-      <button onClick={backToNutritionPage}>Back</button>
+      <button onClick={goToNutritionPage}>Back</button>
+      <button onClick={goToDashboardPage}>Dashboard</button>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 const axios = require('axios');
 import { useEffect, useState } from 'react';
+import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import NutritionList from './NutritionList.jsx';
 
 const AddNutrition = () => {
@@ -75,9 +76,16 @@ const AddNutrition = () => {
     setTotalCalories(qty * calories);
   }, [qty, calories]);
 
-  function displayNutritionList() {
-    ReactDOM.render(<NutritionList />, document.getElementById('app'));
+  const navigate = useNavigate();
+  // Navigate to the Nutrition List page
+  function goToNutritionList() {
+    navigate('/nutritionList');
   }
+
+  // Navigate to the Dashboard page
+  function goToDashboardPage() {
+    navigate('/');
+  };
 
   return (
     <div>
@@ -89,8 +97,8 @@ const AddNutrition = () => {
       <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
       <div>Total Calories: {totalCalories}</div>
       <button onClick={addFood}>Add Food</button>
-      <button>Home</button>
-      <button onClick={displayNutritionList}>Nutrition List</button>
+      <button onClick={goToDashboardPage}>Dashboard</button>
+      <button onClick={goToNutritionList}>Nutrition List</button>
     </div>
   )
 }
