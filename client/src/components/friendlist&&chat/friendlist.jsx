@@ -9,11 +9,12 @@ class FriendList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            friendlist: ['tom', 'john', 'mary']
+            friendlist: []
         }
     }
+    componentDidMount() {
 
-
+    }
     componentDidUpdate(prevProps) {
 
     }

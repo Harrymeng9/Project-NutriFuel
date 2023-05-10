@@ -22,15 +22,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 //   console.log('socket',socket)
 //   next();
 // });
-io.on("connection", (socket) => {
-  console.log("llll")
-  for(let [id] of io.of("/").sockets){
-    console.log(id)
-  }
-  }
 
-  // ...
-);
 app.get('/', (req, res) => {
   res.status(200).send('Main Get')
 });
@@ -98,6 +90,17 @@ app.get('/Nutrition', async (req, res) => {
 // io.on('connection', () => {
 //   console.log('someone connected')
 // })
+io.on("connection", (socket) => {
+  for(let [id] of io.of("/").sockets){
+    console.log(id)
+  }
+  
+  
+  setInterval(() => {
+    socket.emit('hello',Math.random());
+  }, 1000);
+  }
+);
 
 
 http.listen(PORT, () => {
