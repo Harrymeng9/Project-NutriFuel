@@ -14,7 +14,7 @@ const App = () => {
   return (
     <div>
       <h1>This is my React app!</h1>
-      <ExerciseMain />
+      {/* <ExerciseMain /> */}
       <Nutrition />
       <div>**********************************************</div>
       <FriendNChat />

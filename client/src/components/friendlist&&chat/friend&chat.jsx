@@ -3,6 +3,7 @@ import Competition from "./competition.jsx";
 import Chat from "./chat.jsx";
 import FriendList from "./friendlist.jsx";
 import socket from "../../helpers/socket.js";
+import { connection } from "mongoose";
 
 class FriendNChat extends Component {
     constructor(props) {
@@ -12,10 +13,10 @@ class FriendNChat extends Component {
             number: 0
         }
     }
+
     componentDidMount() {
-        socket.on('hello', (a) => {
-            this.setState({ number: a })
-        })
+        socket.auth = { username: 'john' }
+        socket.connect()
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat

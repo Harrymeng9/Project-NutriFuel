@@ -4,6 +4,7 @@ const app = express();
 const PORT = 3000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+const mongodb = require('../database/mongodb.js')
 
 const axios = require('axios');
 const db = require('../database/database.js');
@@ -42,28 +43,28 @@ app.get('/exercise', async (req, res) => {
   try {
     const response = await axios.request(options);
     res.status(200).send(response.data);
-   } catch (error) {
-     console.error(error);
-     res.status(404).send('Failed to connect to exercise API');
-   }
- });
+  } catch (error) {
+    console.error(error);
+    res.status(404).send('Failed to connect to exercise API');
+  }
+});
 
 app.get('/exerciseLog', async (req, res) => {
   db.getExerciseLog(req.query.user_id)
-  .then(data => {
-    console.log('get data', data)
-    res.status(200).send(data)
-  })
+    .then(data => {
+      console.log('get data', data)
+      res.status(200).send(data)
+    })
 });
 
-app.post('/logExercise', async (req,res) => {
+app.post('/logExercise', async (req, res) => {
   console.log('logExercise post req.bod', req.body.params)
   var name = req.body.params.name;
   var time = req.body.params.time;
   db.postExercise(user_id, name, time)
-  .then(data => {
-    res.status(200).send()
-  })
+    .then(data => {
+      res.status(200).send()
+    })
 })
 
 /* ------------------Nutrition------------------*/
@@ -91,9 +92,20 @@ app.get('/Nutrition', async (req, res) => {
   }
 });
 /*-----chat---------------------------------------*/
-// io.on('connection', () => {
-//   console.log('someone connected')
-// })
+io.use((socket, next) => {
+  const username = socket.handshake.auth.username;
+  socket.username = username;
+  next();
+});
+io.on('connection', () => {
+  console.log('someone connectessssd')
+})
+app.get('/friendlist', (req, res, next) => {
+  mongodb.findfriendlist(req.query.user).then((friendlist) => {
+    res.send(friendlist)
+  })
+})
+
 
 
 http.listen(PORT, () => {
