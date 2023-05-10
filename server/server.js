@@ -28,15 +28,15 @@ app.get('/', (req, res) => {
 });
 
 /* ------------------Exercise-------------------*/
- app.get('/exercise', async (req, res) => {
-   var muscle = req.query.name;
-   const options = {
-     method: 'GET',
-     url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
+app.get('/exercise', async (req, res) => {
+  var muscle = req.query.name;
+  const options = {
+    method: 'GET',
+    url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
     headers: {
       'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
     },
-     contentType: 'application/json'
+    contentType: 'application/json'
   }
 
   try {
@@ -48,18 +48,22 @@ app.get('/', (req, res) => {
    }
  });
 
- app.get('/exerciseLog', async (req, res) => {
-   db.getExerciseLog(req.query.user_id)
-   .then(data => {
-     console.log('get data', data)
+app.get('/exerciseLog', async (req, res) => {
+  db.getExerciseLog(req.query.user_id)
+  .then(data => {
+    console.log('get data', data)
     res.status(200).send(data)
   })
-})
+});
 
-app.post('/logExercise', async (req, res) => {
+app.post('/logExercise', async (req,res) => {
   console.log('logExercise post req.bod', req.body.params)
   var name = req.body.params.name;
   var time = req.body.params.time;
+  db.postExercise(user_id, name, time)
+  .then(data => {
+    res.status(200).send()
+  })
 })
 
 /* ------------------Nutrition------------------*/
@@ -90,17 +94,6 @@ app.get('/Nutrition', async (req, res) => {
 // io.on('connection', () => {
 //   console.log('someone connected')
 // })
-io.on("connection", (socket) => {
-  for(let [id] of io.of("/").sockets){
-    console.log(id)
-  }
-  
-  
-  setInterval(() => {
-    socket.emit('hello',Math.random());
-  }, 1000);
-  }
-);
 
 
 http.listen(PORT, () => {

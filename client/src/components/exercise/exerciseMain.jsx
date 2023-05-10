@@ -26,10 +26,9 @@ const ExerciseMain = () => {
     <div>
       <h1>Exercise Log</h1>
       <div>
-      {exerciseLog.map(entry => {
-          console.log(entry)
+        {exerciseLog.map(entry => {
           return (
-            <div className="exerciseLogCard" key={entry.name}>
+            <div className="exerciseLogCard" key={entry.id}>
               <ExerciseLogCard exercise={entry}/>
             </div>
           );
