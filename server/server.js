@@ -87,10 +87,59 @@ app.get('/Nutrition', async (req, res) => {
     const response = await axios.request(options);
     res.status(200).send(response.data[0]);
   } catch (error) {
-    console.error(error);
     res.status(404).send('Failed to connect to nutrition API');
   }
 });
+
+// Post Request - Add food into the database
+app.post('/Nutrition', async (req, res) => {
+  var date = new Date();
+  date = date.toUTCString();
+
+  var user_id = 1; // need update the user_id
+  var food_name = req.body.foodName;
+  var qty = req.body.qty;
+  var total_calories = req.body.totalCalories;
+
+  var queryString = `INSERT INTO nutrition (user_id, date, food_name, qty, total_calories) VALUES($1,$2,$3,$4,$5)`;
+  db.pool.query(queryString, [user_id, date, food_name, qty, total_calories], (err, result) => {
+    if (err) {
+      res.status(400).send('Error occues once add the food' + err);
+    } else {
+      res.status(201).send('Add the food successfully!');
+    }
+  })
+});
+
+// GET REQUEST to retrieve all nutrition list for the current user
+app.get('/NutritionList', async (req, res) => {
+
+  var queryString = `SELECT * FROM nutrition`;
+  db.pool.query(queryString, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once retrieve the nutrition list' + err);
+    } else {
+      res.status(201).send(result.rows);
+    }
+  })
+});
+
+// PUT REQUEST to delete a food from database
+app.put('/NutritionList', async (req, res) => {
+
+  var nutrition_id = req.body.nutrition_id;
+
+  var queryString = `DELETE FROM nutrition WHERE nutrition_id = ${nutrition_id}`;
+  db.pool.query(queryString, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once delete the food' + err);
+    } else {
+      res.status(201).send('Delete it');
+    }
+  })
+});
+
+
 /*-----chat---------------------------------------*/
 io.use((socket, next) => {
   const username = socket.handshake.auth.username;

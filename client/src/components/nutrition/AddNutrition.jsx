@@ -2,6 +2,8 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 const axios = require('axios');
 import { useEffect, useState } from 'react';
+import { useNavigate, Routes, Route, Link } from 'react-router-dom';
+import NutritionList from './NutritionList.jsx';
 
 const AddNutrition = () => {
 
@@ -42,14 +44,48 @@ const AddNutrition = () => {
 
   function addFood() {
     // add data into the database
-    // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
-    setFoodSearchName('');
+    var date = new Date();
+    var currentDate = date.toUTCString();
+
+    var postData = {
+      userId: 1, // need retrieve the user_id as props
+      date: currentDate,
+      foodName: foodName,
+      qty: qty,
+      totalCalories: totalCalories.toFixed(1)
+    }
+
+    if (postData.foodName === '') {
+      alert('Please enter the food');
+    } else {
+      axios.post('/Nutrition', postData)
+        .then((data) => {
+          console.log(data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+
+      // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
+      setFoodSearchName('');
+    }
   };
 
   // Total calories should be recalculated once qty or food calories changed
   useEffect(() => {
     setTotalCalories(qty * calories);
   }, [qty, calories]);
+
+  const navigate = useNavigate();
+  // Navigate to the Nutrition List page
+  function goToNutritionList() {
+    navigate('/nutritionList');
+  }
+
+  // Navigate to the Dashboard page
+  function goToDashboardPage() {
+    navigate('/');
+  };
 
   return (
     <div>
@@ -59,10 +95,10 @@ const AddNutrition = () => {
       <div>Serving Size (g): {servingSize}</div>
       <div>Calories: {calories}</div>
       <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
-      <div>Total Calories: {totalCalories}</div>
+      <div>Total Calories: {totalCalories.toFixed(1)}</div>
       <button onClick={addFood}>Add Food</button>
-      <button>Home</button>
-      <button>Nutrition List</button>
+      <button onClick={goToDashboardPage}>Dashboard</button>
+      <button onClick={goToNutritionList}>Nutrition List</button>
     </div>
   )
 }

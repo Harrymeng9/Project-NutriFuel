@@ -8,7 +8,8 @@
     "webpack": "webpack --mode development --watch",
     "webpack-login": "webpack --mode development --watch --config webpack-login.config.js",
     "webpack-signup": "webpack --mode development --watch --config webpack-signup.config.js",
-    "server": "npx nodemon --watch server server/server.js"
+    "server": "npx nodemon --watch server server/server.js",
+    "docker-build": "webpack && node ./server/server.js"
   },
   "repository": {
     "type": "git",
