@@ -43,7 +43,7 @@ const Profile = () => {
 
 
     <div>
-      <h2>Profile Section</h2>
+      <h2>Profile</h2>
       <Avatar
         alt={profileData.username}
         src={profileData.photo}
@@ -61,27 +61,25 @@ const Profile = () => {
       
 
       <div>
-        <Link to="/profile/edit">
+        <Link to="/profileedit">
           <Button variant="outlined">Edit</Button>
         </Link>
-        <Routes>
-          <Route
-            path="/profile/edit"
-            element={<ProfileEdit />} />
-        </Routes>
+
       </div>
 
       <List>
         <ListItem>
           <ListItemText primary ="email" secondary={profileData.email} />
         </ListItem>
+        <ListItem>
+          <ListItemText primary ="Favorite Food" secondary={profileData.food_favor} />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary ="Favorite Exersice" secondary={profileData.exercise_favor} />
+        </ListItem>
       </List>
 
-
-
-
-
-
+      <Button variant="outlined">Log Out</Button>
 
     </div>
   )

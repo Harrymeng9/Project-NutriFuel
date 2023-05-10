@@ -8,6 +8,7 @@ import Nutrition from './nutrition/Nutrition.jsx';
 import NutritionList from './nutrition/NutritionList.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
+import ProfileEdit from './profile/profileEdit.jsx';
 
 const App = () => {
 
@@ -47,6 +48,7 @@ const App = () => {
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/friendNChat" element={<FriendNChat />} />
         </Routes>
       </div>
