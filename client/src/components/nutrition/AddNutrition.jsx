@@ -52,7 +52,7 @@ const AddNutrition = () => {
       date: currentDate,
       foodName: foodName,
       qty: qty,
-      totalCalories: totalCalories
+      totalCalories: totalCalories.toFixed(1)
     }
 
     if (postData.foodName === '') {
@@ -95,7 +95,7 @@ const AddNutrition = () => {
       <div>Serving Size (g): {servingSize}</div>
       <div>Calories: {calories}</div>
       <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
-      <div>Total Calories: {totalCalories}</div>
+      <div>Total Calories: {totalCalories.toFixed(1)}</div>
       <button onClick={addFood}>Add Food</button>
       <button onClick={goToDashboardPage}>Dashboard</button>
       <button onClick={goToNutritionList}>Nutrition List</button>
