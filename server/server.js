@@ -1,16 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const http = require('http').Server(app)
-//const io = require('socket.io')(http)
 const PORT = 3000;
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+const mongodb = require('../database/mongodb.js')
+
 const axios = require('axios');
 const db = require('../database/database.js');
+//const { default: socket } = require('../client/src/socket.js');
+
+// const httpServer = require('http').createServer()
+// const io = require('socket.io')(httpServer)
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + '/../client/dist'));
+// io.use((socket, next) => {
+//   console.log('socket',socket)
+//   next();
+// });
 
 app.get('/', (req, res) => {
   res.status(200).send('Main Get')
@@ -19,16 +31,17 @@ app.get('/', (req, res) => {
 /* ------------------Exercise-------------------*/
 app.get('/exercise', async (req, res) => {
   var muscle = req.query.name;
+  const options = {
+    method: 'GET',
+    url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
+    headers: {
+      'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+    },
+    contentType: 'application/json'
+  }
 
   try {
-    const response = await axios({
-      method: 'GET',
-      url: 'https://api.api-ninjas.com/v1/exercises?muscle=' + muscle,
-      headers: {
-        'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-      },
-      contentType: 'application/json'
-    });
+    const response = await axios.request(options);
     res.status(200).send(response.data);
   } catch (error) {
     console.error(error);
@@ -37,42 +50,21 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
-  var excersieLog;
   db.getExerciseLog(req.query.user_id)
-  .then(async (data) => {
-    //console.log('get data', data);
-    var time = 0;
-    data.map(entry => {
-      time = time + entry.time;
+    .then(data => {
+      console.log('get data', data)
+      res.status(200).send(data)
     })
-    try {
-      const response = await axios({
-        method: 'GET',
-        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
-        headers: {
-          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-        },
-        contentType: 'application/json'
-      })
-      data.push({calories: response.data[0].total_calories})
-      //console.log(data)
-      res.status(200).send(data);
-    } catch (error) {
-      console.error(error);
-      res.status(404).send('Failed to connect to exercise API');
-    }
-  })
 });
 
-app.post('/logExercise', async (req,res) => {
-  // console.log('logExercise post req.bod', req.body.params)
-  var user_id = req.body.params.user_id;
+app.post('/logExercise', async (req, res) => {
+  console.log('logExercise post req.bod', req.body.params)
   var name = req.body.params.name;
   var time = req.body.params.time;
   db.postExercise(user_id, name, time)
-  .then(data => {
-    res.status(200).send()
-  })
+    .then(data => {
+      res.status(200).send()
+    })
 })
 
 /* ------------------Nutrition------------------*/
@@ -149,30 +141,20 @@ app.put('/NutritionList', async (req, res) => {
 
 
 /*-----chat---------------------------------------*/
-// io.on('connection', () => {
-//   console.log('someone connected')
-// })
-
-/* ------------------Profile------------------*/
-
-app.get('/profile', (req, res) => {
-  var sample_user = {
-    user_id:"1",
-    username:"username",
-    photo:"https://picsum.photos/200",
-    email:"test@gmail.com",
-    password:"passord",
-    food_favor: "food",
-    exercise_favor:"exercise",
-    friends: [2,3]
-  }
-
-  res.status(200).send(sample_user);
+io.use((socket, next) => {
+  const username = socket.handshake.auth.username;
+  socket.username = username;
+  next();
 });
+io.on('connection', () => {
+  console.log('someone connectessssd')
+})
+app.get('/friendlist', (req, res, next) => {
+  mongodb.findfriendlist(req.query.user).then((friendlist) => {
+    res.send(friendlist)
+  })
+})
 
-app.put('/profile', (req, res) => {
-  res.status(200).send(req.body);
-});
 
 
 http.listen(PORT, () => {

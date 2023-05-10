@@ -2,13 +2,21 @@ import React, { Component } from "react";
 import Competition from "./competition.jsx";
 import Chat from "./chat.jsx";
 import FriendList from "./friendlist.jsx";
+import socket from "../../helpers/socket.js";
+import { connection } from "mongoose";
 
 class FriendNChat extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            stat: 'friendlist'
+            stat: 'friendlist',
+            number: 0
         }
+    }
+
+    componentDidMount() {
+        socket.auth = { username: 'john' }
+        socket.connect()
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat
@@ -19,6 +27,7 @@ class FriendNChat extends Component {
     render() {
         return (
             <div>
+                <div>number::{this.state.number}</div>
                 {this.state.stat === 'friendlist' ? <FriendList statHandler={this.statHandler} /> : null}
                 {this.state.stat === 'chat' ? <Chat chatHistory={['hello', 'Hi']} /> : null}
                 {this.state.stat === 'compete' ? <Competition /> : null}
