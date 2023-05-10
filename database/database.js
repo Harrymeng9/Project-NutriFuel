@@ -27,12 +27,12 @@ const connectDb = async () => {
 
     // Create table nutrition
     await pool.query('CREATE TABLE IF NOT EXISTS nutrition(\
-      nutrition_id INT PRIMARY KEY,\
+      nutrition_id SERIAL PRIMARY KEY,\
       user_id INT,\
       date TEXT,\
       food_name TEXT,\
       qty INT,\
-      total_calories INT\
+      total_calories decimal(10,1)\
     )');
 
     // Create table user

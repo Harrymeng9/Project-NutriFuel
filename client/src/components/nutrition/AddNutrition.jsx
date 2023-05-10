@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 const axios = require('axios');
 import { useEffect, useState } from 'react';
+import NutritionList from './NutritionList.jsx';
 
 const AddNutrition = () => {
 
@@ -42,14 +43,41 @@ const AddNutrition = () => {
 
   function addFood() {
     // add data into the database
-    // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
-    setFoodSearchName('');
+    var date = new Date();
+    var currentDate = date.toUTCString();
+
+    var postData = {
+      userId: 1, // need retrieve the user_id as props
+      date: currentDate,
+      foodName: foodName,
+      qty: qty,
+      totalCalories: totalCalories
+    }
+
+    if (postData.foodName === '') {
+      alert('Please enter the food');
+    } else {
+      axios.post('/Nutrition', postData)
+        .then((data) => {
+          console.log(data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+
+      // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
+      setFoodSearchName('');
+    }
   };
 
   // Total calories should be recalculated once qty or food calories changed
   useEffect(() => {
     setTotalCalories(qty * calories);
   }, [qty, calories]);
+
+  function displayNutritionList() {
+    ReactDOM.render(<NutritionList />, document.getElementById('app'));
+  }
 
   return (
     <div>
@@ -62,7 +90,7 @@ const AddNutrition = () => {
       <div>Total Calories: {totalCalories}</div>
       <button onClick={addFood}>Add Food</button>
       <button>Home</button>
-      <button>Nutrition List</button>
+      <button onClick={displayNutritionList}>Nutrition List</button>
     </div>
   )
 }
