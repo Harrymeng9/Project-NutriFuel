@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import TextBox from '../../components/interactables/TextBox.jsx'
-import Button from '../../components/interactables/Button.jsx'
+import TextBox from '../components/interactables/TextBox.jsx'
+import Button from '../components/interactables/Button.jsx'
 
 import '../style.css';
 
