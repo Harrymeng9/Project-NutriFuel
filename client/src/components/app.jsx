@@ -10,6 +10,9 @@ import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 
+import Login from './login&signup/login/Login.jsx';
+import Signup from './login&signup/signup/Signup.jsx'
+
 const App = () => {
 
 
@@ -49,6 +52,8 @@ const App = () => {
       <div>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/exerciseMain" element={<ExerciseMain />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />

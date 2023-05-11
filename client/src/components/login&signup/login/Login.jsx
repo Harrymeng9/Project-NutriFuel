@@ -4,8 +4,9 @@ import React from 'react';
 import TextBox from '../../components/interactables/TextBox.jsx'
 import Button from '../../components/interactables/Button.jsx'
 
+import '../style.css';
 
-export default function App (){
+export default function Login (){
 
   return (
     <>
