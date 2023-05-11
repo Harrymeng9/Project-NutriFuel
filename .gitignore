@@ -4,3 +4,5 @@ client/dist/bundle.js
 client/dist/login/bundle.js
 client/dist/signup/bundle.js
 package-lock.json
+
+server/authentication/serviceAccount.json
