@@ -9,6 +9,7 @@ import NutritionList from './nutrition/NutritionList.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
+import Changepw from './profile/changepw.jsx';
 
 const App = () => {
 
@@ -55,6 +56,7 @@ const App = () => {
           {/* <Route path="/progress" element={<Progress />} /> */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/profileedit" element={<ProfileEdit />} />
+          <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat />} />
         </Routes>
       </div>

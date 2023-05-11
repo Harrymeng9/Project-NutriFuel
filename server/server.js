@@ -4,10 +4,10 @@ const app = express();
 const PORT = 3000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-const mongodb = require('../database/mongodb.js')
+// const mongodb = require('../database/mongodb.js')
 
 const axios = require('axios');
-const db = require('../database/database.js');
+// const db = require('../database/database.js');
 //const { default: socket } = require('../client/src/socket.js');
 
 // const httpServer = require('http').createServer()
@@ -155,7 +155,25 @@ app.get('/friendlist', (req, res, next) => {
   })
 })
 
+/*-----Profile---------------------------------------*/
+app.get('/profile', (req, res) => {
+  var sample_user = {
+    user_id:"1",
+    username:"username",
+    photo:"https://picsum.photos/200",
+    email:"test@gmail.com",
+    password:"passord",
+    food_favor: "food",
+    exercise_favor:"exercise",
+    friends: [2,3]
+  }
 
+  res.status(200).send(sample_user);
+});
+
+app.put('/profile', (req, res) => {
+  res.status(200).send(req.body);
+});
 
 http.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
