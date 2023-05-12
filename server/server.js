@@ -5,7 +5,13 @@ const PORT = 3000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const mongodb = require('../database/mongodb.js')
+
+const { InMemorySessionStore } = require('../server/helpers/sessionStore')
+const crypto = require("crypto");
+const randomId = () => crypto.randomBytes(8).toString("hex");
+
 const axios = require('axios');
+const sessionStore = new InMemorySessionStore()
 const db = require('../database/database.js');
 
 // const { default: socket } = require('../client/src/socket.js');
@@ -14,8 +20,8 @@ const db = require('../database/database.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static(__dirname + '/../client/dist'));
+
 // io.use((socket, next) => {
 //   console.log('socket', socket)
 //   next();
@@ -161,13 +167,68 @@ app.put('/NutritionList', async (req, res) => {
 
 /*-----chat---------------------------------------*/
 io.use((socket, next) => {
+
+  const sessionID = socket.handshake.auth.sessionID
+  console.log('sss', sessionID)
+  if (sessionID) {
+    const session = sessionStore.findSession(sessionID);
+    console.log('????', session)
+    if (session) {
+      socket.sessionID = sessionID;
+      socket.userID = session.userID;
+      socket.username = session.username;
+      return next();
+    }
+  }
   const username = socket.handshake.auth.username;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  socket.sessionID = randomId();
+  socket.userID = randomId();
   socket.username = username;
   next();
 });
-io.on('connection', () => {
-  console.log('someone connectessssd')
+io.on('connection', (socket) => {
+  console.log('hihihi')
+  socket.emit("session", {
+    sessionID: socket.sessionID,
+    userID: socket.userID,
+  });
+  sessionStore.saveSession(socket.sessionID, {
+    userID: socket.userID,
+    username: socket.username,
+    connected: true,
+  });
+  console.log('someone connected')
+  const users = [];
+  sessionStore.findAllSessions().forEach((session) => {
+    users.push({
+      userID: session.userID,
+      username: session.username,
+      connected: session.connected,
+    });
+  })
+  console.log(users)
+
+  socket.on("private message", ({ content, to, from }) => {
+    let receipient
+    for (let [id, socket] of io.of("/").sockets) {
+
+      console.log('o', id, socket.username,from)
+      if (to === socket.username) {
+        receipient = id
+      }
+
+    }
+    console.log(receipient)
+    socket.to(receipient).emit("private message", {
+      content,
+      from: from,
+    });
+  });
 })
+
 app.get('/friendlist', (req, res, next) => {
   mongodb.findfriendlist(req.query.user).then((friendlist) => {
     res.send(friendlist)

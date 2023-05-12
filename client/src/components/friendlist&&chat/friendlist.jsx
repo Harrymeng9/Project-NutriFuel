@@ -10,11 +10,16 @@ class FriendList extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            friendlist: []
+            friendlist: [],
+            newMessage: { content: '', from: '' }
         }
     }
     componentDidMount() {
-        axios('http://localhost:3000/friendlist?user=hasha').then((friendlist) => {
+        this.setState({
+            newMessage: this.props.newMessage
+        })
+        axios('http://localhost:3000/friendlist?user=tom').then((friendlist) => {
+
             this.setState({
                 friendlist: friendlist.data
             })
@@ -23,13 +28,22 @@ class FriendList extends Component {
     componentDidUpdate(prevProps) {
 
     }
-
+    clearnewmessage = () => {
+        this.setState({
+            newMessage: { content: '', from: '' }
+        })
+    }
     render() {
         return (<div>
             <SearchFriend />
             <ul>
-                {this.state.friendlist.length === 0 ? null : this.state.friendlist.map((friend) => {
-                    return <Friend statHandler={this.props.statHandler} friend={friend} />
+                {this.state.friendlist.length === 0 ? null : this.state.friendlist.map((friend1) => {
+                    return <li><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
+                        friend1 === this.state.newMessage.from ? this.state.newMessage : { content: '', from: '' }
+                    }
+                        clearnewmessage={this.clearnewmessage} />
+                        {friend1 === this.state.newMessage.from ? <div>new message</div> : null}
+                    </li>
                 })}
             </ul>
         </div>)
