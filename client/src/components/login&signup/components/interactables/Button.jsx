@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Button ({text}){
+export default function Button ({text, onClick}){
 
 
   return (
-    <input type="button" className="Button" value={text} onClick={()=>{console.log('hello')}}></input>
+    <input type="button" className="Button" value={text} onClick={onClick}></input>
   )
 };

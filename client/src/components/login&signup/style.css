@@ -13,7 +13,7 @@ body {
 #app{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
 
   width:100vw;
   height: 100vh;
@@ -68,7 +68,6 @@ body {
 
 
 .Button{
-  width: 30%;
   height: 20%;
   /* background-color: #157f1f; */
   background-color: #1d263b;
