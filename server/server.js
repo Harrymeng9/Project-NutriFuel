@@ -4,23 +4,20 @@ const app = express();
 const PORT = 3000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-// const mongodb = require('../database/mongodb.js')
-
+const mongodb = require('../database/mongodb.js')
 const axios = require('axios');
-// const db = require('../database/database.js');
-//const { default: socket } = require('../client/src/socket.js');
+const db = require('../database/database.js');
 
+// const { default: socket } = require('../client/src/socket.js');
 // const httpServer = require('http').createServer()
 // const io = require('socket.io')(httpServer)
-
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + '/../client/dist'));
 // io.use((socket, next) => {
-//   console.log('socket',socket)
+//   console.log('socket', socket)
 //   next();
 // });
 
@@ -50,21 +47,43 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
-  db.getExerciseLog(req.query.user_id)
-    .then(data => {
-      console.log('get data', data)
-      res.status(200).send(data)
-    })
+  // db.getExerciseLog(req.query.user_id)
+  //   .then(data => {
+  //     console.log('get data', data)
+  //     res.status(200).send(data)
+  //   })
+  var user_id = req.query.user_id;
+  var queryString = `SELECT * FROM exercise WHERE user_id=${user_id}`;
+  db.pool.query(queryString, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once get exercise log' + err);
+    } else {
+      res.status(201).send(result.rows);
+    }
+  })
 });
 
 app.post('/logExercise', async (req, res) => {
   console.log('logExercise post req.bod', req.body.params)
+  var user_id = req.body.params.user_id;
+  console.log('banana', user_id);
   var name = req.body.params.name;
   var time = req.body.params.time;
-  db.postExercise(user_id, name, time)
-    .then(data => {
-      res.status(200).send()
-    })
+  // db.postExercise(user_id, name, time)
+  //   .then(data => {
+  //     res.status(200).send()
+  //   })
+  var date = new Date();
+  date = date.toUTCString();
+
+  var queryString = `INSERT INTO exercise (user_id, exercise_name, date, time) VALUES($1,$2,$3,$4)`;
+  db.pool.query(queryString, [user_id, name, date, time], (err, result) => {
+    if (err) {
+      res.status(400).send('Error occues once add the exercise' + err);
+    } else {
+      res.status(201).send('Add the exercise successfully!');
+    }
+  })
 })
 
 /* ------------------Nutrition------------------*/
@@ -158,14 +177,14 @@ app.get('/friendlist', (req, res, next) => {
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
   var sample_user = {
-    user_id:"1",
-    username:"username",
-    photo:"https://picsum.photos/200",
-    email:"test@gmail.com",
-    password:"passord",
+    user_id: "1",
+    username: "username",
+    photo: "https://picsum.photos/200",
+    email: "test@gmail.com",
+    password: "passord",
     food_favor: "food",
-    exercise_favor:"exercise",
-    friends: [2,3]
+    exercise_favor: "exercise",
+    friends: [2, 3]
   }
 
   res.status(200).send(sample_user);
