@@ -56,26 +56,29 @@ const Profile = () => {
       />
 
       <h3>{profileData.username}</h3>
-      <div>{ friendsCount} Friends</div>
+      <div>{friendsCount} Friends</div>
       <></>
-      
+
 
       <div>
         <Link to="/profileedit">
           <Button variant="outlined">Edit</Button>
+        </Link>
+        <Link to="/changepw">
+          <Button variant="outlined">Reset Password</Button>
         </Link>
 
       </div>
 
       <List>
         <ListItem>
-          <ListItemText primary ="email" secondary={profileData.email} />
+          <ListItemText primary="email" secondary={profileData.email} />
         </ListItem>
         <ListItem>
-          <ListItemText primary ="Favorite Food" secondary={profileData.food_favor} />
+          <ListItemText primary="Favorite Food" secondary={profileData.food_favor} />
         </ListItem>
         <ListItem>
-          <ListItemText primary ="Favorite Exersice" secondary={profileData.exercise_favor} />
+          <ListItemText primary="Favorite Exersice" secondary={profileData.exercise_favor} />
         </ListItem>
       </List>
 
