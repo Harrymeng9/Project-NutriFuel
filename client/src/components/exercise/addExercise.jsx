@@ -5,11 +5,11 @@ import ExerciseCard from './exerciseCard.jsx';
 const AddExercise = () => {
   const [exerciseList, setExerciseList] = useState([]);
 
-  function fetchExercises (e) {
+  function fetchExercises(e) {
     var muscle = e.target.id;
     axios.get('/exercise', { params: { name: muscle } })
       .then(data => {
-        console.log(data.data);
+        // console.log('API', data.data);
         setExerciseList(data.data);
       })
       .catch(err => {
@@ -34,10 +34,10 @@ const AddExercise = () => {
       </div>
       <div>
         {exerciseList.map(entry => {
-          console.log(entry)
+          // console.log('test', entry);
           return (
             <div className="exerciseCard" key={entry.name}>
-              <ExerciseCard exercise={entry}/>
+              <ExerciseCard exercise={entry} />
             </div>
           );
         })}
