@@ -1,10 +1,12 @@
 
 import React, { Component } from "react";
+import socket from "../../helpers/socket";
 
 class Chat extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            chatHistory:[],
             content: ''
         }
     }
@@ -14,12 +16,27 @@ class Chat extends Component {
         })
     }
     send = () => {
+        socket.emit('private message',{
+            content:this.state.content,
+            to: 'marry'
+        })
         this.setState({
             content: ''
         })
-        console.log(this.state.content)
     }
-
+/*
+onMessage(content) {
+  if (this.selectedUser) {
+    socket.emit("private message", {
+      content,
+      to: this.selectedUser.userID,
+    });
+    this.selectedUser.messages.push({
+      content,
+      fromSelf: true,
+    });
+  }
+}*/ 
     render() {
         return (
             <div>

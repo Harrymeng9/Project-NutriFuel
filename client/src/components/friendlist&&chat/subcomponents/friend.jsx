@@ -6,7 +6,7 @@ class Friend extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            newmassage: false
         }
     }
     changestate = (e) => {
