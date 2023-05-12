@@ -5,13 +5,13 @@ const PORT = 3000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const mongodb = require('../database/mongodb.js')
+const { InMemorySessionStore } = require('../server/helpers/sessionStore')
+const crypto = require("crypto");
+const randomId = () => crypto.randomBytes(8).toString("hex");
+
 
 const axios = require('axios');
-// const db = require('../database/database.js');
-//const { default: socket } = require('../client/src/socket.js');
 
-// const httpServer = require('http').createServer()
-// const io = require('socket.io')(httpServer)
 
 const sessionStore = new InMemorySessionStore()
 
@@ -19,10 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + '/../client/dist'));
-// io.use((socket, next) => {
-//   console.log('socket',socket)
-//   next();
-// });
 
 app.get('/', (req, res) => {
   res.status(200).send('Main Get')
@@ -142,12 +138,12 @@ app.put('/NutritionList', async (req, res) => {
 
 /*-----chat---------------------------------------*/
 io.use((socket, next) => {
- 
+
   const sessionID = socket.handshake.auth.sessionID
-  console.log('sss',sessionID)
+  console.log('sss', sessionID)
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
-    console.log('????',session)
+    console.log('????', session)
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
@@ -186,14 +182,20 @@ io.on('connection', (socket) => {
   })
   console.log(users)
 
-  socket.on("private message", ({ content, to }) => {
+  socket.on("private message", ({ content, to, from }) => {
+    let receipient
     for (let [id, socket] of io.of("/").sockets) {
-      console.log('aaaafffssssssssa', id, socket.username)
+
+      console.log('o', id, socket.username,from)
+      if (to === socket.username) {
+        receipient = id
+      }
 
     }
-    socket.to('bndKwYI2uR2PKmKSAAAB').emit("private message", {
+    console.log(receipient)
+    socket.to(receipient).emit("private message", {
       content,
-      from: socket.id,
+      from: from,
     });
   });
 })
@@ -207,14 +209,14 @@ app.get('/friendlist', (req, res, next) => {
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
   var sample_user = {
-    user_id:"1",
-    username:"username",
-    photo:"https://picsum.photos/200",
-    email:"test@gmail.com",
-    password:"passord",
+    user_id: "1",
+    username: "username",
+    photo: "https://picsum.photos/200",
+    email: "test@gmail.com",
+    password: "passord",
     food_favor: "food",
-    exercise_favor:"exercise",
-    friends: [2,3]
+    exercise_favor: "exercise",
+    friends: [2, 3]
   }
 
   res.status(200).send(sample_user);

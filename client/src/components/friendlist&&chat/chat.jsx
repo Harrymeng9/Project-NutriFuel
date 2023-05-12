@@ -6,9 +6,20 @@ class Chat extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            chatHistory:[],
+            chatHistory: [],
             content: ''
         }
+    }
+    componentDidMount() {
+        console.log('i am chat')
+        socket.on("private message", ({ content, from }) => {
+            console.log('something', content, from)
+            let a = this.state.chatHistory
+            a.push(content)
+            this.setState({
+                chatHistory: a
+            })
+        });
     }
     textareahandle = (e) => {
         this.setState({
@@ -16,33 +27,24 @@ class Chat extends Component {
         })
     }
     send = () => {
-        socket.emit('private message',{
-            content:this.state.content,
-            to: 'marry'
+        let a = this.state.chatHistory
+        a.push(this.state.content)
+        socket.emit('private message', {
+            content: this.state.content,
+            to: 'tom',
+            from: 'jerry'
         })
         this.setState({
+            chatHistory: a,
             content: ''
         })
     }
-/*
-onMessage(content) {
-  if (this.selectedUser) {
-    socket.emit("private message", {
-      content,
-      to: this.selectedUser.userID,
-    });
-    this.selectedUser.messages.push({
-      content,
-      fromSelf: true,
-    });
-  }
-}*/ 
     render() {
         return (
             <div>
-                <div id="chatbox" style={{'height':"100px", 'width':'200px','border':'1px solid black'}}>
+                <div id="chatbox" style={{ 'height': "100px", 'width': '200px', 'border': '1px solid black' }}>
                     <ul>
-                        {this.props.chatHistory.map((item) => {
+                        {this.state.chatHistory.map((item) => {
                             return <li>{item}</li>
                         })}
                     </ul>

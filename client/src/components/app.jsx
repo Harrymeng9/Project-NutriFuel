@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
@@ -10,10 +11,37 @@ import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 import Changepw from './profile/changepw.jsx';
+import socket from '../helpers/socket.js';
 
 const App = () => {
+  const [newMessage, setnewMessage] = useState({ content: '', from: '' })
+  const [notification, setnotification] = useState(true)
 
-
+  useEffect(() => {
+    socket.auth = { username: 'tom' }
+    const sessionID = localStorage.getItem("sessionID");
+    if (sessionID) {
+      socket.auth = { sessionID }
+    }
+    socket.connect()
+    socket.on("session", ({ sessionID, userID }) => {
+      socket.auth = { sessionID };
+      localStorage.setItem("sessionID", sessionID);
+      socket.userID = userID;
+    });
+    socket.on("private message", ({ content, from }) => {
+      setnewMessage({
+        content: content,
+        from: from
+      })
+    });
+  })
+  const resetNewMessage = () => {
+    setnewMessage({ content: '', from: '' })
+  }
+  const turnoffnotification = () => {
+    setnotification(false)
+  }
   function Dashboard() {
     const navigate = useNavigate();
 
@@ -57,8 +85,12 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
-          <Route path="/friendNChat" element={<FriendNChat />} />
+          <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
+            turnoffnotification={turnoffnotification}
+          />} />
         </Routes>
+        <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
+        }</div>
       </div>
     </div>
   );
