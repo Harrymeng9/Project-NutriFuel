@@ -6,3 +6,4 @@ client/dist/signup/bundle.js
 package-lock.json
 
 server/authentication/serviceAccount.json
+client/src/components/firebase-config.js
