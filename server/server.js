@@ -255,6 +255,20 @@ app.put('/profile', (req, res) => {
   res.status(200).send(req.body);
 });
 
+
+/*-----Authentication---------------------------------------*/
+app.post('/signup', (req, res)=>{
+  console.log('running');
+  db.pool.query(`INSERT INTO users (user_id, username) VALUES ('${req.body.uid}', '${req.body.username}')`, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send('Error');
+    } else {
+      res.status(200).send('success');
+    }
+  })
+});
+
 http.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
