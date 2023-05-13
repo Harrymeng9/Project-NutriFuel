@@ -15,6 +15,7 @@ import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 import Changepw from './profile/changepw.jsx';
 import socket from '../helpers/socket.js';
+import axios from 'axios';
 
 import Login from './login&signup/login/Login.jsx';
 import Signup from './login&signup/signup/Signup.jsx';
@@ -26,9 +27,11 @@ const App = () => {
 
   const [newMessage, setnewMessage] = useState({ content: '', from: '' })
   const [notification, setnotification] = useState(true)
+  const [friendrequest, setfriendrequest] = useState('')
+  const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
 
   useEffect(() => {
-    socket.auth = { username: 'tom' }
+    socket.auth = { username: 'jack' }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
       socket.auth = { sessionID }
@@ -40,17 +43,33 @@ const App = () => {
       socket.userID = userID;
     });
     socket.on("private message", ({ content, from }) => {
+      console.log('ololo',content,from)
       setnewMessage({
         content: content,
         from: from
       })
     });
+    socket.on('addfriend', ({ from }) => {
+      setfriendrequest(from)
+    })
   })
   const resetNewMessage = () => {
     setnewMessage({ content: '', from: '' })
   }
   const turnoffnotification = () => {
     setnotification(false)
+  }
+  const deny = () => {
+
+    setfriendrequest('')
+  }
+  const accept = () => {
+    socket.emit('makefriend', {
+      from: 'jack',
+      to: 'tom'
+    })
+    setfriendrequest('')
+
   }
 
   const navigate = useNavigate();
@@ -74,6 +93,7 @@ const App = () => {
       }
     })
   }, []);
+
 
 
   function Dashboard({ auth, signOut }) {
@@ -126,10 +146,15 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
-            turnoffnotification={turnoffnotification}
+            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
           />} />
         </Routes>
         <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
+        }</div>
+        <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
+          <button onClick={accept}>accept</button>
+          <button onClick={deny}>deny</button>
+        </div> : null
         }</div>
       </div>
     </div>

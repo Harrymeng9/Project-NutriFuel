@@ -1,6 +1,7 @@
 
 
 import React, { Component } from "react";
+import socket from "../../../helpers/socket";
 
 class Friend extends Component {
     constructor(props) {
@@ -13,18 +14,29 @@ class Friend extends Component {
         this.setState({
             newMessage: this.props.newMessage
         })
+        socket.on("private message", ({ content, from }) => {
+            if (this.props.friend === from) {
+                this.setState({
+                    content: content,
+                    from: from
+                })
+            }
+        })
     }
     changestate = (e) => {
-        console.log(this.state.newMessage)
         if (e.target.innerHTML === 'chat') {
             this.props.clearnewmessage()
+            this.props.setrecipient(this.props.friend)
         }
         this.props.statHandler(e.target.innerHTML)
     }
     render() {
         return <div>{this.props.friend}
             <button onClick={this.changestate}>compete</button>
-            <button onClick={this.changestate}>chat</button></div>
+            <button onClick={this.changestate}>chat</button>
+            {this.state.newMessage.content!==''?<div>new message</div>:null}
+            </div>
+            
     }
 }
 

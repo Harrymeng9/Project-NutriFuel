@@ -1,6 +1,7 @@
 import React from "react";
 import { Component } from "react";
 import axios from "axios";
+import socket from "../../helpers/socket";
 
 class SearchFriend extends Component {
     constructor(props) {
@@ -11,9 +12,22 @@ class SearchFriend extends Component {
         }
     }
     search = () => {
-        this.setState({
-            search: ''
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/searchfriend',
+            params: {
+                friend: this.state.search
+            }
+        }).then((data) => {
+            console.log(data.data)
+            this.setState({
+                searchresult: data.data
+            })
+
         })
+        // this.setState({
+        //     search: ''
+        // })
     }
     inputhandle = (e) => {
         this.setState({
@@ -21,10 +35,18 @@ class SearchFriend extends Component {
         })
     }
     addfriendhandle = (e) => {
-
+        socket.emit('addfriend',{
+            from:'tom',
+            to: this.state.searchresult
+        })
+        this.setState({
+            searchresult:''
+        })
     }
     handlecancel = () => {
-
+        this.setState({
+            searchresult:''
+        })
     }
 
     render() {
@@ -35,10 +57,11 @@ class SearchFriend extends Component {
             <button onClick={this.search}>search friend</button>
             {this.state.searchresult === '' ? null : <div>
                 {this.state.searchresult}
-                {this.state.searchresult === 'no user founded' ? null : <div>
+                {this.state.searchresult === 'no such person' ? null : <div>
                     <button onClick={this.addfriendhandle}>add friend</button>
-                    <button onClick={this.handlecancel}>cancel</button>
+                    
                 </div>}
+                <button onClick={this.handlecancel}>cancel</button>
             </div>}
         </div>)
     }
