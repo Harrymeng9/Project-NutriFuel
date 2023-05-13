@@ -9,6 +9,7 @@ import ExerciseMain from './exercise/exerciseMain.jsx';
 import AddExercise from './exercise/addExercise.jsx';
 import Nutrition from './nutrition/Nutrition.jsx';
 import NutritionList from './nutrition/NutritionList.jsx';
+import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
@@ -19,7 +20,7 @@ import Login from './login&signup/login/Login.jsx';
 import Signup from './login&signup/signup/Signup.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import {auth} from './firebase-config.js'
+import { auth } from './firebase-config.js'
 
 const App = () => {
 
@@ -60,22 +61,22 @@ const App = () => {
     token: null,
   });
 
-  useEffect(()=>{
-    onAuthStateChanged(auth, user =>{
+  useEffect(() => {
+    onAuthStateChanged(auth, user => {
       console.log(user);
-      if(user) {
+      if (user) {
         user.getIdToken()
-        .then((token)=>{
-          console.log(token);
-        });
+          .then((token) => {
+            console.log(token);
+          });
       } else {
         navigate('/login');
       }
     })
-  },[]);
+  }, []);
 
 
-  function Dashboard({auth, signOut}) {
+  function Dashboard({ auth, signOut }) {
 
     function goToExercisePage() {
       navigate('/exerciseMain');
@@ -104,7 +105,7 @@ const App = () => {
         <div><button onClick={goToProgressPage}>Progress</button></div>
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
         <div><button onClick={goToChatPage}>Friends/Chat</button></div>
-        <div><button onClick={()=>{signOut(auth)}}>Sign out</button></div>
+        <div><button onClick={() => { signOut(auth) }}>Sign out</button></div>
       </div>
     );
   }
@@ -113,14 +114,14 @@ const App = () => {
     <div>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard auth={auth} signOut={signOut}/>} />
-          <Route path="/login" element={<Login userInfo={userInfo} auth={auth}/>} />
-          <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth}/> } />
+          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} />} />
+          <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
+          <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain />} />
           <Route path="/addExercise" element={<AddExercise />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />
-          {/* <Route path="/progress" element={<Progress />} /> */}
+          <Route path="/progress" element={<Progress />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
