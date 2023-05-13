@@ -14,6 +14,7 @@ const axios = require('axios');
 const sessionStore = new InMemorySessionStore()
 const db = require('../database/database.js');
 
+
 // const { default: socket } = require('../client/src/socket.js');
 // const httpServer = require('http').createServer()
 // const io = require('socket.io')(httpServer)
@@ -181,13 +182,12 @@ app.get('/ProgressNutrition', async (req, res) => {
 });
 
 /*-----chat---------------------------------------*/
+
 io.use((socket, next) => {
 
   const sessionID = socket.handshake.auth.sessionID
-  console.log('sss', sessionID)
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
-    console.log('????', session)
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
@@ -225,31 +225,73 @@ io.on('connection', (socket) => {
     });
   })
   console.log(users)
+  socket.on('makefriend', ({ from, to }) => {
+    console.log('999999')
+    mongodb.addfriend(from, to).then(() => {
+      return mongodb.addfriend(to, from)
+    }).then((a)=>{
+      let receipient 
+      for (let [id, socket] of io.of("/").sockets) {
+        console.log('????,,,,,,',id,socket.username)
+        if (to === socket.username) {
+          receipient = id
+        }
+      }
+      console.log('????',receipient)
+      socket.to(receipient).emit('makefriend',{
+        from:from
+      })
+    })
+  })
 
   socket.on("private message", ({ content, to, from }) => {
     let receipient
     for (let [id, socket] of io.of("/").sockets) {
-
       console.log('o', id, socket.username, from)
       if (to === socket.username) {
         receipient = id
       }
-
     }
     console.log(receipient)
+    mongodb.createmessage(from, to, content)
     socket.to(receipient).emit("private message", {
       content,
       from: from,
     });
   });
+  socket.on('addfriend', ({ from, to }) => {
+    let receipient
+    for (let [id, socket] of io.of("/").sockets) {
+      console.log('o', id, socket.username, from)
+      if (to === socket.username) {
+        receipient = id
+      }
+    }
+    socket.to(receipient).emit("addfriend", {
+      from: from,
+    });
+  })
 })
+
 
 app.get('/friendlist', (req, res, next) => {
   mongodb.findfriendlist(req.query.user).then((friendlist) => {
     res.send(friendlist)
   })
 })
-
+app.get('/getchathistory', (req, res, next) => {
+  mongodb.findmessage(req.query.sender, req.query.recipient).then((data) => {
+    res.send(data)
+  })
+})
+app.get('/searchfriend', (req, res, next) => {
+  console.log('>>>>', req.query.friend)
+  if (req.query.friend === 'jack') {
+    res.send('jack')
+  } else {
+    res.send('no such person')
+  }
+})
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
   var sample_user = {
