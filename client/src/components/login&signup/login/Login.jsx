@@ -43,13 +43,14 @@ var LoginSection = function ({userInfo, auth, setShowError}){
     signInWithEmailAndPassword(auth, loginInfo.current.email, loginInfo.current.password)
     .then((userCrediential)=>{
       userInfo.current = {
-        loggedIn: true,
         uid: userCrediential.user.uid,
-        token: null
+        email: loginInfo.current.email,
+        //username: signupInfo.current.username
       };
       navigate('/');
     })
     .catch((error)=>{
+      console.log(error.message);
       //email or password is incorrect
       setShowError(true);
     });
