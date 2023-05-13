@@ -1,6 +1,7 @@
 
 import React, { Component } from "react";
 import socket from "../../helpers/socket";
+import axios from "axios";
 
 class Chat extends Component {
     constructor(props) {
@@ -11,11 +12,14 @@ class Chat extends Component {
         }
     }
     componentDidMount() {
-        console.log('i am chat')
+        if (this.props.newMessage.content !== '') {
+            this.setState({
+                chatHistory: [this.props.newMessage]
+            })
+        }
         socket.on("private message", ({ content, from }) => {
-            console.log('something', content, from)
             let a = this.state.chatHistory
-            a.push(content)
+            a.push({ content, from })
             this.setState({
                 chatHistory: a
             })
@@ -28,10 +32,11 @@ class Chat extends Component {
     }
     send = () => {
         let a = this.state.chatHistory
-        a.push(this.state.content)
+        console.log(this.props.recipient)
+        a.push({ from: 'tom', content: this.state.content })
         socket.emit('private message', {
             content: this.state.content,
-            to: 'tom',
+            to: this.props.recipient,
             from: 'jerry'
         })
         this.setState({
@@ -39,13 +44,36 @@ class Chat extends Component {
             content: ''
         })
     }
+    showhistory = () => {
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/getchathistory',
+            params: {
+                sender: 'jerry',
+                recipient: 'tom'
+            }
+        }).then((a) => {
+            a = a.data
+            let b = []
+            for (let i = 0; i < a.length; i++) {
+                b.push({
+                    from: a[i].sender,
+                    content: a[i].message
+                })
+            }
+            this.setState({
+                chatHistory: b
+            })
+        })
+    }
     render() {
         return (
             <div>
-                <div id="chatbox" style={{ 'height': "100px", 'width': '200px', 'border': '1px solid black' }}>
+                <div id="chatbox" style={{ 'height': "100px", 'width': '200px', 'border': '1px solid black', 'overflow': 'scroll' }}>
+                    <button onClick={this.showhistory}>show history</button>
                     <ul>
                         {this.state.chatHistory.map((item) => {
-                            return <li>{item}</li>
+                            return <li>{item.from}:{item.content}</li>
                         })}
                     </ul>
                 </div>

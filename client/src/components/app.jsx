@@ -124,7 +124,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
-          <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
+          <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage} 
             turnoffnotification={turnoffnotification}
           />} />
         </Routes>

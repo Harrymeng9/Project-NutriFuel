@@ -11,6 +11,19 @@ class SearchFriend extends Component {
         }
     }
     search = () => {
+        axios({
+            method: 'get',
+            url: 'http://localhost:3000/searchfriend',
+            params: {
+                friend: this.state.search
+            }
+        }).then((data) => {
+            console.log(data.data)
+            this.setState({
+                searchresult: data.data
+            })
+
+        })
         this.setState({
             search: ''
         })
@@ -24,7 +37,9 @@ class SearchFriend extends Component {
 
     }
     handlecancel = () => {
-
+        this.setState({
+            searchresult:''
+        })
     }
 
     render() {
@@ -35,10 +50,11 @@ class SearchFriend extends Component {
             <button onClick={this.search}>search friend</button>
             {this.state.searchresult === '' ? null : <div>
                 {this.state.searchresult}
-                {this.state.searchresult === 'no user founded' ? null : <div>
+                {this.state.searchresult === 'no such person' ? null : <div>
                     <button onClick={this.addfriendhandle}>add friend</button>
-                    <button onClick={this.handlecancel}>cancel</button>
+                    
                 </div>}
+                <button onClick={this.handlecancel}>cancel</button>
             </div>}
         </div>)
     }

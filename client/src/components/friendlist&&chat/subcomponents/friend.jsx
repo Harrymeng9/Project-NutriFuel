@@ -11,13 +11,13 @@ class Friend extends Component {
     }
     componentDidMount() {
         this.setState({
-            newMessage: this.props.newMessage
+            newMessage:this.props.newMessage
         })
     }
     changestate = (e) => {
-        console.log(this.state.newMessage)
         if (e.target.innerHTML === 'chat') {
             this.props.clearnewmessage()
+            this.props.setrecipient(this.props.friend)
         }
         this.props.statHandler(e.target.innerHTML)
     }

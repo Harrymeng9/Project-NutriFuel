@@ -15,6 +15,7 @@ class FriendList extends Component {
         }
     }
     componentDidMount() {
+        console.log('ppp',this.props)
         this.setState({
             newMessage: this.props.newMessage
         })
@@ -41,7 +42,8 @@ class FriendList extends Component {
                     return <li><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
                         friend1 === this.state.newMessage.from ? this.state.newMessage : { content: '', from: '' }
                     }
-                        clearnewmessage={this.clearnewmessage} />
+                        clearnewmessage={this.clearnewmessage}
+                        setrecipient={this.props.setrecipient} />
                         {friend1 === this.state.newMessage.from ? <div>new message</div> : null}
                     </li>
                 })}

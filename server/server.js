@@ -166,13 +166,12 @@ app.put('/NutritionList', async (req, res) => {
 
 
 /*-----chat---------------------------------------*/
+
 io.use((socket, next) => {
 
   const sessionID = socket.handshake.auth.sessionID
-  console.log('sss', sessionID)
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
-    console.log('????', session)
     if (session) {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
@@ -214,14 +213,14 @@ io.on('connection', (socket) => {
   socket.on("private message", ({ content, to, from }) => {
     let receipient
     for (let [id, socket] of io.of("/").sockets) {
-
-      console.log('o', id, socket.username,from)
+      console.log('o', id, socket.username, from)
       if (to === socket.username) {
         receipient = id
       }
 
     }
     console.log(receipient)
+    mongodb.createmessage(from, to, content)
     socket.to(receipient).emit("private message", {
       content,
       from: from,
@@ -234,7 +233,19 @@ app.get('/friendlist', (req, res, next) => {
     res.send(friendlist)
   })
 })
-
+app.get('/getchathistory',(req,res,next)=>{
+  mongodb.findmessage(req.query.sender,req.query.recipient).then((data)=>{
+    res.send(data)
+  })
+})
+app.get('/searchfriend',(req,res,next)=>{
+  console.log('>>>>',req.params.friend)
+  if(req.params.friend==='jack'){
+    res.send('jack')
+  } else{
+    res.send('no such person')
+  }
+})
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
   var sample_user = {
