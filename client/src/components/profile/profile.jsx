@@ -12,12 +12,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-
+import {sendPasswordResetEmail} from 'firebase/auth';
 
 const axios = require('axios');
 
 
-const Profile = () => {
+const Profile = ({userInfo, auth}) => {
 
   const [profileData, setProfileData] = useState({});
   const [friendsCount, setFriendsCount] = useState(0);
@@ -64,9 +64,16 @@ const Profile = () => {
         <Link to="/profileedit">
           <Button variant="outlined">Edit</Button>
         </Link>
-        <Link to="/changepw">
-          <Button variant="outlined">Reset Password</Button>
-        </Link>
+        <Button variant="outlined" onClick={()=>{
+          sendPasswordResetEmail(auth, userInfo.current.email)
+          .then(()=>{
+            console.log('password reset email sent!')
+          })
+          .catch((error)=>{
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
+        }}>Reset Password</Button>
 
       </div>
 

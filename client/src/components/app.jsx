@@ -55,9 +55,9 @@ const App = () => {
   const navigate = useNavigate();
 
   const userInfo = useRef({
-    loggedIn: false,
     uid: null,
-    token: null,
+    email: null,
+    username: null,
   });
 
   useEffect(()=>{
@@ -121,7 +121,7 @@ const App = () => {
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           {/* <Route path="/progress" element={<Progress />} /> */}
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth}/>} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
