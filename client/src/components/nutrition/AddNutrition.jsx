@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import NutritionList from './NutritionList.jsx';
 
-const AddNutrition = () => {
+const AddNutrition = (props) => {
 
   const [foodSearchName, setFoodSearchName] = useState('');
   const [foodName, setFoodName] = useState('');
@@ -45,7 +45,7 @@ const AddNutrition = () => {
   function addFood() {
     // add data into the database
     var postData = {
-      userId: 1, // need retrieve the user_id as props
+      userId: props.userId,
       foodName: foodName,
       qty: qty,
       totalCalories: totalCalories.toFixed(1)

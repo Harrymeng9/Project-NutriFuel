@@ -35,9 +35,10 @@ const NutritionList = (props) => {
       <h2>Nutrition List</h2>
       <div>
         {nutritionList.map((result, i) => {
+          const dateOnly = result.date.substring(0,10);
           return (
             <div key={i}>
-              <NutritionEntry nutrition_id={result.nutrition_id} date={result.date} food_name={result.food_name} qty={result.qty} total_calories={result.total_calories} />
+              <NutritionEntry nutrition_id={result.nutrition_id} date={dateOnly} food_name={result.food_name} qty={result.qty} total_calories={result.total_calories} />
             </div>
           )
         })}
