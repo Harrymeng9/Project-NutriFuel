@@ -252,18 +252,17 @@ app.get('/friendlist', (req, res, next) => {
 
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
-  var sample_user = {
-    user_id: "1",
-    username: "username",
-    photo: "https://picsum.photos/200",
-    email: "test@gmail.com",
-    password: "passord",
-    food_favor: "food",
-    exercise_favor: "exercise",
-    friends: [2, 3]
-  }
+  let user_id = 1;
+  let queryString = `SELECT * FROM users WHERE user_id = ${user_id};`;
 
-  res.status(200).send(sample_user);
+  db.pool.query(queryString, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once retrieve user' + err);
+    } else {
+      res.status(201).send(result.rows[0]);
+    }
+  })
+  
 });
 
 app.put('/profile', (req, res) => {

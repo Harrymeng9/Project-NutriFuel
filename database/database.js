@@ -37,7 +37,7 @@ const connectDb = async () => {
 
     // Create table user
     await pool.query('CREATE TABLE IF NOT EXISTS users(\
-      user_id TEXT PRIMARY KEY,\
+      user_id INT PRIMARY KEY NOT NULL ,\
       username TEXT,\
       photo TEXT,\
       email TEXT,\
