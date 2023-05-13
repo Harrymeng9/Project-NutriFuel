@@ -6,8 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import ExerciseMain from './exercise/exerciseMain.jsx';
+import AddExercise from './exercise/addExercise.jsx';
 import Nutrition from './nutrition/Nutrition.jsx';
 import NutritionList from './nutrition/NutritionList.jsx';
+import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
@@ -99,6 +101,9 @@ const App = () => {
     function goToExercisePage() {
       navigate('/exerciseMain');
     }
+    function goToAddExercisePage() {
+      navigate('/addExercise');
+    }
     function goToNutritionPage() {
       navigate('/nutrition');
     }
@@ -133,6 +138,7 @@ const App = () => {
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth}/>} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth}/> } />
           <Route path="/exerciseMain" element={<ExerciseMain />} />
+          <Route path="/addExercise" element={<AddExercise />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/progress" element={<Progress />} />
@@ -143,6 +149,13 @@ const App = () => {
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
           />} />
         </Routes>
+        <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
+        }</div>
+        <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
+          <button onClick={accept}>accept</button>
+          <button onClick={deny}>deny</button>
+        </div> : null
+        }</div>
       </div>
     </div>
   );
