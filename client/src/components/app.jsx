@@ -98,6 +98,8 @@ const App = () => {
 
   function Dashboard({ auth, signOut }) {
 
+    console.log('current user', auth.currentUser);
+
     function goToExercisePage() {
       navigate('/exerciseMain');
     }
