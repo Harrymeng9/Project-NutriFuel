@@ -17,7 +17,7 @@ class FriendNChat extends Component {
         this.props.turnoffnotification()
         console.log('wwwww',this.props.newMessage)
     }
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) { 
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat

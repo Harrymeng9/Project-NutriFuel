@@ -3,6 +3,7 @@ import { Component } from "react";
 import Friend from "./subcomponents/friend.jsx";
 import SearchFriend from "./searchfriend.jsx";
 import axios from "axios";
+import socket from "../../helpers/socket.js";
 
 
 
@@ -15,14 +16,22 @@ class FriendList extends Component {
         }
     }
     componentDidMount() {
-        console.log('ppp',this.props)
+        console.log('ppp', this.props)
         this.setState({
             newMessage: this.props.newMessage
         })
-        axios('http://localhost:3000/friendlist?user=tom').then((friendlist) => {
+        axios('http://localhost:3000/friendlist?user=jack').then((friendlist) => {
 
             this.setState({
                 friendlist: friendlist.data
+            })
+        })
+        socket.on('makefriend', ({ from }) => {
+            console.log('???>>>', from)
+            let c = this.state.friendlist
+            c.push(from)
+            this.setState({
+                friendlist: c
             })
         })
     }

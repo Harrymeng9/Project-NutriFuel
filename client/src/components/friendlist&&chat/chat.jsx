@@ -33,11 +33,11 @@ class Chat extends Component {
     send = () => {
         let a = this.state.chatHistory
         console.log(this.props.recipient)
-        a.push({ from: 'tom', content: this.state.content })
+        a.push({ from: 'jack', content: this.state.content })
         socket.emit('private message', {
             content: this.state.content,
             to: this.props.recipient,
-            from: 'jerry'
+            from: 'jack'
         })
         this.setState({
             chatHistory: a,
@@ -49,7 +49,7 @@ class Chat extends Component {
             method: 'get',
             url: 'http://localhost:3000/getchathistory',
             params: {
-                sender: 'jerry',
+                sender: 'jack',
                 recipient: 'tom'
             }
         }).then((a) => {

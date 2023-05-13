@@ -1,6 +1,7 @@
 
 
 import React, { Component } from "react";
+import socket from "../../../helpers/socket";
 
 class Friend extends Component {
     constructor(props) {
@@ -11,7 +12,15 @@ class Friend extends Component {
     }
     componentDidMount() {
         this.setState({
-            newMessage:this.props.newMessage
+            newMessage: this.props.newMessage
+        })
+        socket.on("private message", ({ content, from }) => {
+            if (this.props.friend === from) {
+                this.setState({
+                    content: content,
+                    from: from
+                })
+            }
         })
     }
     changestate = (e) => {
@@ -24,7 +33,10 @@ class Friend extends Component {
     render() {
         return <div>{this.props.friend}
             <button onClick={this.changestate}>compete</button>
-            <button onClick={this.changestate}>chat</button></div>
+            <button onClick={this.changestate}>chat</button>
+            {this.state.newMessage.content!==''?<div>new message</div>:null}
+            </div>
+            
     }
 }
 

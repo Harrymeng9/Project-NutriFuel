@@ -44,12 +44,8 @@ const AddNutrition = () => {
 
   function addFood() {
     // add data into the database
-    var date = new Date();
-    var currentDate = date.toUTCString();
-
     var postData = {
       userId: 1, // need retrieve the user_id as props
-      date: currentDate,
       foodName: foodName,
       qty: qty,
       totalCalories: totalCalories.toFixed(1)

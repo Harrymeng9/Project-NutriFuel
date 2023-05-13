@@ -1,6 +1,7 @@
 import React from "react";
 import { Component } from "react";
 import axios from "axios";
+import socket from "../../helpers/socket";
 
 class SearchFriend extends Component {
     constructor(props) {
@@ -24,9 +25,9 @@ class SearchFriend extends Component {
             })
 
         })
-        this.setState({
-            search: ''
-        })
+        // this.setState({
+        //     search: ''
+        // })
     }
     inputhandle = (e) => {
         this.setState({
@@ -34,7 +35,13 @@ class SearchFriend extends Component {
         })
     }
     addfriendhandle = (e) => {
-
+        socket.emit('addfriend',{
+            from:'tom',
+            to: this.state.searchresult
+        })
+        this.setState({
+            searchresult:''
+        })
     }
     handlecancel = () => {
         this.setState({

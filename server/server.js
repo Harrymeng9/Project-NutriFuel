@@ -14,6 +14,7 @@ const axios = require('axios');
 const sessionStore = new InMemorySessionStore()
 const db = require('../database/database.js');
 
+
 // const { default: socket } = require('../client/src/socket.js');
 // const httpServer = require('http').createServer()
 // const io = require('socket.io')(httpServer)
@@ -72,7 +73,6 @@ app.get('/exerciseLog', async (req, res) => {
 app.post('/logExercise', async (req, res) => {
   console.log('logExercise post req.bod', req.body.params)
   var user_id = req.body.params.user_id;
-  console.log('banana', user_id);
   var name = req.body.params.name;
   var time = req.body.params.time;
   // db.postExercise(user_id, name, time)
@@ -118,8 +118,11 @@ app.get('/Nutrition', async (req, res) => {
 
 // Post Request - Add food into the database
 app.post('/Nutrition', async (req, res) => {
-  var date = new Date();
-  date = date.toUTCString();
+  var currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const date = `${month}/${day}/${year}`;
 
   var user_id = 1; // need update the user_id
   var food_name = req.body.foodName;
@@ -164,6 +167,19 @@ app.put('/NutritionList', async (req, res) => {
   })
 });
 
+// GET REQUEST to retrieve all the total calories for progress page
+app.get('/ProgressNutrition', async (req, res) => {
+  var specialDate = '05/12/2023';
+  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE date =$1`;
+  var queryValues = [specialDate];
+  db.pool.query(queryString, queryValues, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once retrieve the total calories' + err);
+    } else {
+      res.status(201).send(result.rows);
+    }
+  })
+});
 
 /*-----chat---------------------------------------*/
 
@@ -209,6 +225,24 @@ io.on('connection', (socket) => {
     });
   })
   console.log(users)
+  socket.on('makefriend', ({ from, to }) => {
+    console.log('999999')
+    mongodb.addfriend(from, to).then(() => {
+      return mongodb.addfriend(to, from)
+    }).then((a)=>{
+      let receipient 
+      for (let [id, socket] of io.of("/").sockets) {
+        console.log('????,,,,,,',id,socket.username)
+        if (to === socket.username) {
+          receipient = id
+        }
+      }
+      console.log('????',receipient)
+      socket.to(receipient).emit('makefriend',{
+        from:from
+      })
+    })
+  })
 
   socket.on("private message", ({ content, to, from }) => {
     let receipient
@@ -217,7 +251,6 @@ io.on('connection', (socket) => {
       if (to === socket.username) {
         receipient = id
       }
-
     }
     console.log(receipient)
     mongodb.createmessage(from, to, content)
@@ -226,23 +259,36 @@ io.on('connection', (socket) => {
       from: from,
     });
   });
+  socket.on('addfriend', ({ from, to }) => {
+    let receipient
+    for (let [id, socket] of io.of("/").sockets) {
+      console.log('o', id, socket.username, from)
+      if (to === socket.username) {
+        receipient = id
+      }
+    }
+    socket.to(receipient).emit("addfriend", {
+      from: from,
+    });
+  })
 })
+
 
 app.get('/friendlist', (req, res, next) => {
   mongodb.findfriendlist(req.query.user).then((friendlist) => {
     res.send(friendlist)
   })
 })
-app.get('/getchathistory',(req,res,next)=>{
-  mongodb.findmessage(req.query.sender,req.query.recipient).then((data)=>{
+app.get('/getchathistory', (req, res, next) => {
+  mongodb.findmessage(req.query.sender, req.query.recipient).then((data) => {
     res.send(data)
   })
 })
-app.get('/searchfriend',(req,res,next)=>{
-  console.log('>>>>',req.params.friend)
-  if(req.params.friend==='jack'){
+app.get('/searchfriend', (req, res, next) => {
+  console.log('>>>>', req.query.friend)
+  if (req.query.friend === 'jack') {
     res.send('jack')
-  } else{
+  } else {
     res.send('no such person')
   }
 })
@@ -264,6 +310,20 @@ app.get('/profile', (req, res) => {
 
 app.put('/profile', (req, res) => {
   res.status(200).send(req.body);
+});
+
+
+/*-----Authentication---------------------------------------*/
+app.post('/signup', (req, res) => {
+  console.log('running');
+  db.pool.query(`INSERT INTO users (user_id, username) VALUES ('${req.body.uid}', '${req.body.username}')`, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send('Error');
+    } else {
+      res.status(200).send('success');
+    }
+  })
 });
 
 http.listen(PORT, () => {
