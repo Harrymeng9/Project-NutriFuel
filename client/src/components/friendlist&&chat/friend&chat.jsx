@@ -8,14 +8,16 @@ class FriendNChat extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            stat: 'friendlist'
+            stat: 'friendlist',
+            recipient:''
         }
     }
     componentDidMount() {
-        this.props.resetNewMessage()
+        // this.props.resetNewMessage()
         this.props.turnoffnotification()
+        console.log('wwwww',this.props.newMessage)
     }
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) { 
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat
@@ -23,11 +25,16 @@ class FriendNChat extends Component {
             stat: stat
         })
     }
+    setrecipient=(recipient)=>{
+        this.setState({
+            recipient:recipient
+        })
+    }
     render() {
         return (
             <div>
-                {this.state.stat === 'friendlist' ? <FriendList statHandler={this.statHandler} newMessage={this.props.newMessage} /> : null}
-                {this.state.stat === 'chat' ? <Chat chatHistory={['hello', 'Hi']} /> : null}
+                {this.state.stat === 'friendlist' ? <FriendList setrecipient={this.setrecipient} statHandler={this.statHandler} newMessage={this.props.newMessage} /> : null}
+                {this.state.stat === 'chat' ? <Chat newMessage={this.props.newMessage} recipient={this.state.recipient}/> : null}
                 {this.state.stat === 'compete' ? <Competition /> : null}
                 <button onClick={(e) => {
                     this.statHandler(e.target.innerHTML)

@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import ExerciseMain from './exercise/exerciseMain.jsx';
-import AddExercise from './exercise/addExercise.jsx';
 import Nutrition from './nutrition/Nutrition.jsx';
 import NutritionList from './nutrition/NutritionList.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
@@ -14,20 +13,23 @@ import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 import Changepw from './profile/changepw.jsx';
 import socket from '../helpers/socket.js';
+import axios from 'axios';
 
 import Login from './login&signup/login/Login.jsx';
 import Signup from './login&signup/signup/Signup.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import {auth} from './firebase-config.js'
+import { auth } from './firebase-config.js'
 
 const App = () => {
 
   const [newMessage, setnewMessage] = useState({ content: '', from: '' })
   const [notification, setnotification] = useState(true)
+  const [friendrequest, setfriendrequest] = useState('')
+  const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
 
   useEffect(() => {
-    socket.auth = { username: 'tom' }
+    socket.auth = { username: 'jack' }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
       socket.auth = { sessionID }
@@ -39,17 +41,33 @@ const App = () => {
       socket.userID = userID;
     });
     socket.on("private message", ({ content, from }) => {
+      console.log('ololo',content,from)
       setnewMessage({
         content: content,
         from: from
       })
     });
+    socket.on('addfriend', ({ from }) => {
+      setfriendrequest(from)
+    })
   })
   const resetNewMessage = () => {
     setnewMessage({ content: '', from: '' })
   }
   const turnoffnotification = () => {
     setnotification(false)
+  }
+  const deny = () => {
+
+    setfriendrequest('')
+  }
+  const accept = () => {
+    socket.emit('makefriend', {
+      from: 'jack',
+      to: 'tom'
+    })
+    setfriendrequest('')
+
   }
 
   const navigate = useNavigate();
@@ -60,28 +78,26 @@ const App = () => {
     username: null,
   });
 
-  useEffect(()=>{
-    onAuthStateChanged(auth, user =>{
+  useEffect(() => {
+    onAuthStateChanged(auth, user => {
       console.log(user);
-      if(user) {
+      if (user) {
         user.getIdToken()
-        .then((token)=>{
-          console.log(token);
-        });
+          .then((token) => {
+            console.log(token);
+          });
       } else {
         navigate('/login');
       }
     })
-  },[]);
+  }, []);
 
 
-  function Dashboard({auth, signOut}) {
+
+  function Dashboard({ auth, signOut }) {
 
     function goToExercisePage() {
       navigate('/exerciseMain');
-    }
-    function goToAddExercisePage() {
-      navigate('/addExercise');
     }
     function goToNutritionPage() {
       navigate('/nutrition');
@@ -104,7 +120,7 @@ const App = () => {
         <div><button onClick={goToProgressPage}>Progress</button></div>
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
         <div><button onClick={goToChatPage}>Friends/Chat</button></div>
-        <div><button onClick={()=>{signOut(auth)}}>Sign out</button></div>
+        <div><button onClick={() => { signOut(auth) }}>Sign out</button></div>
       </div>
     );
   }
@@ -117,19 +133,16 @@ const App = () => {
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth}/>} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth}/> } />
           <Route path="/exerciseMain" element={<ExerciseMain />} />
-          <Route path="/addExercise" element={<AddExercise />} />
           <Route path="/nutrition" element={<Nutrition />} />
           <Route path="/nutritionList" element={<NutritionList />} />
-          {/* <Route path="/progress" element={<Progress />} /> */}
+          <Route path="/progress" element={<Progress />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth}/>} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
-            turnoffnotification={turnoffnotification}
+            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
           />} />
         </Routes>
-        <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
-        }</div>
       </div>
     </div>
   );
