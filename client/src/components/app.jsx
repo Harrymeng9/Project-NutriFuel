@@ -24,6 +24,27 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase-config.js'
 
 const App = () => {
+  const navigate = useNavigate();
+
+  const userInfo = useRef({
+    uid: null,
+    email: null,
+    username: null,
+  });
+
+  useEffect(() => {
+    onAuthStateChanged(auth, user => {
+      console.log(user);
+      if (user) {
+        user.getIdToken()
+          .then((token) => {
+            console.log(token);
+          });
+      } else {
+        navigate('/login');
+      }
+    })
+  }, []);
 
   const [newMessage, setnewMessage] = useState({ content: '', from: '' })
   const [notification, setnotification] = useState(true)
@@ -31,6 +52,7 @@ const App = () => {
   const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
 
   useEffect(() => {
+    console.log('????',userInfo)
     socket.auth = { username: 'jack' }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
@@ -72,27 +94,7 @@ const App = () => {
 
   }
 
-  const navigate = useNavigate();
 
-  const userInfo = useRef({
-    uid: null,
-    email: null,
-    username: null,
-  });
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      console.log(user);
-      if (user) {
-        user.getIdToken()
-          .then((token) => {
-            console.log(token);
-          });
-      } else {
-        navigate('/login');
-      }
-    })
-  }, []);
 
 
 
