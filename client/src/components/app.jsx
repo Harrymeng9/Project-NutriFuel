@@ -43,7 +43,7 @@ const App = () => {
       socket.userID = userID;
     });
     socket.on("private message", ({ content, from }) => {
-      console.log('ololo',content,from)
+      console.log('ololo', content, from)
       setnewMessage({
         content: content,
         from: from
@@ -75,9 +75,9 @@ const App = () => {
   const navigate = useNavigate();
 
   const userInfo = useRef({
-    loggedIn: false,
     uid: null,
-    token: null,
+    email: null,
+    username: null,
   });
 
   useEffect(() => {
@@ -108,7 +108,12 @@ const App = () => {
       navigate('/nutrition');
     }
     function goToProgressPage() {
-      navigate('/progress');
+      // Guest cannot access the progress page
+      if (userInfo.current.uid === null) {
+        alert('Please log in to check progress!')
+      } else {
+        navigate('/progress');
+      }
     }
     function goToUserProfilePage() {
       navigate('/profile');
@@ -139,10 +144,10 @@ const App = () => {
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain />} />
           <Route path="/addExercise" element={<AddExercise />} />
-          <Route path="/nutrition" element={<Nutrition />} />
+          <Route path="/nutrition" element={<Nutrition userInfo={userInfo} />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/progress" element={<Progress />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}

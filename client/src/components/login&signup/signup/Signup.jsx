@@ -58,9 +58,9 @@ var SignupSection = function ({userInfo, auth, setShowError}){
         .then((userCrediential)=>{
           //update the userInfo Ref
           userInfo.current = {
-            loggedIn: true,
             uid: userCrediential.user.uid,
-            token: null
+            email: signupInfo.current.email,
+            username: signupInfo.current.username
           };
           //send the uid and username to our server to save
           axios.post('/signup', {
