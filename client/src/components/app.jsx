@@ -109,7 +109,7 @@ const App = () => {
     }
     function goToProgressPage() {
       // Guest cannot access the progress page
-      if (userInfo.current.uid === NULL) {
+      if (userInfo.current.uid === null) {
         alert('Please log in to check progress!')
       } else {
         navigate('/progress');

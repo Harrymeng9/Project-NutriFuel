@@ -43,27 +43,32 @@ const AddNutrition = (props) => {
   }, [foodSearchName]);
 
   function addFood() {
-    // add data into the database
-    var postData = {
-      userId: props.userId,
-      foodName: foodName,
-      qty: qty,
-      totalCalories: totalCalories.toFixed(1)
-    }
 
-    if (postData.foodName === '') {
-      alert('Please enter the food');
+    // Guest cannot add any food into the database
+    if (props.userId === null) {
+      alert('Please log in!');
     } else {
-      axios.post('/Nutrition', postData)
-        .then((data) => {
-          console.log(data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
+      // add data into the database
+      var postData = {
+        userId: props.userId,
+        foodName: foodName,
+        qty: qty,
+        totalCalories: totalCalories.toFixed(1)
+      }
 
-      // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
-      setFoodSearchName('');
+      if (postData.foodName === '') {
+        alert('Please enter the food');
+      } else {
+        axios.post('/Nutrition', postData)
+          .then((data) => {
+            console.log(data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        // reset all numbers to default, once FoodSearchName is empty, it will trigger the above useEffect()
+        setFoodSearchName('');
+      }
     }
   };
 
@@ -75,7 +80,12 @@ const AddNutrition = (props) => {
   const navigate = useNavigate();
   // Navigate to the Nutrition List page
   function goToNutritionList() {
-    navigate('/nutritionList');
+    // Guest cannot check the nutrition list
+    if (props.userId === null) {
+      alert('Please log in!');
+    } else {
+      navigate('/nutritionList');
+    }
   }
 
   // Navigate to the Dashboard page
