@@ -53,7 +53,7 @@ class FriendList extends Component {
                     }
                         clearnewmessage={this.clearnewmessage}
                         setrecipient={this.props.setrecipient} />
-                        {friend1 === this.state.newMessage.from ? <div>new message</div> : null}
+                        {/* {friend1 === this.state.newMessage.from ? <div>new message</div> : null} */}
                     </li>
                 })}
             </ul>

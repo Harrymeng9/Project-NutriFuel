@@ -149,7 +149,7 @@ const App = () => {
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
           />} />
         </Routes>
-        <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
+        <div >{notification ? newMessage.content === '' ? null : <div >new message!!!!!</div> : null
         }</div>
         <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
           <button onClick={accept}>accept</button>
