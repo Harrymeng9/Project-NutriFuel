@@ -88,7 +88,6 @@ const App = () => {
           userInfo.current.email = user.email;
           userInfo.current.uid = user.uid;
         }
-
         // user.getIdToken()
         //   .then((token) => {
         //     console.log(token);
