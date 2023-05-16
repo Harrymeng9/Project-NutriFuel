@@ -6,7 +6,7 @@ import TextBox from '../components/interactables/TextBox.jsx'
 import Button from '../components/interactables/Button.jsx'
 
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword , signInAnonymously } from "firebase/auth";
 
 
 import '../style.css';
@@ -56,6 +56,13 @@ var LoginSection = function ({userInfo, auth, setShowError}){
     });
   };
 
+  const loginAsGuest = function (){
+    signInAnonymously(auth)
+    .then(()=>{
+      navigate('/');
+    });
+  };
+
   const navigate = useNavigate();
   return (
     <div id="LoginSection" className="col-3">
@@ -63,6 +70,8 @@ var LoginSection = function ({userInfo, auth, setShowError}){
       <TextBox defaultText={'Password'} onChange={(e)=>{loginInfo.current.password = e.target.value}} isPassword={true}/>
       <Button text={'Login'} onClick={sendLogin}/>
       <Button text={'Create Account'} onClick={()=>{navigate('/signup')}}/>
+      <Button text={'Login as Guest'} onClick={loginAsGuest}/>
+
     </div>
   );
 };
