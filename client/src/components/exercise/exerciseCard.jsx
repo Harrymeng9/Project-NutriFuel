@@ -10,9 +10,9 @@ const ExerciseCard = (props) => {
   function handleTimeInput(e) {
     setTime(e.target.value);
   }
-  console.log('test', props);
+  //console.log('test', props);
   function addToLog(name, userId) {
-    console.log('name, userId', name, userId)
+    //console.log('name, userId', name, userId)
     axios.post('/logExercise', { params: { user_id: userId, name: name, time: time } })
       .then(data => {
         console.log(data);

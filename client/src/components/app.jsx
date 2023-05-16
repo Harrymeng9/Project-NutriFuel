@@ -147,8 +147,8 @@ const App = () => {
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
-          <Route path="/exerciseMain" element={<ExerciseMain />} />
-          <Route path="/addExercise" element={<AddExercise />} />
+          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />
+          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth}/>} />
           <Route path="/nutrition" element={<Nutrition userInfo={userInfo} />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/progress" element={<Progress />} />

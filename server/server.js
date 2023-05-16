@@ -76,25 +76,25 @@ app.get('/exerciseLog', async (req, res) => {
 });
 
 app.post('/logExercise', async (req, res) => {
-  console.log('logExercise post req.bod', req.body.params)
+  //console.log('logExercise post req.bod', req.body.params)
   var user_id = req.body.params.user_id;
   var name = req.body.params.name;
   var time = req.body.params.time;
-  db.postExercise(user_id, name, time)
-    .then(data => {
-      res.status(200).send()
-    })
-  // var date = new Date();
-  // date = date.toUTCString();
+  // db.postExercise(user_id, name, time)
+  //   .then(data => {
+  //     res.status(200).send()
+  //   })
+  var date = new Date();
+  date = date.toUTCString();
 
-  // var queryString = `INSERT INTO exercise (user_id, date, exercise_name, time) VALUES($1,$2,$3,$4)`;
-  // db.pool.query(queryString, [user_id, date, name, time], (err, result) => {
-  //   if (err) {
-  //     res.status(400).send('Error occues once add the exercise' + err);
-  //   } else {
-  //     res.status(201).send('Add the exercise successfully!');
-  //   }
-  // })
+  var queryString = `INSERT INTO exercise (user_id, date, exercise_name, time) VALUES($1,$2,$3,$4)`;
+  db.pool.query(queryString, [user_id, date, name, time], (err, result) => {
+    if (err) {
+      res.status(400).send('Error occues once add the exercise' + err);
+    } else {
+      res.status(201).send('Add the exercise successfully!');
+    }
+  })
 })
 
 /* ------------------Nutrition------------------*/

@@ -3,16 +3,16 @@ import axios from 'axios';
 import ExerciseCard from './exerciseCard.jsx';
 import { useLocation } from 'react-router-dom';
 
-const AddExercise = (props) => {
+const AddExercise = (userInfo) => {
   const [exerciseList, setExerciseList] = useState([]);
   const location = useLocation();
   const [uid, setUid] = useState()
 
   useEffect(() => {
-    setUid(location.state.userInfo.userInfo.current.uid);
+    setUid(userInfo.userInfo.current.uid);
   }, [])
-  console.log('location', location.state.userInfo.userInfo.current.uid)
-  console.log('uid', uid)
+  //console.log('location', location.state.userInfo.userInfo.current.uid)
+  //console.log('uid', uid)
 
   function fetchExercises(e) {
     var muscle = e.target.id;
