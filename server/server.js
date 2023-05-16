@@ -118,13 +118,12 @@ app.get('/Nutrition', async (req, res) => {
 
 // Post Request - Add food into the database
 app.post('/Nutrition', async (req, res) => {
-  var currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = currentDate.getDate().toString().padStart(2, '0');
-  const date = `${month}/${day}/${year}`;
+  var date = new Date();
+  const options = { timeZone: 'America/Los_Angeles' };
+  const pacificTime = date.toLocaleString('en-US', options);
+  date = pacificTime;
 
-  var user_id = 1; // need update the user_id
+  var user_id = req.body.userId;
   var food_name = req.body.foodName;
   var qty = req.body.qty;
   var total_calories = req.body.totalCalories;
@@ -229,17 +228,17 @@ io.on('connection', (socket) => {
     console.log('999999')
     mongodb.addfriend(from, to).then(() => {
       return mongodb.addfriend(to, from)
-    }).then((a)=>{
-      let receipient 
+    }).then((a) => {
+      let receipient
       for (let [id, socket] of io.of("/").sockets) {
-        console.log('????,,,,,,',id,socket.username)
+        console.log('????,,,,,,', id, socket.username)
         if (to === socket.username) {
           receipient = id
         }
       }
-      console.log('????',receipient)
-      socket.to(receipient).emit('makefriend',{
-        from:from
+      console.log('????', receipient)
+      socket.to(receipient).emit('makefriend', {
+        from: from
       })
     })
   })
