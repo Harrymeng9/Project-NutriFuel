@@ -40,25 +40,9 @@ const connectDb = async () => {
       user_id TEXT PRIMARY KEY,\
       username TEXT,\
       photo TEXT,\
-      email TEXT,\
       password TEXT,\
       food_favor TEXT,\
-      exercise_favor TEXT,\
-      friends TEXT\
-    )');
-
-    // Create table usersgroups
-    await pool.query('CREATE TABLE IF NOT EXISTS usersgroups(\
-      id INT PRIMARY KEY,\
-      user_id INT,\
-      group_id INT\
-    )');
-
-    // Create table group
-    await pool.query('CREATE TABLE IF NOT EXISTS groups(\
-      group_id INT PRIMARY KEY,\
-      group_name TEXT,\
-      group_members TEXT\
+      exercise_favor TEXT\
     )');
 
     console.log('Connected to PostgreSQL');

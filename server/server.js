@@ -293,22 +293,25 @@ app.get('/searchfriend', (req, res, next) => {
 })
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
-  var sample_user = {
-    user_id: "1",
-    username: "username",
-    photo: "https://picsum.photos/200",
-    email: "test@gmail.com",
-    password: "passord",
-    food_favor: "food",
-    exercise_favor: "exercise",
-    friends: [2, 3]
-  }
-
-  res.status(200).send(sample_user);
+  // let user_id = 'emumpQFafefQhZl2mg9UPEdk0RB3';
+  let queryString = `SELECT * FROM users WHERE user_id = $1`;
+  let queryValue=[req.query.uid]
+  console.log('req.query', req.query);
+  //req.query { uid: 'emumpQFafefQhZl2mg9UPEdk0RB3' }
+  db.pool.query(queryString, queryValue,(err, result) => {
+    if (err) {
+      console.log('Error getting user data from databse', err)
+      res.status(400).send('Error getting user data from databse');
+    } else {
+      res.status(201).send(result.rows[0]);
+    }
+  })
+  
 });
 
 app.put('/profile', (req, res) => {
   res.status(200).send(req.body);
+
 });
 
 
