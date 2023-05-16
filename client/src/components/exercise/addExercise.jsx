@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ExerciseCard from './exerciseCard.jsx';
 import { useLocation } from 'react-router-dom';
+import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 
 const AddExercise = (userInfo) => {
   const [exerciseList, setExerciseList] = useState([]);
@@ -11,8 +12,14 @@ const AddExercise = (userInfo) => {
   useEffect(() => {
     setUid(userInfo.userInfo.current.uid);
   }, [])
-  //console.log('location', location.state.userInfo.userInfo.current.uid)
-  //console.log('uid', uid)
+
+  function goToDashboardPage() {
+    navigate('/');
+  };
+
+  function goToExercisePage() {
+    navigate('/exerciseMain');
+  };
 
   function fetchExercises(e) {
     var muscle = e.target.id;
@@ -40,6 +47,8 @@ const AddExercise = (userInfo) => {
         <button onClick={fetchExercises} id='glutes'>Glutes</button><br></br>
         <button onClick={fetchExercises} id='biceps'>Biceps</button><br></br>
         <button onClick={fetchExercises} id='triceps'>Triceps</button><br></br>
+        <button onClick={goToExercisePage}>Back to Exercise Log</button><br></br>
+        <button onClick={goToDashboardPage}>Back to Dashboard</button><br></br>
       </div>
       <div>
         {exerciseList.map(entry => {
