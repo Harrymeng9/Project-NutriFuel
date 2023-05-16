@@ -54,20 +54,25 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
-  // db.getExerciseLog(req.query.user_id)
-  //   .then(data => {
-  //     console.log('get data', data)
-  //     res.status(200).send(data)
-  //   })
-  var user_id = req.query.user_id;
-  var queryString = `SELECT * FROM exercise WHERE user_id=${user_id}`;
-  db.pool.query(queryString, (err, result) => {
-    if (err) {
-      res.status(400).send('Error occurs once get exercise log' + err);
-    } else {
-      res.status(201).send(result.rows);
-    }
-  })
+  db.getExerciseLog(req.query.user_id)
+    .then(data => {
+      var time = data[data.length - 1].time
+      //console.log('get data', time)
+      axios({
+        method: 'GET',
+        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+        headers: {
+          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+        },
+        contentType: 'application/json'
+      })
+      .then(result => {
+        data.push({calories: result.data[0].total_calories})
+        //console.log('result', data)
+        db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
+        res.status(200).send(data)
+      })
+    })
 });
 
 app.post('/logExercise', async (req, res) => {
@@ -75,21 +80,21 @@ app.post('/logExercise', async (req, res) => {
   var user_id = req.body.params.user_id;
   var name = req.body.params.name;
   var time = req.body.params.time;
-  // db.postExercise(user_id, name, time)
-  //   .then(data => {
-  //     res.status(200).send()
-  //   })
-  var date = new Date();
-  date = date.toUTCString();
+  db.postExercise(user_id, name, time)
+    .then(data => {
+      res.status(200).send()
+    })
+  // var date = new Date();
+  // date = date.toUTCString();
 
-  var queryString = `INSERT INTO exercise (user_id, exercise_name, date, time) VALUES($1,$2,$3,$4)`;
-  db.pool.query(queryString, [user_id, name, date, time], (err, result) => {
-    if (err) {
-      res.status(400).send('Error occues once add the exercise' + err);
-    } else {
-      res.status(201).send('Add the exercise successfully!');
-    }
-  })
+  // var queryString = `INSERT INTO exercise (user_id, date, exercise_name, time) VALUES($1,$2,$3,$4)`;
+  // db.pool.query(queryString, [user_id, date, name, time], (err, result) => {
+  //   if (err) {
+  //     res.status(400).send('Error occues once add the exercise' + err);
+  //   } else {
+  //     res.status(201).send('Add the exercise successfully!');
+  //   }
+  // })
 })
 
 /* ------------------Nutrition------------------*/
@@ -306,7 +311,7 @@ app.get('/profile', (req, res) => {
       res.status(201).send(result.rows[0]);
     }
   })
-  
+
 });
 
 app.put('/profile', (req, res) => {

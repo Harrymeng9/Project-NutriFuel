@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ExerciseCard from './exerciseCard.jsx';
+import { useLocation } from 'react-router-dom';
 
-const AddExercise = () => {
+const AddExercise = (props) => {
   const [exerciseList, setExerciseList] = useState([]);
+  const location = useLocation();
+  const [uid, setUid] = useState()
+
+  useEffect(() => {
+    setUid(location.state.userInfo.userInfo.current.uid);
+  }, [])
+  console.log('location', location.state.userInfo.userInfo.current.uid)
+  console.log('uid', uid)
 
   function fetchExercises(e) {
     var muscle = e.target.id;
@@ -37,7 +46,7 @@ const AddExercise = () => {
           // console.log('test', entry);
           return (
             <div className="exerciseCard" key={entry.name}>
-              <ExerciseCard exercise={entry} />
+              <ExerciseCard exercise={entry} uid={uid}/>
             </div>
           );
         })}
