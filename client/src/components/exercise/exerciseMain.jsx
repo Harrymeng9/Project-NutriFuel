@@ -25,7 +25,11 @@ const ExerciseMain = (userInfo) => {
   function goToAddExercisePage() {
     navigate('/addExercise');
     // ReactDOM.render(<AddExercise />, document.getElementById('app'));
-  }
+  };
+
+  function goToDashboardPage() {
+    navigate('/');
+  };
 
   return (
     <div>
@@ -41,6 +45,7 @@ const ExerciseMain = (userInfo) => {
         })}
       </div>
       <button onClick={goToAddExercisePage}>Add Exercise</button>
+      <button onClick={goToDashboardPage}>Back to Dashboard</button>
     </div>
   )
 }
