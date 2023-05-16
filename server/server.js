@@ -223,6 +223,7 @@ io.on('connection', (socket) => {
       connected: session.connected,
     });
   })
+  
   console.log(users)
   socket.on('makefriend', ({ from, to }) => {
     console.log('999999')

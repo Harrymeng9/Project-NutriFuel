@@ -16,18 +16,17 @@ class FriendList extends Component {
         }
     }
     componentDidMount() {
-        console.log('ppp', this.props)
         this.setState({
             newMessage: this.props.newMessage
         })
-        axios('http://localhost:3000/friendlist?user=jack').then((friendlist) => {
+        console.log("username",this.props.userInfo.current.username)
+        axios(`http://localhost:3000/friendlist?user=${this.props.userInfo.current.username}`).then((friendlist) => {
 
             this.setState({
                 friendlist: friendlist.data
             })
         })
         socket.on('makefriend', ({ from }) => {
-            console.log('???>>>', from)
             let c = this.state.friendlist
             c.push(from)
             this.setState({
@@ -35,9 +34,7 @@ class FriendList extends Component {
             })
         })
     }
-    componentDidUpdate(prevProps) {
 
-    }
     clearnewmessage = () => {
         this.setState({
             newMessage: { content: '', from: '' }

@@ -11,13 +11,14 @@ class Friend extends Component {
         }
     }
     componentDidMount() {
+        console.log('>>>>', this.props.newMessage)
         this.setState({
             newMessage: this.props.newMessage
         })
         socket.on("private message", ({ content, from }) => {
 
             if (this.props.friend === from) {
-                console.log('something', content, from, this.props.friend)
+                // console.log('something', content, from, this.props.friend)
                 this.setState({
                     newMessage: { content: content, from: from }
                 })
@@ -29,7 +30,7 @@ class Friend extends Component {
             console.log('??????chat')
             this.props.clearnewmessage()
             this.props.setrecipient(this.props.friend)
-            this.setState({newMessage: {content: '',from: ''}})
+            this.setState({ newMessage: { content: '', from: '' } })
         }
         this.props.statHandler(e.target.innerHTML)
 
@@ -37,7 +38,7 @@ class Friend extends Component {
     render() {
         return <div>{this.props.friend}
             <button onClick={this.changestate}>compete</button>
-            <button onClick={this.changestate}>chat</button>
+            <button onClick={this.changestate} friend={this.props.friend}>chat</button>
             {this.state.newMessage.content !== '' ? <span>new message</span> : null}
         </div>
 

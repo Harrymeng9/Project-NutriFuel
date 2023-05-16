@@ -33,6 +33,7 @@ const App = () => {
   });
 
   useEffect(() => {
+
     onAuthStateChanged(auth, user => {
       console.log(user);
       if (user) {
@@ -47,13 +48,14 @@ const App = () => {
   }, []);
 
   const [newMessage, setnewMessage] = useState({ content: '', from: '' })
-  const [notification, setnotification] = useState(true)
+  const [notification, setnotification] = useState(false)
   const [friendrequest, setfriendrequest] = useState('')
   const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
-
+  const [message, setmessage] = useState(true)
+  const [mainpage, setmainpage] = useState(true)
   useEffect(() => {
-    console.log('????',userInfo)
-    socket.auth = { username: 'jack' }
+    console.log('????', userInfo)
+    socket.auth = { username: userInfo.current.username }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
       socket.auth = { sessionID }
@@ -64,13 +66,15 @@ const App = () => {
       localStorage.setItem("sessionID", sessionID);
       socket.userID = userID;
     });
-    socket.on("private message", ({ content, from }) => {
-      console.log('ololo', content, from)
-      setnewMessage({
-        content: content,
-        from: from
-      })
-    });
+    if (message) {
+      socket.on("private message", ({ content, from }) => {
+        setnotification(true)
+        setnewMessage({
+          content: content,
+          from: from
+        })
+      });
+    }
     socket.on('addfriend', ({ from }) => {
       setfriendrequest(from)
     })
@@ -78,12 +82,21 @@ const App = () => {
   const resetNewMessage = () => {
     setnewMessage({ content: '', from: '' })
   }
-  const turnoffnotification = () => {
-    setnotification(false)
+  const turnoffnotification = (n) => {
+    // let a = notification
+    setnotification(n)
+  }
+
+
+  const backtomain = (a) => {
+    navigate(a)
   }
   const deny = () => {
 
     setfriendrequest('')
+  }
+  const otherpage = (a) => {
+    setmainpage(a)
   }
   const accept = () => {
     socket.emit('makefriend', {
@@ -91,13 +104,7 @@ const App = () => {
       to: 'tom'
     })
     setfriendrequest('')
-
   }
-
-
-
-
-
   function Dashboard({ auth, signOut }) {
 
     function goToExercisePage() {
@@ -123,6 +130,7 @@ const App = () => {
     function goToChatPage() {
       navigate('/friendNChat');
     }
+
 
     return (
       <div>
@@ -153,10 +161,11 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit />} />
           <Route path="/changepw" element={<Changepw />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
-            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
+            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
+            backtomain={backtomain} otherpage={otherpage}
           />} />
         </Routes>
-        <div >{notification ? newMessage.content === '' ? null : <div >new message!!!!!</div> : null
+        <div >{notification && mainpage ? <div >new message!!!!!</div> : null
         }</div>
         <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
           <button onClick={accept}>accept</button>
@@ -167,5 +176,6 @@ const App = () => {
     </div>
   );
 }
+//newMessage.content === '' ? null :
 
 export default App;
