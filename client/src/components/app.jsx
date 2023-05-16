@@ -83,10 +83,12 @@ const App = () => {
     onAuthStateChanged(auth, user => {
       console.log(user);
       if (user) {
-        user.getIdToken()
-          .then((token) => {
-            console.log(token);
-          });
+        userInfo.current.email = user.email;
+        userInfo.current.uid = user.uid;
+        // user.getIdToken()
+        //   .then((token) => {
+        //     console.log(token);
+        //   });
       } else {
         navigate('/login');
       }
@@ -96,6 +98,8 @@ const App = () => {
 
 
   function Dashboard({ auth, signOut }) {
+
+    console.log('current user', auth.currentUser);
 
     function goToExercisePage() {
       navigate('/exerciseMain');
