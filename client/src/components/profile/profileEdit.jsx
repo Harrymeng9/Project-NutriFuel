@@ -3,10 +3,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
-
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
@@ -33,14 +30,13 @@ const ProfileEdit = () => {
 
 
   useEffect(() => {
-    axios.get('/profile', { params: { "user_id": 1 } })
+    axios.get('/profile')
       .then((data) => {
         setProfileData(data.data);
         setPhoto(data.data.photo);
         setUsername(data.data.username);
         setFood(data.data.food_favor);
         setExercise(data.data.exercise_favor);
-        setEmail(data.data.email);
       })
       .catch((err) => {
         console.log('err', err);
@@ -54,7 +50,6 @@ const ProfileEdit = () => {
     console.log({
       username: username,
       photo: photo,
-      email: email,
       food_favor: food,
       exercise_favor: exercise,
     });

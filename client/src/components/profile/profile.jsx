@@ -3,45 +3,36 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import ProfileEdit from './profileEdit.jsx';
-
-
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-
-import {sendPasswordResetEmail} from 'firebase/auth';
-
+import { sendPasswordResetEmail, signOut } from 'firebase/auth';
 const axios = require('axios');
 
 
-const Profile = ({userInfo, auth}) => {
-
+const Profile = ({ userInfo, auth }) => {
   const [profileData, setProfileData] = useState({});
   const [friendsCount, setFriendsCount] = useState(0);
 
-
   useEffect(() => {
-    axios.get('/profile', { params: { "user_id": 1 } })
+    setUser(userInfo.current);
+      console.log('userInfo', userInfo);
+
+    axios.get('/profile', { params: { "uid": userInfo.current.uid} })
       .then((data) => {
         setProfileData(data.data);
-        setFriendsCount(data.data.friends.length)
+        setFriendsCount(3)
+      }).then((data)=>{
+
       })
       .catch((err) => {
         console.log('err', err);
-      })
+      });
   }
     , []);
-
-
-
-
   return (
-
-
-
     <div>
       <h2>Profile</h2>
       <Avatar
@@ -54,32 +45,27 @@ const Profile = ({userInfo, auth}) => {
           fontWeight: 'bold',
         }}
       />
-
       <h3>{profileData.username}</h3>
       <div>{friendsCount} Friends</div>
       <></>
-
-
       <div>
         <Link to="/profileedit">
           <Button variant="outlined">Edit</Button>
         </Link>
-        <Button variant="outlined" onClick={()=>{
+        <Button variant="outlined" onClick={() => {
           sendPasswordResetEmail(auth, userInfo.current.email)
-          .then(()=>{
-            console.log('password reset email sent!')
-          })
-          .catch((error)=>{
-            const errorCode = error.code;
-            const errorMessage = error.message;
-          });
+            .then(() => {
+              console.log('password reset email sent!')
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+            });
         }}>Reset Password</Button>
-
       </div>
-
       <List>
         <ListItem>
-          <ListItemText primary="email" secondary={profileData.email} />
+          <ListItemText primary="email" secondary={userInfo.current.email} />
         </ListItem>
         <ListItem>
           <ListItemText primary="Favorite Food" secondary={profileData.food_favor} />
@@ -88,11 +74,8 @@ const Profile = ({userInfo, auth}) => {
           <ListItemText primary="Favorite Exersice" secondary={profileData.exercise_favor} />
         </ListItem>
       </List>
-
-      <Button variant="outlined">Log Out</Button>
-
+      <Button variant="outlined" onClick={() => { signOut(auth) }}>Log Out</Button>
     </div>
   )
 }
-
 export default Profile;

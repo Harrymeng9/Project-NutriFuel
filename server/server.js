@@ -294,12 +294,15 @@ app.get('/searchfriend', (req, res, next) => {
 })
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
-  let user_id = 1;
-  let queryString = `SELECT * FROM users WHERE user_id = ${user_id};`;
-
-  db.pool.query(queryString, (err, result) => {
+  // let user_id = 'emumpQFafefQhZl2mg9UPEdk0RB3';
+  let queryString = `SELECT * FROM users WHERE user_id = $1`;
+  let queryValue=[req.query.uid]
+  console.log('req.query', req.query);
+  //req.query { uid: 'emumpQFafefQhZl2mg9UPEdk0RB3' }
+  db.pool.query(queryString, queryValue,(err, result) => {
     if (err) {
-      res.status(400).send('Error occurs once retrieve user' + err);
+      console.log('Error getting user data from databse', err)
+      res.status(400).send('Error getting user data from databse');
     } else {
       res.status(201).send(result.rows[0]);
     }
@@ -309,6 +312,7 @@ app.get('/profile', (req, res) => {
 
 app.put('/profile', (req, res) => {
   res.status(200).send(req.body);
+
 });
 
 

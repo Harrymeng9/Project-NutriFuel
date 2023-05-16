@@ -13,7 +13,6 @@ import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
-import Changepw from './profile/changepw.jsx';
 import socket from '../helpers/socket.js';
 import axios from 'axios';
 
@@ -143,8 +142,7 @@ const App = () => {
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth}/>} />
-          <Route path="/profileedit" element={<ProfileEdit />} />
-          <Route path="/changepw" element={<Changepw />} />
+          <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth}/>} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
           />} />
