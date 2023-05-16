@@ -83,8 +83,10 @@ const App = () => {
     onAuthStateChanged(auth, user => {
       console.log(user);
       if (user) {
-        userInfo.current.email = user.email;
-        userInfo.current.uid = user.uid;
+        if (!user.isAnonymous) {
+          userInfo.current.email = user.email;
+          userInfo.current.uid = user.uid;
+        }
         // user.getIdToken()
         //   .then((token) => {
         //     console.log(token);
