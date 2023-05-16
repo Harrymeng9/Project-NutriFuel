@@ -17,9 +17,6 @@ const Profile = ({ userInfo, auth }) => {
   const [friendsCount, setFriendsCount] = useState(0);
 
   useEffect(() => {
-    setUser(userInfo.current);
-      console.log('userInfo', userInfo);
-
     axios.get('/profile', { params: { "uid": userInfo.current.uid} })
       .then((data) => {
         setProfileData(data.data);
