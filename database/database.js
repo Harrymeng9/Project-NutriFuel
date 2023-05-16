@@ -25,6 +25,13 @@ const connectDb = async () => {
       time INT\
     )');
 
+    //Create table calories burned
+    await pool.query('CREATE TABLE IF NOT EXISTS caloriesBurned(\
+      calories_id SERIAL PRIMARY KEY,\
+      user_id TEXT,\
+      calories_burned INT\
+    )');
+
     // Create table nutrition
     await pool.query('CREATE TABLE IF NOT EXISTS nutrition(\
       nutrition_id SERIAL PRIMARY KEY,\
@@ -40,25 +47,9 @@ const connectDb = async () => {
       user_id TEXT PRIMARY KEY,\
       username TEXT,\
       photo TEXT,\
-      email TEXT,\
       password TEXT,\
       food_favor TEXT,\
-      exercise_favor TEXT,\
-      friends TEXT\
-    )');
-
-    // Create table usersgroups
-    await pool.query('CREATE TABLE IF NOT EXISTS usersgroups(\
-      id INT PRIMARY KEY,\
-      user_id INT,\
-      group_id INT\
-    )');
-
-    // Create table group
-    await pool.query('CREATE TABLE IF NOT EXISTS groups(\
-      group_id INT PRIMARY KEY,\
-      group_name TEXT,\
-      group_members TEXT\
+      exercise_favor TEXT\
     )');
 
     console.log('Connected to PostgreSQL');
@@ -74,13 +65,20 @@ connectDb();
 // Exercise
 const getExerciseLog = async (user_id) => {
   return new Promise(function (resolve, reject) {
-    pool.query('SELECT * FROM exerciseLog WHERE user_id=' + user_id, (err, result) => {
+    //console.log('user_id', user_id)
+    pool.query(`SELECT * FROM exercise WHERE user_id='${user_id}'`, (err, result) => {
       if (err) {
         console.log('getExerciseLog query err', err);
-        reject(err)
+        // reject(err)
+      } else {
+        var time = 0;
+        result.rows.map(entry => {
+          time = time + entry.time;
+        })
+        result.rows.push({time: time})
+        //console.log('exercises', result.rows)
+        resolve(result.rows);
       }
-      //console.log('exercises', result.rows)
-      resolve(result.rows);
     })
   })
 }
@@ -94,8 +92,34 @@ const postExercise = async (user_id, name, time) => {
       if (error) {
         reject(error)
       }
-      //console.log(results)
+      console.log(results)
       resolve(results.rows);
+    })
+  })
+};
+
+const postCaloriesBurned = async (user_id, calories_burned) => {
+  //console.log(user_id, calories_burned)
+  return new Promise(function(resolve, reject) {
+    pool.query(`select * from caloriesburned where user_id='${user_id}'`, (err, res) => {
+      //console.log(res.rows[0])
+      if (res.rows[0] === undefined) {
+        pool.query(`INSERT INTO caloriesBurned (user_id, calories_burned) VALUES ('${user_id}', ${calories_burned})`, (error, results) => {
+          if (error) {
+            reject(error)
+          }
+          //console.log('res', res.rows)
+          resolve(res.rows);
+        })
+      } else {
+        pool.query(`update caloriesburned set calories_burned=${calories_burned} where user_id='${user_id}'`, (errs, ress) => {
+          if (errs) {
+            reject(errs)
+          }
+          //console.log('ress', ress.rows)
+          resolve(ress.rows);
+        })
+      }
     })
   })
 }
@@ -104,6 +128,7 @@ const postExercise = async (user_id, name, time) => {
 module.exports = {
   getExerciseLog,
   postExercise,
+  postCaloriesBurned,
   pool
 }
 

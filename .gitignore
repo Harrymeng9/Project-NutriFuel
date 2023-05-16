@@ -1,9 +1,7 @@
 node_modules
 .env
-client/dist/bundle.js
-client/dist/login/bundle.js
-client/dist/signup/bundle.js
 package-lock.json
+client/dist/bundle.js
 
 server/authentication/serviceAccount.json
 client/src/components/firebase-config.js

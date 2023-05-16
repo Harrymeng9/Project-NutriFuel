@@ -13,7 +13,6 @@ import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
-import Changepw from './profile/changepw.jsx';
 import socket from '../helpers/socket.js';
 import axios from 'axios';
 
@@ -37,10 +36,14 @@ const App = () => {
     onAuthStateChanged(auth, user => {
       console.log(user);
       if (user) {
-        user.getIdToken()
-          .then((token) => {
-            console.log(token);
-          });
+        if (!user.isAnonymous) {
+          userInfo.current.email = user.email;
+          userInfo.current.uid = user.uid;
+        }
+        // user.getIdToken()
+        //   .then((token) => {
+        //     console.log(token);
+        //   });
       } else {
         navigate('/login');
       }
@@ -107,6 +110,8 @@ const App = () => {
   }
   function Dashboard({ auth, signOut }) {
 
+    console.log('current user', auth.currentUser);
+
     function goToExercisePage() {
       navigate('/exerciseMain');
     }
@@ -152,14 +157,13 @@ const App = () => {
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
-          <Route path="/exerciseMain" element={<ExerciseMain />} />
-          <Route path="/addExercise" element={<AddExercise />} />
+          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />
+          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth}/>} />
           <Route path="/nutrition" element={<Nutrition userInfo={userInfo} />} />
           <Route path="/nutritionList" element={<NutritionList />} />
           <Route path="/progress" element={<Progress />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
-          <Route path="/profileedit" element={<ProfileEdit />} />
-          <Route path="/changepw" element={<Changepw />} />
+          <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
             backtomain={backtomain} otherpage={otherpage}
