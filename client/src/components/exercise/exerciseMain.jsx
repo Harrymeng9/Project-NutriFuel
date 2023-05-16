@@ -7,10 +7,9 @@ import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 
 const ExerciseMain = (userInfo) => {
   const [exerciseLog, setExerciseLog] = useState([]);
-  const [timeEx, setTimeEx] =useState(0);
+  const [timeEx, setTimeEx] = useState(0);
 
   useEffect(() => {
-    console.log(userInfo.userInfo.current.uid)
     axios.get('/exerciseLog', { params: { user_id: userInfo.userInfo.current.uid } })
       .then(data => {
         //console.log('useEffect data', data);
@@ -24,7 +23,7 @@ const ExerciseMain = (userInfo) => {
   const navigate = useNavigate();
 
   function goToAddExercisePage() {
-    navigate('/addExercise', {state: {userInfo: userInfo}});
+    navigate('/addExercise');
     // ReactDOM.render(<AddExercise />, document.getElementById('app'));
   }
 

@@ -92,23 +92,23 @@ const postExercise = async (user_id, name, time) => {
       if (error) {
         reject(error)
       }
-      //console.log(results)
+      console.log(results)
       resolve(results.rows);
     })
   })
 };
 
 const postCaloriesBurned = async (user_id, calories_burned) => {
-  console.log(user_id, calories_burned)
+  //console.log(user_id, calories_burned)
   return new Promise(function(resolve, reject) {
     pool.query(`select * from caloriesburned where user_id='${user_id}'`, (err, res) => {
-      console.log(res.rows[0])
+      //console.log(res.rows[0])
       if (res.rows[0] === undefined) {
         pool.query(`INSERT INTO caloriesBurned (user_id, calories_burned) VALUES ('${user_id}', ${calories_burned})`, (error, results) => {
           if (error) {
             reject(error)
           }
-          console.log('res', res.rows)
+          //console.log('res', res.rows)
           resolve(res.rows);
         })
       } else {
@@ -116,7 +116,7 @@ const postCaloriesBurned = async (user_id, calories_burned) => {
           if (errs) {
             reject(errs)
           }
-          console.log('ress', ress.rows)
+          //console.log('ress', ress.rows)
           resolve(ress.rows);
         })
       }
