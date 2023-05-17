@@ -23,54 +23,6 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase-config.js'
 
 const App = () => {
-
-  const [newMessage, setnewMessage] = useState({ content: '', from: '' })
-  const [notification, setnotification] = useState(true)
-  const [friendrequest, setfriendrequest] = useState('')
-  const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
-
-  useEffect(() => {
-    socket.auth = { username: 'jack' }
-    const sessionID = localStorage.getItem("sessionID");
-    if (sessionID) {
-      socket.auth = { sessionID }
-    }
-    socket.connect()
-    socket.on("session", ({ sessionID, userID }) => {
-      socket.auth = { sessionID };
-      localStorage.setItem("sessionID", sessionID);
-      socket.userID = userID;
-    });
-    socket.on("private message", ({ content, from }) => {
-      console.log('ololo', content, from)
-      setnewMessage({
-        content: content,
-        from: from
-      })
-    });
-    socket.on('addfriend', ({ from }) => {
-      setfriendrequest(from)
-    })
-  })
-  const resetNewMessage = () => {
-    setnewMessage({ content: '', from: '' })
-  }
-  const turnoffnotification = () => {
-    setnotification(false)
-  }
-  const deny = () => {
-
-    setfriendrequest('')
-  }
-  const accept = () => {
-    socket.emit('makefriend', {
-      from: 'jack',
-      to: 'tom'
-    })
-    setfriendrequest('')
-
-  }
-
   const navigate = useNavigate();
 
   const userInfo = useRef({
@@ -80,6 +32,7 @@ const App = () => {
   });
 
   useEffect(() => {
+
     onAuthStateChanged(auth, user => {
       console.log(user);
       if (user) {
@@ -97,8 +50,64 @@ const App = () => {
     })
   }, []);
 
+  const [newMessage, setnewMessage] = useState({ content: '', from: '' })
+  const [notification, setnotification] = useState(false)
+  const [friendrequest, setfriendrequest] = useState('')
+  const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
+  const [message, setmessage] = useState(true)
+  const [mainpage, setmainpage] = useState(true)
+  useEffect(() => {
+    console.log('????', userInfo)
+    socket.auth = { username: userInfo.current.username }
+    const sessionID = localStorage.getItem("sessionID");
+    if (sessionID) {
+      socket.auth = { sessionID }
+    }
+    socket.connect()
+    socket.on("session", ({ sessionID, userID }) => {
+      socket.auth = { sessionID };
+      localStorage.setItem("sessionID", sessionID);
+      socket.userID = userID;
+    });
+    if (message) {
+      socket.on("private message", ({ content, from }) => {
+        setnotification(true)
+        setnewMessage({
+          content: content,
+          from: from
+        })
+      });
+    }
+    socket.on('addfriend', ({ from }) => {
+      setfriendrequest(from)
+    })
+  })
+  const resetNewMessage = () => {
+    setnewMessage({ content: '', from: '' })
+  }
+  const turnoffnotification = (n) => {
+    // let a = notification
+    setnotification(n)
+  }
 
 
+  const backtomain = (a) => {
+    navigate(a)
+  }
+  const deny = () => {
+
+    setfriendrequest('')
+  }
+  const otherpage = (a) => {
+    setmainpage(a)
+  }
+  const accept = () => {
+    socket.emit('makefriend', {
+      from: 'jack',
+      to: 'tom'
+    })
+    setfriendrequest('')
+  }
   function Dashboard({ auth, signOut }) {
 
     console.log('current user', auth.currentUser);
@@ -126,6 +135,7 @@ const App = () => {
     function goToChatPage() {
       navigate('/friendNChat');
     }
+
 
     return (
       <div>
@@ -155,10 +165,11 @@ const App = () => {
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
-            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest}
+            turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
+            backtomain={backtomain} otherpage={otherpage}
           />} />
         </Routes>
-        <div >{notification ? newMessage.content === '' ? null : <div >new message</div> : null
+        <div >{notification && mainpage ? <div >new message!!!!!</div> : null
         }</div>
         <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
           <button onClick={accept}>accept</button>
@@ -169,5 +180,6 @@ const App = () => {
     </div>
   );
 }
+//newMessage.content === '' ? null :
 
 export default App;
