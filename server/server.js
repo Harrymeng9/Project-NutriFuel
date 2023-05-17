@@ -146,10 +146,11 @@ app.post('/Nutrition', async (req, res) => {
 
 // GET REQUEST to retrieve all nutrition list for the current user
 app.get('/NutritionList', async (req, res) => {
+  var user_id = req.query.user_id;
   var date = req.query.selectedDate;
   const pacificTime = moment.tz(date, 'America/Los_Angeles').format('YYYY-MM-DD');
-  var queryString = `SELECT * FROM nutrition WHERE date::date = $1`;
-  var queryValues = [pacificTime];
+  var queryString = `SELECT * FROM nutrition WHERE user_id = $1 AND date::date = $2`;
+  var queryValues = [user_id, pacificTime];
 
   db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
@@ -210,10 +211,11 @@ app.put('/NutritionListDelete', async (req, res) => {
 
 // GET REQUEST to calculate the daily total calories for a specific date
 app.get('/dailyCalories', async (req, res) => {
+  var user_id = req.query.user_id;
   var date = req.query.selectedDate;
   const pacificTime = moment.tz(date, 'America/Los_Angeles').format('YYYY-MM-DD');
-  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE date =$1`;
-  var queryValues = [pacificTime];
+  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE user_id = $1 AND date::date = $2`;
+  var queryValues = [user_id, pacificTime];
 
   db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
@@ -282,7 +284,7 @@ io.on('connection', (socket) => {
       connected: session.connected,
     });
   })
-  
+
   console.log(users)
   socket.on('makefriend', ({ from, to }) => {
     console.log('999999')
@@ -354,9 +356,9 @@ app.get('/searchfriend', (req, res, next) => {
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
   let queryString = `SELECT * FROM users WHERE user_id = $1`;
-  let queryValue=[req.query.uid]
+  let queryValue = [req.query.uid]
   // console.log('req.query', req.query);
-  db.pool.query(queryString, queryValue,(err, result) => {
+  db.pool.query(queryString, queryValue, (err, result) => {
     if (err) {
       console.log('Error getting user data from databse', err)
       res.status(400).send('Error getting user data from databse');
@@ -369,9 +371,9 @@ app.get('/profile', (req, res) => {
 
 app.put('/profileedit', (req, res) => {
   let queryString = `update users set photo = $1,food_favor=$2,exercise_favor=$3 where user_id= $4;`;
-  let queryValue=[req.query.photo, req.query.food, req.query.exercise, req.query.uid]
+  let queryValue = [req.query.photo, req.query.food, req.query.exercise, req.query.uid]
   // console.log('req.query', req.query);
-  db.pool.query(queryString, queryValue,(err, result) => {
+  db.pool.query(queryString, queryValue, (err, result) => {
     if (err) {
       console.log(err)
       res.status(400).send('Error update users');
