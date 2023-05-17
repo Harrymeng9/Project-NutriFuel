@@ -54,24 +54,29 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
-  // db.getExerciseLog(req.query.user_id)
-  //   .then(data => {
-  //     console.log('get data', data)
-  //     res.status(200).send(data)
-  //   })
-  var user_id = req.query.user_id;
-  var queryString = `SELECT * FROM exercise WHERE user_id=${user_id}`;
-  db.pool.query(queryString, (err, result) => {
-    if (err) {
-      res.status(400).send('Error occurs once get exercise log' + err);
-    } else {
-      res.status(201).send(result.rows);
-    }
-  })
+  db.getExerciseLog(req.query.user_id)
+    .then(data => {
+      var time = data[data.length - 1].time
+      //console.log('get data', time)
+      axios({
+        method: 'GET',
+        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+        headers: {
+          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+        },
+        contentType: 'application/json'
+      })
+      .then(result => {
+        data.push({calories: result.data[0].total_calories})
+        //console.log('result', data)
+        db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
+        res.status(200).send(data)
+      })
+    })
 });
 
 app.post('/logExercise', async (req, res) => {
-  console.log('logExercise post req.bod', req.body.params)
+  //console.log('logExercise post req.bod', req.body.params)
   var user_id = req.body.params.user_id;
   var name = req.body.params.name;
   var time = req.body.params.time;
@@ -82,8 +87,8 @@ app.post('/logExercise', async (req, res) => {
   var date = new Date();
   date = date.toUTCString();
 
-  var queryString = `INSERT INTO exercise (user_id, exercise_name, date, time) VALUES($1,$2,$3,$4)`;
-  db.pool.query(queryString, [user_id, name, date, time], (err, result) => {
+  var queryString = `INSERT INTO exercise (user_id, date, exercise_name, time) VALUES($1,$2,$3,$4)`;
+  db.pool.query(queryString, [user_id, date, name, time], (err, result) => {
     if (err) {
       res.status(400).send('Error occues once add the exercise' + err);
     } else {
@@ -223,6 +228,7 @@ io.on('connection', (socket) => {
       connected: session.connected,
     });
   })
+  
   console.log(users)
   socket.on('makefriend', ({ from, to }) => {
     console.log('999999')
@@ -304,7 +310,7 @@ app.get('/profile', (req, res) => {
       res.status(201).send(result.rows[0]);
     }
   })
-  
+
 });
 
 app.put('/profileedit', (req, res) => {

@@ -5,13 +5,14 @@ import axios from 'axios';
 import ExerciseLogCard from './exerciseLogCard.jsx';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 
-const ExerciseMain = () => {
+const ExerciseMain = (userInfo) => {
   const [exerciseLog, setExerciseLog] = useState([]);
+  const [timeEx, setTimeEx] = useState(0);
 
   useEffect(() => {
-    axios.get('/exerciseLog', { params: { user_id: 1 } })
+    axios.get('/exerciseLog', { params: { user_id: userInfo.userInfo.current.uid } })
       .then(data => {
-        console.log('useEffect data', data);
+        //console.log('useEffect data', data);
         setExerciseLog(data.data);
       })
       .catch(err => {
@@ -24,21 +25,27 @@ const ExerciseMain = () => {
   function goToAddExercisePage() {
     navigate('/addExercise');
     // ReactDOM.render(<AddExercise />, document.getElementById('app'));
-  }
+  };
+
+  function goToDashboardPage() {
+    navigate('/');
+  };
 
   return (
     <div>
       <h1>Exercise Log</h1>
       <div>
         {exerciseLog.map(entry => {
+          //console.log(entry)
           return (
             <div className="exerciseLogCard" key={entry.id}>
-              <ExerciseLogCard exercise={entry} />
+              <ExerciseLogCard exercise={entry} userInfo={userInfo}/>
             </div>
           );
         })}
       </div>
       <button onClick={goToAddExercisePage}>Add Exercise</button>
+      <button onClick={goToDashboardPage}>Back to Dashboard</button>
     </div>
   )
 }
