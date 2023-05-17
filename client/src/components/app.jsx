@@ -159,9 +159,9 @@ const App = () => {
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />
           <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth}/>} />
-          <Route path="/nutrition" element={<Nutrition userInfo={userInfo} />} />
-          <Route path="/nutritionList" element={<NutritionList />} />
-          <Route path="/progress" element={<Progress />} />
+          <Route path="/nutrition" element={<Nutrition userInfo={userInfo} auth={auth} />} />
+          <Route path="/nutritionList" element={<NutritionList userInfo={userInfo} auth={auth}/>} />
+          <Route path="/progress" element={<Progress userInfo={userInfo} auth={auth}/>} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}

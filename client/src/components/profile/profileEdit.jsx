@@ -16,10 +16,7 @@ import Profile from './profile.jsx';
 const axios = require('axios');
 
 
-const ProfileEdit = () => {
-
-  const [profileData, setProfileData] = useState({});
-
+const ProfileEdit = ({auth, userInfo}) => {
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -27,16 +24,13 @@ const ProfileEdit = () => {
   const [exercise, setExercise] = useState("");
 
 
-
-
   useEffect(() => {
-    axios.get('/profile')
+    axios.get('/profile', { params: { "uid": userInfo.current.uid} })
       .then((data) => {
-        setProfileData(data.data);
-        setPhoto(data.data.photo);
         setUsername(data.data.username);
-        setFood(data.data.food_favor);
-        setExercise(data.data.exercise_favor);
+        setPhoto(data.data.photo ? data.data.photo:'');
+        setFood(data.data.food_favor ? data.data.food_favor:'');
+        setExercise(data.data.exercise_favor ? data.data.exercise_favor:'');
       })
       .catch((err) => {
         console.log('err', err);
@@ -47,21 +41,28 @@ const ProfileEdit = () => {
   const navigate = useNavigate();
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      username: username,
-      photo: photo,
-      food_favor: food,
-      exercise_favor: exercise,
+    let obj = {
+      uid:userInfo.current.uid,
+      photo: photo.toString(),
+      food: food,
+      exercise: exercise,
+    };
+    axios.put('/profileedit', null, { params: obj})
+    .then((data) => {
+      console.log('profile info updated');
+      navigate("/profile");
+    })
+    .catch((err) => {
+      console.log('prifile update error', err);
     });
-
-    navigate("/profile");
+    
   }
 
 
   return (
     <div>
       <Typography component="h1" variant="h5">
-        Profile Edit
+         Edit Profile
       </Typography>
       <Container component="main">
 
@@ -78,37 +79,21 @@ const ProfileEdit = () => {
             <TextField
               required
               multiline
-              id="outlined-basic" variant="outlined"
+              id="outlined-helperText" 
               label="avatar photo link"
               defaultValue={photo}
               onChange={e => setPhoto(e.target.value)}
             />
             <TextField
-              required
               multiline
-              id="outlined-basic" variant="outlined"
-              label="username"
-              defaultValue={username}
-              onChange={e => setUsername(e.target.value)}
-            />
-            <TextField
-              required
-              multiline
-              id="outlined-basic" variant="outlined"
-              label="email adress"
-              defaultValue={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-            <TextField
-              multiline
-              id="outlined-basic" variant="outlined"
+              id="outlined-helperText" 
               label="favorite food"
               defaultValue={food}
               onChange={e => setFood(e.target.value)}
             />
             <TextField
               multiline
-              id="outlined-basic" variant="outlined"
+              id="outlined-helperText" 
               label="favorite exercise"
               defaultValue={exercise}
               onChange={e => setExercise(e.target.value)}
