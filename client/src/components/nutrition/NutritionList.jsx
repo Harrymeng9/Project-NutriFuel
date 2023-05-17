@@ -18,9 +18,10 @@ const NutritionList = (props) => {
   const [nutritionList, setNutritionList] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date(date));
   const [dailyCalories, setDailyCalories] = useState(0);
+  var userId = props.userInfo.current.uid;
 
   useEffect(() => {
-    axios.get('/NutritionList', { params: { selectedDate: selectedDate } })
+    axios.get('/NutritionList', { params: { user_id: userId, selectedDate: selectedDate } })
       .then((data) => {
         setNutritionList(data.data);
       })
@@ -31,7 +32,7 @@ const NutritionList = (props) => {
 
   // Get the daily total calories for a specific date
   useEffect(() => {
-    axios.get('/dailyCalories', { params: { selectedDate: selectedDate } })
+    axios.get('/dailyCalories', { params: { user_id: userId, selectedDate: selectedDate } })
       .then((data) => {
         setDailyCalories(data.data);
       })
