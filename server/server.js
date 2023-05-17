@@ -299,11 +299,9 @@ app.get('/searchfriend', (req, res, next) => {
 })
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
-  // let user_id = 'emumpQFafefQhZl2mg9UPEdk0RB3';
   let queryString = `SELECT * FROM users WHERE user_id = $1`;
   let queryValue=[req.query.uid]
-  console.log('req.query', req.query);
-  //req.query { uid: 'emumpQFafefQhZl2mg9UPEdk0RB3' }
+  // console.log('req.query', req.query);
   db.pool.query(queryString, queryValue,(err, result) => {
     if (err) {
       console.log('Error getting user data from databse', err)
@@ -315,8 +313,19 @@ app.get('/profile', (req, res) => {
 
 });
 
-app.put('/profile', (req, res) => {
-  res.status(200).send(req.body);
+app.put('/profileedit', (req, res) => {
+  let queryString = `update users set photo = $1,food_favor=$2,exercise_favor=$3 where user_id= $4;`;
+  let queryValue=[req.query.photo, req.query.food, req.query.exercise, req.query.uid]
+  // console.log('req.query', req.query);
+  db.pool.query(queryString, queryValue,(err, result) => {
+    if (err) {
+      console.log(err)
+      res.status(400).send('Error update users');
+    } else {
+      res.status(204).send('users info updated');
+    }
+  })
+
 
 });
 
