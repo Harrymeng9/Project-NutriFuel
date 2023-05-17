@@ -40,7 +40,6 @@ const connectDb = async () => {
       user_id TEXT PRIMARY KEY,\
       username TEXT,\
       photo TEXT,\
-      password TEXT,\
       food_favor TEXT,\
       exercise_favor TEXT\
     )');
