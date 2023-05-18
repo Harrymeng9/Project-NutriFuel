@@ -1,14 +1,14 @@
 import React from 'react';
 
 const ExerciseLogCard = (props) => {
-  if (props.exercise.name !== undefined) {
+  if (props.exercise.exercise_name !== undefined) {
     return (
       <div>
-        Name - {props.exercise.name}<br></br>
+        Name - {props.exercise.exercise_name}<br></br>
         Time - {props.exercise.time}
       </div>
     )
-  } else {
+  } else if (props.exercise.calories !== undefined) {
     return (
       <div>
         Calories Burned = {props.exercise.calories}

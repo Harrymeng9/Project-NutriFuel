@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/fetcher')
+    .then(()=>{console.log('MongoDB has connected successfully.');})
+    .catch (error => console.log(error));
+
 
 
 const friendlistschma = new mongoose.Schema({

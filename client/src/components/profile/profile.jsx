@@ -17,12 +17,14 @@ const Profile = ({ userInfo, auth }) => {
   const [friendsCount, setFriendsCount] = useState(0);
 
   useEffect(() => {
-    axios.get('/profile', { params: { "uid": userInfo.current.uid} })
+    axios.get('/profile', { params: { "uid": userInfo.current.uid } })
       .then((data) => {
         setProfileData(data.data);
-        setFriendsCount(3)
-      }).then((data)=>{
-
+        setFriendsCount(0);
+        axios.get('/friendlist', { params: { "user": String(data.data.username) } })
+          .catch((err) => {
+            console.log('err', err);
+          });
       })
       .catch((err) => {
         console.log('err', err);

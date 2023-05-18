@@ -25,9 +25,6 @@ class SearchFriend extends Component {
             })
 
         })
-        // this.setState({
-        //     search: ''
-        // })
     }
     inputhandle = (e) => {
         this.setState({

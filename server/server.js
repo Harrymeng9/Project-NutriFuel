@@ -14,6 +14,7 @@ const axios = require('axios');
 const sessionStore = new InMemorySessionStore()
 const db = require('../database/database.js');
 
+const moment = require('moment-timezone');
 
 // const { default: socket } = require('../client/src/socket.js');
 // const httpServer = require('http').createServer()
@@ -54,24 +55,29 @@ app.get('/exercise', async (req, res) => {
 });
 
 app.get('/exerciseLog', async (req, res) => {
-  // db.getExerciseLog(req.query.user_id)
-  //   .then(data => {
-  //     console.log('get data', data)
-  //     res.status(200).send(data)
-  //   })
-  var user_id = req.query.user_id;
-  var queryString = `SELECT * FROM exercise WHERE user_id=${user_id}`;
-  db.pool.query(queryString, (err, result) => {
-    if (err) {
-      res.status(400).send('Error occurs once get exercise log' + err);
-    } else {
-      res.status(201).send(result.rows);
-    }
-  })
+  db.getExerciseLog(req.query.user_id)
+    .then(data => {
+      var time = data[data.length - 1].time
+      //console.log('get data', time)
+      axios({
+        method: 'GET',
+        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+        headers: {
+          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+        },
+        contentType: 'application/json'
+      })
+        .then(result => {
+          data.push({ calories: result.data[0].total_calories })
+          //console.log('result', data)
+          db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
+          res.status(200).send(data)
+        })
+    })
 });
 
 app.post('/logExercise', async (req, res) => {
-  console.log('logExercise post req.bod', req.body.params)
+  //console.log('logExercise post req.bod', req.body.params)
   var user_id = req.body.params.user_id;
   var name = req.body.params.name;
   var time = req.body.params.time;
@@ -82,8 +88,8 @@ app.post('/logExercise', async (req, res) => {
   var date = new Date();
   date = date.toUTCString();
 
-  var queryString = `INSERT INTO exercise (user_id, exercise_name, date, time) VALUES($1,$2,$3,$4)`;
-  db.pool.query(queryString, [user_id, name, date, time], (err, result) => {
+  var queryString = `INSERT INTO exercise (user_id, date, exercise_name, time) VALUES($1,$2,$3,$4)`;
+  db.pool.query(queryString, [user_id, date, name, time], (err, result) => {
     if (err) {
       res.status(400).send('Error occues once add the exercise' + err);
     } else {
@@ -140,9 +146,13 @@ app.post('/Nutrition', async (req, res) => {
 
 // GET REQUEST to retrieve all nutrition list for the current user
 app.get('/NutritionList', async (req, res) => {
+  var user_id = req.query.user_id;
+  var date = req.query.selectedDate;
+  const pacificTime = moment.tz(date, 'America/Los_Angeles').format('YYYY-MM-DD');
+  var queryString = `SELECT * FROM nutrition WHERE user_id = $1 AND date::date = $2`;
+  var queryValues = [user_id, pacificTime];
 
-  var queryString = `SELECT * FROM nutrition`;
-  db.pool.query(queryString, (err, result) => {
+  db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
       res.status(400).send('Error occurs once retrieve the nutrition list' + err);
     } else {
@@ -151,12 +161,45 @@ app.get('/NutritionList', async (req, res) => {
   })
 });
 
-// PUT REQUEST to delete a food from database
-app.put('/NutritionList', async (req, res) => {
+// PUT REQUEST to update a food qty and its total calories into the database
+app.put('/NutritionListUpdate', async (req, res) => {
+
+  var foodSearchName = req.body.food_name;
+  const options = {
+    method: 'GET',
+    url: 'https://nutrition-by-api-ninjas.p.rapidapi.com/v1/nutrition',
+    params: {
+      query: `${foodSearchName}`
+    },
+    headers: {
+      'X-RapidAPI-Key': '9ffc3f8601msh7e418407ae18e5ep117f98jsn209b51d30f62',
+      'X-RapidAPI-Host': 'nutrition-by-api-ninjas.p.rapidapi.com'
+    }
+  };
+
+  const response = await axios.request(options);
+  var unitCalories = response.data[0].calories;
 
   var nutrition_id = req.body.nutrition_id;
+  var adjustQty = req.body.qty;
+  var totalCalories = adjustQty * unitCalories;
+  const queryString = 'UPDATE nutrition SET qty = $1, total_calories = $2 WHERE nutrition_id = $3';
+  const queryValues = [adjustQty, totalCalories, nutrition_id];
 
+  db.pool.query(queryString, queryValues, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once delete the food' + err);
+    } else {
+      res.status(201).send('Update it');
+    }
+  })
+});
+
+// PUT REQUEST to delete a food from database
+app.put('/NutritionListDelete', async (req, res) => {
+  var nutrition_id = req.body.nutrition_id;
   var queryString = `DELETE FROM nutrition WHERE nutrition_id = ${nutrition_id}`;
+
   db.pool.query(queryString, (err, result) => {
     if (err) {
       res.status(400).send('Error occurs once delete the food' + err);
@@ -166,11 +209,29 @@ app.put('/NutritionList', async (req, res) => {
   })
 });
 
+// GET REQUEST to calculate the daily total calories for a specific date
+app.get('/dailyCalories', async (req, res) => {
+  var user_id = req.query.user_id;
+  var date = req.query.selectedDate;
+  const pacificTime = moment.tz(date, 'America/Los_Angeles').format('YYYY-MM-DD');
+  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE user_id = $1 AND date::date = $2`;
+  var queryValues = [user_id, pacificTime];
+
+  db.pool.query(queryString, queryValues, (err, result) => {
+    if (err) {
+      res.status(400).send('Error occurs once retrieve the total calories' + err);
+    } else {
+      res.status(201).send(result.rows[0].sum);
+    }
+  })
+});
+
 // GET REQUEST to retrieve all the total calories for progress page
 app.get('/ProgressNutrition', async (req, res) => {
   var specialDate = '05/12/2023';
   var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE date =$1`;
   var queryValues = [specialDate];
+
   db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
       res.status(400).send('Error occurs once retrieve the total calories' + err);
@@ -223,6 +284,7 @@ io.on('connection', (socket) => {
       connected: session.connected,
     });
   })
+
   console.log(users)
   socket.on('makefriend', ({ from, to }) => {
     console.log('999999')
@@ -293,12 +355,10 @@ app.get('/searchfriend', (req, res, next) => {
 })
 /*-----Profile---------------------------------------*/
 app.get('/profile', (req, res) => {
-  // let user_id = 'emumpQFafefQhZl2mg9UPEdk0RB3';
   let queryString = `SELECT * FROM users WHERE user_id = $1`;
-  let queryValue=[req.query.uid]
-  console.log('req.query', req.query);
-  //req.query { uid: 'emumpQFafefQhZl2mg9UPEdk0RB3' }
-  db.pool.query(queryString, queryValue,(err, result) => {
+  let queryValue = [req.query.uid]
+  // console.log('req.query', req.query);
+  db.pool.query(queryString, queryValue, (err, result) => {
     if (err) {
       console.log('Error getting user data from databse', err)
       res.status(400).send('Error getting user data from databse');
@@ -306,11 +366,22 @@ app.get('/profile', (req, res) => {
       res.status(201).send(result.rows[0]);
     }
   })
-  
+
 });
 
-app.put('/profile', (req, res) => {
-  res.status(200).send(req.body);
+app.put('/profileedit', (req, res) => {
+  let queryString = `update users set photo = $1,food_favor=$2,exercise_favor=$3 where user_id= $4;`;
+  let queryValue = [req.query.photo, req.query.food, req.query.exercise, req.query.uid]
+  // console.log('req.query', req.query);
+  db.pool.query(queryString, queryValue, (err, result) => {
+    if (err) {
+      console.log(err)
+      res.status(400).send('Error update users');
+    } else {
+      res.status(204).send('users info updated');
+    }
+  })
+
 
 });
 

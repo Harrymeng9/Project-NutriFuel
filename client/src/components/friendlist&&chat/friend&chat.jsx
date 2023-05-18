@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Competition from "./competition.jsx";
 import Chat from "./chat.jsx";
 import FriendList from "./friendlist.jsx";
+
 
 
 class FriendNChat extends Component {
@@ -9,15 +9,15 @@ class FriendNChat extends Component {
         super(props)
         this.state = {
             stat: 'friendlist',
-            recipient:''
+            recipient: ''
         }
     }
     componentDidMount() {
         // this.props.resetNewMessage()
-        this.props.turnoffnotification()
-        console.log('wwwww',this.props.newMessage)
+        this.props.turnoffnotification(false)
+        this.props.otherpage(false)
     }
-    componentDidUpdate(prevProps) { 
+    componentDidUpdate(prevProps) {
     }
     statHandler = (stat) => {
         stat = stat === 'BACK' ? 'friendlist' : stat
@@ -25,20 +25,30 @@ class FriendNChat extends Component {
             stat: stat
         })
     }
-    setrecipient=(recipient)=>{
+    setrecipient = (recipient) => {
         this.setState({
-            recipient:recipient
+            recipient: recipient
         })
+    }
+    // function goToDashboardPage() {
+    //     navigate('/');
+    //   };  const navigate = useNavigate();
+    backtodashboard = () => {
+        this.props.backtomain('/')
+        this.props.otherpage(true)
+        this.props.turnoffnotification(false)
     }
     render() {
         return (
             <div>
-                {this.state.stat === 'friendlist' ? <FriendList setrecipient={this.setrecipient} statHandler={this.statHandler} newMessage={this.props.newMessage} /> : null}
-                {this.state.stat === 'chat' ? <Chat newMessage={this.props.newMessage} recipient={this.state.recipient}/> : null}
-                {this.state.stat === 'compete' ? <Competition /> : null}
-                <button onClick={(e) => {
+                {this.state.stat === 'friendlist' ? <FriendList setrecipient={this.setrecipient} statHandler={this.statHandler} newMessage={this.props.newMessage} userInfo={this.props.userInfo} /> : null}
+                {this.state.stat === 'chat' ? <Chat resetNewMessage={this.props.resetNewMessage} newMessage={this.props.newMessage} recipient={this.state.recipient} userInfo={this.props.userInfo} turnoffnotification={this.props.turnoffnotification} /> : null}
+                {/* {this.state.stat === 'compete' ? <Competition /> : null} */}
+                {this.state.stat === 'friendlist' ? null : <button onClick={(e) => {
                     this.statHandler(e.target.innerHTML)
-                }}>BACK</button>
+                }}>BACK</button>}
+                <button onClick={this.backtodashboard}>dashboard</button>
+
             </div>
         )
     }

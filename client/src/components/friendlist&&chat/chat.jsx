@@ -17,6 +17,7 @@ class Chat extends Component {
                 chatHistory: [this.props.newMessage]
             })
         }
+        this.props.turnoffnotification(false)
         socket.on("private message", ({ content, from }) => {
             let a = this.state.chatHistory
             a.push({ content, from })
@@ -24,6 +25,7 @@ class Chat extends Component {
                 chatHistory: a
             })
         });
+        this.props.resetNewMessage()
     }
     textareahandle = (e) => {
         this.setState({
@@ -33,11 +35,11 @@ class Chat extends Component {
     send = () => {
         let a = this.state.chatHistory
         console.log(this.props.recipient)
-        a.push({ from: 'jack', content: this.state.content })
+        a.push({ from: this.props.userInfo.current.username, content: this.state.content })
         socket.emit('private message', {
             content: this.state.content,
             to: this.props.recipient,
-            from: 'jack'
+            from: this.props.userInfo.current.username
         })
         this.setState({
             chatHistory: a,
