@@ -29,7 +29,8 @@ const connectDb = async () => {
     await pool.query('CREATE TABLE IF NOT EXISTS caloriesBurned(\
       calories_id SERIAL PRIMARY KEY,\
       user_id TEXT,\
-      calories_burned INT\
+      calories_burned INT,\
+      date DATE\
     )');
 
     // Create table nutrition
@@ -63,9 +64,11 @@ connectDb();
 
 // Exercise
 const getExerciseLog = async (user_id) => {
+  var date = new Date();
+  date = date.toUTCString();
   return new Promise(function (resolve, reject) {
     //console.log('user_id', user_id)
-    pool.query(`SELECT * FROM exercise WHERE user_id='${user_id}'`, (err, result) => {
+    pool.query(`SELECT * FROM exercise WHERE user_id='${user_id}' and date='${date}'`, (err, result) => {
       if (err) {
         console.log('getExerciseLog query err', err);
         // reject(err)
@@ -99,11 +102,13 @@ const postExercise = async (user_id, name, time) => {
 
 const postCaloriesBurned = async (user_id, calories_burned) => {
   //console.log(user_id, calories_burned)
+  var date = new Date();
+  date = date.toUTCString();
   return new Promise(function(resolve, reject) {
-    pool.query(`select * from caloriesburned where user_id='${user_id}'`, (err, res) => {
+    pool.query(`select * from caloriesburned where user_id='${user_id}' and date='${date}'`, (err, res) => {
       //console.log(res.rows[0])
       if (res.rows[0] === undefined) {
-        pool.query(`INSERT INTO caloriesBurned (user_id, calories_burned) VALUES ('${user_id}', ${calories_burned})`, (error, results) => {
+        pool.query(`INSERT INTO caloriesBurned (user_id, calories_burned, date) VALUES ('${user_id}', ${calories_burned}, '${date}')`, (error, results) => {
           if (error) {
             reject(error)
           }
@@ -111,7 +116,7 @@ const postCaloriesBurned = async (user_id, calories_burned) => {
           resolve(res.rows);
         })
       } else {
-        pool.query(`update caloriesburned set calories_burned=${calories_burned} where user_id='${user_id}'`, (errs, ress) => {
+        pool.query(`UPDATE caloriesburned SET calories_burned=${calories_burned} WHERE user_id='${user_id}' and date='${date}'`, (errs, ress) => {
           if (errs) {
             reject(errs)
           }

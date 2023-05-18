@@ -1,4 +1,5 @@
 import React from 'react';
+import './exerciseCss.css';
 
 const ExerciseLogCard = (props) => {
   if (props.exercise.exercise_name !== undefined) {
