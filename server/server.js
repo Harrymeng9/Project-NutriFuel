@@ -228,15 +228,39 @@ app.get('/dailyCalories', async (req, res) => {
 
 // GET REQUEST to retrieve all the total calories for progress page
 app.get('/ProgressNutrition', async (req, res) => {
-  var specialDate = '05/12/2023';
-  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE date =$1`;
-  var queryValues = [specialDate];
+  var user_id = req.query.user_id;
+  var startDate = req.query.startDate;
+  var startDatePacificTime = moment.tz(startDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+  var endDate = req.query.endDate;
+  var endDatePacificTime = moment.tz(endDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+
+  var xDates = []; // start date to end date
+  var yCalories = []; // total calories for each date
+
+  var queryString = `
+  SELECT date, SUM(total_calories)
+  FROM nutrition
+  WHERE user_id = $1 AND date >= $2 AND date <= $3
+  GROUP BY date
+  ORDER BY date ASC` ;
+  var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
 
   db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
       res.status(400).send('Error occurs once retrieve the total calories' + err);
     } else {
-      res.status(201).send(result.rows);
+      for (var i = 0; i < result.rows.length; i++) {
+        var currDate = result.rows[i].date;
+        currDate = moment.tz(currDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+        xDates.push(currDate);
+        var currData = Number(result.rows[i].sum);
+        yCalories.push(currData);
+      }
+
+      var dateAndCalories = [];
+      dateAndCalories.push(xDates);
+      dateAndCalories.push(yCalories);
+      res.status(201).send(dateAndCalories);
     }
   })
 });

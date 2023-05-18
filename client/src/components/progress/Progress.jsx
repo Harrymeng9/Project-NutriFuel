@@ -11,6 +11,8 @@ import {
   LinearScale,
   PointElement
 } from 'chart.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 Chartjs.register(
   LineElement,
@@ -19,7 +21,19 @@ Chartjs.register(
   PointElement
 )
 
-const Progress = () => {
+const Progress = (props) => {
+  var userId = props.userInfo.current.uid;
+
+  var date = new Date();
+  const timeOptions = { timeZone: 'America/Los_Angeles' };
+  const pacificTime = date.toLocaleString('en-US', timeOptions);
+  date = pacificTime;
+
+  const [startDate, setStartDate] = useState(new Date(date));
+  const [endDate, setEndDate] = useState(new Date(date));
+  const [xDates, setXDates] = useState([]);
+  const [yCalories, setYCalories] = useState([]);
+
   // Navigate to the Dashboard page
   const navigate = useNavigate();
 
@@ -28,25 +42,37 @@ const Progress = () => {
   };
 
   useEffect(() => {
-    axios.get('/ProgressNutrition')
+    axios.get('/ProgressNutrition', { params: { user_id: userId, startDate: startDate, endDate: endDate } })
       .then((data) => {
-        console.log('test0', Number(data.data[0].sum));
-        // var sumCalories = data.data[0].sum;
-        // console.log('test1', sumCalories, typeof sumCalories);
-        // sumCalories = Number(sumCalories);
-        // console.log('test2', sumCalories, typeof sumCalories);
-        // console.log('works', data.data[0].sum, typeof data.data[0].sum);
+        setXDates(data.data[0]);
+        setYCalories(data.data[1]);
       })
       .catch((err) => {
-        console.log('not work');
+        console.log('Err', err);
       })
-  }, []);
+  }, [startDate, endDate]);
 
   const data = {
-    labels: ['05/12/2023', '05/13/2023', '05/14/2023', '05/15/2023'],
+    labels: xDates,
     datasets: [{
-      data: [8, 7, 9, 2]
+      data: yCalories
     }]
+  };
+
+  const handleStartDateChange = (date) => {
+    if (date.getTime() > endDate.getTime()) {
+      alert('Please enter a valid date');
+    } else {
+      setStartDate(date);
+    }
+  };
+
+  const handleEndDateChange = (date) => {
+    if (date.getTime() < startDate.getTime()) {
+      alert('Please enter a valid date');
+    } else {
+      setEndDate(date);
+    }
   };
 
   const options = [];
@@ -54,6 +80,20 @@ const Progress = () => {
   return (
     <div>
       <h2>Progress Section</h2>
+      <div>Please select the start date</div>
+      <div>
+        <DatePicker
+          selected={startDate}
+          onChange={handleStartDateChange}
+          dateFormat="yyyy-MM-dd" />
+      </div>
+      <div>Please select the end date</div>
+      <div>
+        <DatePicker
+          selected={endDate}
+          onChange={handleEndDateChange}
+          dateFormat="yyyy-MM-dd" />
+      </div>
       <div>
         <Line data={data} options={options}></Line>
       </div>
