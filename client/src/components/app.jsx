@@ -147,10 +147,9 @@ const App = () => {
         <div><button onClick={goToProgressPage}>Progress</button></div>
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
         <div><button onClick={goToChatPage}>Friends/Chat</button></div>
-        <div><button onClick={() => { signOut(auth) }}>Sign out</button></div>
+        <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div>
         <Navigation auth={auth} signOut={signOut} />
 
-        <div><button onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Sign out</button></div>
       </div>
     );
   }
@@ -159,14 +158,14 @@ const App = () => {
     <div>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo}/>} />
+          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
-          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />
-          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth}/>} />
+          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth} />} />
+          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth} />} />
           <Route path="/nutrition" element={<Nutrition userInfo={userInfo} auth={auth} />} />
-          <Route path="/nutritionList" element={<NutritionList userInfo={userInfo} auth={auth}/>} />
-          <Route path="/progress" element={<Progress userInfo={userInfo} auth={auth}/>} />
+          <Route path="/nutritionList" element={<NutritionList userInfo={userInfo} auth={auth} />} />
+          <Route path="/progress" element={<Progress userInfo={userInfo} auth={auth} />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
