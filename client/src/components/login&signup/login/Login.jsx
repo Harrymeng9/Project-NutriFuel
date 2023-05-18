@@ -2,14 +2,20 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import {useRef, useState} from 'react';
 
-import TextBox from '../components/interactables/TextBox.jsx'
-import Button from '../components/interactables/Button.jsx'
+//import TextBox from '../components/interactables/TextBox.jsx'
+//import Button from '../components/interactables/Button.jsx'
+
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+
 
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword , signInAnonymously } from "firebase/auth";
 
 
-import '../style.css';
+//import '../style.css';
 
 export default function Login ({userInfo, auth}){
 
@@ -17,9 +23,11 @@ export default function Login ({userInfo, auth}){
 
   return (
     <>
-      <Title/>
-      <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
-      <Error showError={showError}/>
+      <Stack spacing={12} justifyContent="space-between">
+        <Title/>
+        <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
+        <Error showError={showError}/>
+      </Stack>
     </>
   )
 }
@@ -65,12 +73,25 @@ var LoginSection = function ({userInfo, auth, setShowError}){
 
   const navigate = useNavigate();
   return (
-    <div id="LoginSection" className="col-3">
-      <TextBox defaultText={'Email'} onChange={(e)=>{loginInfo.current.email = e.target.value}}/>
-      <TextBox defaultText={'Password'} onChange={(e)=>{loginInfo.current.password = e.target.value}} isPassword={true}/>
-      <Button text={'Login'} onClick={sendLogin}/>
-      <Button text={'Create Account'} onClick={()=>{navigate('/signup')}}/>
-      <Button text={'Login as Guest'} onClick={loginAsGuest}/>
+    <div id="LoginSection" >
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TextField fullWidth label={'Email'} onChange={(e)=>{loginInfo.current.email = e.target.value}}/>
+        </Grid>
+        <Grid item xs={12}>
+        <TextField fullWidth label={'Password'} onChange={(e)=>{loginInfo.current.password = e.target.value}} type={'password'}/>
+        </Grid>
+        <Grid item xs={12}>
+          <Button variant='contained' onClick={sendLogin}>Login</Button>
+        </Grid>
+        <Grid item l={6}>
+          <Button variant='contained' onClick={()=>{navigate('/signup')}}>Create Account</Button>
+        </Grid>
+        <Grid item l={6}>
+          <Button variant='contained' onClick={loginAsGuest}>Login as Guest</Button>
+        </Grid>
+      </Grid>
+
 
     </div>
   );
