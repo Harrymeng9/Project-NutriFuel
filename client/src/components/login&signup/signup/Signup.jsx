@@ -56,29 +56,36 @@ var SignupSection = function ({userInfo, auth, setShowError}){
 
     //check if the passwords match
     if (signupInfo.current.password === signupInfo.current.confirmPassword) {
-      //create the user with firebase
-      createUserWithEmailAndPassword(auth, signupInfo.current.email, signupInfo.current.password)
-        .then((userCrediential)=>{
-          //update the userInfo Ref
-          userInfo.current = {
-            uid: userCrediential.user.uid,
-            email: signupInfo.current.email,
-            username: signupInfo.current.username
-          };
-          //send the uid and username to our server to save
-          axios.post('/signup', {
-            uid: userInfo.current.uid,
-            username: signupInfo.current.username
+
+      if (signupInfo.current.username !== '') {
+
+        //create the user with firebase
+        createUserWithEmailAndPassword(auth, signupInfo.current.email, signupInfo.current.password)
+          .then((userCrediential)=>{
+            //update the userInfo Ref
+            userInfo.current = {
+              uid: userCrediential.user.uid,
+              email: signupInfo.current.email,
+              username: signupInfo.current.username
+            };
+            //send the uid and username to our server to save
+            axios.post('/signup', {
+              uid: userInfo.current.uid,
+              username: signupInfo.current.username
+            })
+              .then(()=>{
+                console.log('running');
+                navigate('/');
+              });
           })
-            .then(()=>{
-              console.log('running');
-              navigate('/');
-            });
-        })
-        .catch((error)=>{
-          console.log(error);
-          setShowError('password is too weak');
-        });
+          .catch((error)=>{
+            console.log(error);
+            setShowError('password is too weak');
+          });
+      } else {
+        setShowError('please enter a username');
+
+      }
     } else {
       setShowError('passwords do not match');
 

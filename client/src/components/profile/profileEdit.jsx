@@ -16,7 +16,7 @@ import Profile from './profile.jsx';
 const axios = require('axios');
 
 
-const ProfileEdit = ({auth, userInfo}) => {
+const ProfileEdit = ({ auth, userInfo }) => {
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -25,12 +25,12 @@ const ProfileEdit = ({auth, userInfo}) => {
 
 
   useEffect(() => {
-    axios.get('/profile', { params: { "uid": userInfo.current.uid} })
+    axios.get('/profile', { params: { "uid": userInfo.current.uid } })
       .then((data) => {
         setUsername(data.data.username);
-        setPhoto(data.data.photo ? data.data.photo:'');
-        setFood(data.data.food_favor ? data.data.food_favor:'');
-        setExercise(data.data.exercise_favor ? data.data.exercise_favor:'');
+        setPhoto(data.data.photo ? data.data.photo : '');
+        setFood(data.data.food_favor ? data.data.food_favor : '');
+        setExercise(data.data.exercise_favor ? data.data.exercise_favor : '');
       })
       .catch((err) => {
         console.log('err', err);
@@ -42,27 +42,27 @@ const ProfileEdit = ({auth, userInfo}) => {
   const onSubmit = (e) => {
     e.preventDefault();
     let obj = {
-      uid:userInfo.current.uid,
+      uid: userInfo.current.uid,
       photo: photo.toString(),
       food: food,
       exercise: exercise,
     };
-    axios.put('/profileedit', null, { params: obj})
-    .then((data) => {
-      console.log('profile info updated');
-      navigate("/profile");
-    })
-    .catch((err) => {
-      console.log('prifile update error', err);
-    });
-    
+    axios.put('/profileedit', null, { params: obj })
+      .then((data) => {
+        console.log('profile info updated');
+        navigate("/profile");
+      })
+      .catch((err) => {
+        console.log('prifile update error', err);
+      });
+
   }
 
 
   return (
     <div>
       <Typography component="h1" variant="h5">
-         Edit Profile
+        Edit Profile
       </Typography>
       <Container component="main">
 
@@ -70,31 +70,33 @@ const ProfileEdit = ({auth, userInfo}) => {
         <Box
           component="form"
           sx={{
-            '& .MuiTextField-root': { m: 1, width: '20ch' },
+            '& .MuiTextField-root': { m: 1, width: '250' },
           }}
           noValidate
           autoComplete="off"
         >
           <div>
             <TextField
-              required
               multiline
-              id="outlined-helperText" 
+              variant="filled"
               label="avatar photo link"
+              InputLabelProps={{ shrink: true }}
               defaultValue={photo}
               onChange={e => setPhoto(e.target.value)}
             />
             <TextField
               multiline
-              id="outlined-helperText" 
+              variant="filled"
               label="favorite food"
+              InputLabelProps={{ shrink: true }}
               defaultValue={food}
               onChange={e => setFood(e.target.value)}
             />
             <TextField
               multiline
-              id="outlined-helperText" 
+              variant="filled"
               label="favorite exercise"
+              InputLabelProps={{ shrink: true }}
               defaultValue={exercise}
               onChange={e => setExercise(e.target.value)}
             />
@@ -106,9 +108,8 @@ const ProfileEdit = ({auth, userInfo}) => {
           <div>
             <Button
               type="submit"
-              variant="contained"
-              color="primary"
               className="submit"
+              variant="outlined"
               onClick={onSubmit}
             >
               Update

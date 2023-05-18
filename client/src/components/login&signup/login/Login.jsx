@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -23,11 +24,12 @@ export default function Login ({userInfo, auth}){
 
   return (
     <>
-      <Stack spacing={12} justifyContent="space-between">
+    <Stack spacing={12} justifyContent="space-between">
         <Title/>
         <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
         <Error showError={showError}/>
       </Stack>
+      
     </>
   )
 }
@@ -35,7 +37,7 @@ export default function Login ({userInfo, auth}){
 
 var Title = function (){
   return (
-    <div id='Title'>NutriFuel</div>
+    <div id='Title'>NutriFuel!</div>
   );
 };
 
