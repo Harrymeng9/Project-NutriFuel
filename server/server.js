@@ -58,21 +58,31 @@ app.get('/exerciseLog', async (req, res) => {
   db.getExerciseLog(req.query.user_id)
     .then(data => {
       var time = data[data.length - 1].time
-      //console.log('get data', time)
-      axios({
-        method: 'GET',
-        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
-        headers: {
-          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-        },
-        contentType: 'application/json'
-      })
+      if (time === 0) {
+        data.push({ calories: 0 })
+        res.status(200).send(data)
+      } else {
+        axios({
+          method: 'GET',
+          url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+          headers: {
+            'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+          },
+          contentType: 'application/json'
+        })
         .then(result => {
+          //console.log('result', result.data)
           data.push({ calories: result.data[0].total_calories })
           //console.log('result', data)
           db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
           res.status(200).send(data)
         })
+        .catch(err => {
+          if (err) {
+            console.log('exercise log server err', err)
+          }
+        })
+      }
     })
 });
 
