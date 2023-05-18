@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Navigation from '../navigation/navigation.jsx';
 
 Chartjs.register(
   LineElement,
@@ -33,13 +34,6 @@ const Progress = (props) => {
   const [endDate, setEndDate] = useState(new Date(date));
   const [xDates, setXDates] = useState([]);
   const [yCalories, setYCalories] = useState([]);
-
-  // Navigate to the Dashboard page
-  const navigate = useNavigate();
-
-  function goToDashboardPage() {
-    navigate('/');
-  };
 
   useEffect(() => {
     axios.get('/ProgressNutrition', { params: { user_id: userId, startDate: startDate, endDate: endDate } })
@@ -97,7 +91,7 @@ const Progress = (props) => {
       <div>
         <Line data={data} options={options}></Line>
       </div>
-      <button onClick={goToDashboardPage}>Dashboard</button>
+      <Navigation />
     </div>
   )
 }
