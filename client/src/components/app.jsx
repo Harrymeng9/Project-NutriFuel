@@ -110,7 +110,7 @@ const App = () => {
     })
     setfriendrequest('')
   }
-  function Dashboard({ auth, signOut }) {
+  function Dashboard({ auth, signOut, userInfo }) {
 
     console.log('current user', auth.currentUser);
 
@@ -150,6 +150,7 @@ const App = () => {
         <div><button onClick={() => { signOut(auth) }}>Sign out</button></div>
         <Navigation auth={auth} signOut={signOut} />
 
+        <div><button onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Sign out</button></div>
       </div>
     );
   }
@@ -158,7 +159,7 @@ const App = () => {
     <div>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} />} />
+          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo}/>} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />

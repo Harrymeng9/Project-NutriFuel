@@ -3,10 +3,13 @@ import React from 'react';
 import {useRef, useState} from 'react';
 
 
-import TextBox from '../components/interactables/TextBox.jsx'
-import Button from '../components/interactables/Button.jsx'
+// import TextBox from '../components/interactables/TextBox.jsx'
+// import Button from '../components/interactables/Button.jsx'
 
-import '../style.css';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
+// import '../style.css';
 
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -85,11 +88,11 @@ var SignupSection = function ({userInfo, auth, setShowError}){
 
   return (
     <div id="SigninSection" >
-      <TextBox defaultText={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}}/>
-      <TextBox defaultText={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}}/>
-      <TextBox defaultText={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} isPassword={true}/>
-      <TextBox defaultText={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} isPassword={true}/>
-      <Button text={'Signup'} onClick={sendSignupInfo}/>
+      <TextField label={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}}/>
+      <TextField label={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}}/>
+      <TextField label={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} type="password"/>
+      <TextField label={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} type="password"/>
+      <Button variant='contained' onClick={sendSignupInfo}>Signup</Button>
     </div>
   );
 };

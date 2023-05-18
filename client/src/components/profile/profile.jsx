@@ -73,7 +73,7 @@ const Profile = ({ userInfo, auth }) => {
           <ListItemText primary="Favorite Exersice" secondary={profileData.exercise_favor} />
         </ListItem>
       </List>
-      <Button variant="outlined" onClick={() => { signOut(auth) }}>Log Out</Button>
+      <Button variant="outlined" onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Log Out</Button>
     </div>
   )
 }
