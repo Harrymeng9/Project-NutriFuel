@@ -51,8 +51,8 @@ class Chat extends Component {
             method: 'get',
             url: 'http://localhost:3000/getchathistory',
             params: {
-                sender: 'jack',
-                recipient: 'tom'
+                sender: this.props.userInfo.current.username,
+                recipient: this.props.recipient
             }
         }).then((a) => {
             a = a.data

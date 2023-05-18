@@ -4,6 +4,7 @@ import Friend from "./subcomponents/friend.jsx";
 import SearchFriend from "./searchfriend.jsx";
 import axios from "axios";
 import socket from "../../helpers/socket.js";
+import { List, ListItem,Divider} from "@mui/material";
 
 {/* <ListItemButton component="a" href="#simple-list">
   <ListItemText primary="Spam" />
@@ -21,7 +22,7 @@ class FriendList extends Component {
         this.setState({
             newMessage: this.props.newMessage
         })
-        console.log("username",this.props.userInfo.current.username)
+        console.log("username", this.props.userInfo.current.username)
         axios(`http://localhost:3000/friendlist?user=${this.props.userInfo.current.username}`).then((friendlist) => {
 
             this.setState({
@@ -46,17 +47,18 @@ class FriendList extends Component {
     render() {
         return (<div>
             <SearchFriend />
-            <ul>
+            <List>
+                <Divider/>
                 {this.state.friendlist.length === 0 ? null : this.state.friendlist.map((friend1) => {
-                    return <li><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
+                    return <ListItem divider={true}><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
                         friend1 === this.state.newMessage.from ? this.state.newMessage : { content: '', from: '' }
                     }
                         clearnewmessage={this.clearnewmessage}
                         setrecipient={this.props.setrecipient} />
                         {/* {friend1 === this.state.newMessage.from ? <div>new message</div> : null} */}
-                    </li>
+                    </ListItem>
                 })}
-            </ul>
+            </List>
         </div>)
 
 
