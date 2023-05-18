@@ -3,10 +3,13 @@ import React from 'react';
 import {useRef, useState} from 'react';
 
 
-import TextBox from '../components/interactables/TextBox.jsx'
-import Button from '../components/interactables/Button.jsx'
+// import TextBox from '../components/interactables/TextBox.jsx'
+// import Button from '../components/interactables/Button.jsx'
 
-import '../style.css';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
+// import '../style.css';
 
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -53,29 +56,36 @@ var SignupSection = function ({userInfo, auth, setShowError}){
 
     //check if the passwords match
     if (signupInfo.current.password === signupInfo.current.confirmPassword) {
-      //create the user with firebase
-      createUserWithEmailAndPassword(auth, signupInfo.current.email, signupInfo.current.password)
-        .then((userCrediential)=>{
-          //update the userInfo Ref
-          userInfo.current = {
-            uid: userCrediential.user.uid,
-            email: signupInfo.current.email,
-            username: signupInfo.current.username
-          };
-          //send the uid and username to our server to save
-          axios.post('/signup', {
-            uid: userInfo.current.uid,
-            username: signupInfo.current.username
+
+      if (signupInfo.current.username !== '') {
+
+        //create the user with firebase
+        createUserWithEmailAndPassword(auth, signupInfo.current.email, signupInfo.current.password)
+          .then((userCrediential)=>{
+            //update the userInfo Ref
+            userInfo.current = {
+              uid: userCrediential.user.uid,
+              email: signupInfo.current.email,
+              username: signupInfo.current.username
+            };
+            //send the uid and username to our server to save
+            axios.post('/signup', {
+              uid: userInfo.current.uid,
+              username: signupInfo.current.username
+            })
+              .then(()=>{
+                console.log('running');
+                navigate('/');
+              });
           })
-            .then(()=>{
-              console.log('running');
-              navigate('/');
-            });
-        })
-        .catch((error)=>{
-          console.log(error);
-          setShowError('password is too weak');
-        });
+          .catch((error)=>{
+            console.log(error);
+            setShowError('password is too weak');
+          });
+      } else {
+        setShowError('please enter a username');
+
+      }
     } else {
       setShowError('passwords do not match');
 
@@ -85,11 +95,11 @@ var SignupSection = function ({userInfo, auth, setShowError}){
 
   return (
     <div id="SigninSection" >
-      <TextBox defaultText={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}}/>
-      <TextBox defaultText={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}}/>
-      <TextBox defaultText={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} isPassword={true}/>
-      <TextBox defaultText={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} isPassword={true}/>
-      <Button text={'Signup'} onClick={sendSignupInfo}/>
+      <TextField label={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}}/>
+      <TextField label={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}}/>
+      <TextField label={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} type="password"/>
+      <TextField label={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} type="password"/>
+      <Button variant='contained' onClick={sendSignupInfo}>Signup</Button>
     </div>
   );
 };
