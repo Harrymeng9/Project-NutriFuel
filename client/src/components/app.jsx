@@ -13,6 +13,8 @@ import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
+import Navigation from './navigation/navigation.jsx';
+
 import socket from '../helpers/socket.js';
 import axios from 'axios';
 
@@ -146,6 +148,8 @@ const App = () => {
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
         <div><button onClick={goToChatPage}>Friends/Chat</button></div>
         <div><button onClick={() => { signOut(auth) }}>Sign out</button></div>
+        <Navigation auth={auth} signOut={signOut} />
+
       </div>
     );
   }
