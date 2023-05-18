@@ -12,7 +12,7 @@ class Chat extends Component {
         }
     }
     componentDidMount() {
-        if (this.props.newMessage.content !== '') {
+        if (this.props.newMessage.from === this.props.recipient) {
             this.setState({
                 chatHistory: [this.props.newMessage]
             })

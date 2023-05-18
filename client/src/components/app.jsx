@@ -28,7 +28,7 @@ const App = () => {
   const userInfo = useRef({
     uid: null,
     email: null,
-    username: null,
+    username: 'jack',
   });
 
   useEffect(() => {

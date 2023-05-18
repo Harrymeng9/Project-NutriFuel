@@ -43,7 +43,6 @@ class FriendNChat extends Component {
             <div>
                 {this.state.stat === 'friendlist' ? <FriendList setrecipient={this.setrecipient} statHandler={this.statHandler} newMessage={this.props.newMessage} userInfo={this.props.userInfo} /> : null}
                 {this.state.stat === 'chat' ? <Chat resetNewMessage={this.props.resetNewMessage} newMessage={this.props.newMessage} recipient={this.state.recipient} userInfo={this.props.userInfo} turnoffnotification={this.props.turnoffnotification} /> : null}
-                {/* {this.state.stat === 'compete' ? <Competition /> : null} */}
                 {this.state.stat === 'friendlist' ? null : <button onClick={(e) => {
                     this.statHandler(e.target.innerHTML)
                 }}>BACK</button>}

@@ -5,7 +5,9 @@ import SearchFriend from "./searchfriend.jsx";
 import axios from "axios";
 import socket from "../../helpers/socket.js";
 
-
+{/* <ListItemButton component="a" href="#simple-list">
+  <ListItemText primary="Spam" />
+</ListItemButton> */}
 
 class FriendList extends Component {
     constructor(props) {
@@ -34,6 +36,7 @@ class FriendList extends Component {
             })
         })
     }
+
 
     clearnewmessage = () => {
         this.setState({

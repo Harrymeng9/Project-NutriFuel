@@ -2,6 +2,7 @@ import React from "react";
 import { Component } from "react";
 import axios from "axios";
 import socket from "../../helpers/socket";
+import Button from '@mui/material/Button';
 
 class SearchFriend extends Component {
     constructor(props) {
@@ -51,14 +52,14 @@ class SearchFriend extends Component {
             <input type="text" value={this.state.search} onChange={
                 this.inputhandle
             } />
-            <button onClick={this.search}>search friend</button>
+            <Button variant="contained" onClick={this.search}>search friend</Button>
             {this.state.searchresult === '' ? null : <div>
                 {this.state.searchresult}
                 {this.state.searchresult === 'no such person' ? null : <div>
-                    <button onClick={this.addfriendhandle}>add friend</button>
+                    <Button onClick={this.addfriendhandle}>add friend</Button>
                     
                 </div>}
-                <button onClick={this.handlecancel}>cancel</button>
+                <Button onClick={this.handlecancel}>cancel</Button>
             </div>}
         </div>)
     }

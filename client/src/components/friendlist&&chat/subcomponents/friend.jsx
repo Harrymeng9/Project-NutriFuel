@@ -27,7 +27,6 @@ class Friend extends Component {
     }
     changestate = (e) => {
         if (e.target.innerHTML === 'chat') {
-            console.log('??????chat')
             this.props.clearnewmessage()
             this.props.setrecipient(this.props.friend)
             this.setState({ newMessage: { content: '', from: '' } })
@@ -37,12 +36,12 @@ class Friend extends Component {
     }
     render() {
         return <div>{this.props.friend}
-            <button onClick={this.changestate}>compete</button>
-            <button onClick={this.changestate} friend={this.props.friend}>chat</button>
+            {/* <button onClick={this.changestate}>compete</button> */}
+            <button onClick={this.changestate} >chat</button>
             {this.state.newMessage.content !== '' ? <span>new message</span> : null}
         </div>
 
     }
 }
-
+//friend={this.props.friend}
 export default Friend
