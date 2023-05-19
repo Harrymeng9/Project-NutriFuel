@@ -58,21 +58,31 @@ app.get('/exerciseLog', async (req, res) => {
   db.getExerciseLog(req.query.user_id)
     .then(data => {
       var time = data[data.length - 1].time
-      //console.log('get data', time)
-      axios({
-        method: 'GET',
-        url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
-        headers: {
-          'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
-        },
-        contentType: 'application/json'
-      })
-        .then(result => {
-          data.push({ calories: result.data[0].total_calories })
-          //console.log('result', data)
-          db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
-          res.status(200).send(data)
+      if (time === 0) {
+        data.push({ calories: 0 })
+        res.status(200).send(data)
+      } else {
+        axios({
+          method: 'GET',
+          url: 'https://api.api-ninjas.com/v1/caloriesburned?activity=building&duration=' + time,
+          headers: {
+            'X-Api-Key': 'v9CqesqX5ys6rlModj/Riw==qC0eVhKYsz1MF3tN'
+          },
+          contentType: 'application/json'
         })
+          .then(result => {
+            //console.log('result', result.data)
+            data.push({ calories: result.data[0].total_calories })
+            //console.log('result', data)
+            db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
+            res.status(200).send(data)
+          })
+          .catch(err => {
+            if (err) {
+              console.log('exercise log server err', err)
+            }
+          })
+      }
     })
 });
 
@@ -134,15 +144,32 @@ app.post('/Nutrition', async (req, res) => {
   var qty = req.body.qty;
   var total_calories = req.body.totalCalories;
 
-  var queryString = `INSERT INTO nutrition (user_id, date, food_name, qty, total_calories) VALUES($1,$2,$3,$4,$5)`;
-  db.pool.query(queryString, [user_id, date, food_name, qty, total_calories], (err, result) => {
+  var queryStringExistFood = `SELECT nutrition_id FROM nutrition WHERE user_id = $1 AND date = $2 AND food_name = $3`;
+  var queryValuesExistFood = [user_id, date, food_name];
+
+  db.pool.query(queryStringExistFood, queryValuesExistFood, (err, result) => {
     if (err) {
       res.status(400).send('Error occues once add the food' + err);
     } else {
-      res.status(201).send('Add the food successfully!');
+      // If the food does not exist in the database, then insert a new record. Otherwise, update the existing data
+      if (result.rows.length === 0) {
+        var queryString = `INSERT INTO nutrition (user_id, date, food_name, qty, total_calories) VALUES($1,$2,$3,$4,$5)`;
+        var queryValues = [user_id, date, food_name, qty, total_calories];
+      } else {
+        var nutrition_id = result.rows[0].nutrition_id;
+        var queryString = `UPDATE nutrition SET qty = qty + $1, total_calories = total_calories + $2 WHERE nutrition_id = $3`;
+        var queryValues = [qty, total_calories, nutrition_id];
+      }
+      db.pool.query(queryString, queryValues, (err, result) => {
+        if (err) {
+          res.status(400).send('Error occues once add the food' + err);
+        } else {
+          res.status(201).send('Add the food successfully!');
+        }
+      })
     }
   })
-});
+})
 
 // GET REQUEST to retrieve all nutrition list for the current user
 app.get('/NutritionList', async (req, res) => {
@@ -228,15 +255,73 @@ app.get('/dailyCalories', async (req, res) => {
 
 // GET REQUEST to retrieve all the total calories for progress page
 app.get('/ProgressNutrition', async (req, res) => {
-  var specialDate = '05/12/2023';
-  var queryString = `SELECT SUM(total_calories) FROM nutrition WHERE date =$1`;
-  var queryValues = [specialDate];
+  var user_id = req.query.user_id;
+  var startDate = req.query.startDate;
+  var startDatePacificTime = moment.tz(startDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+  var endDate = req.query.endDate;
+  var endDatePacificTime = moment.tz(endDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+
+  var xDates = []; // start date to end date
+  var yCalories = []; // total calories for each date
+
+  // var queryString = `
+  // SELECT date, SUM(calories_burned)
+  // FROM caloriesburned
+  // WHERE user_id = $1 AND date >= $2 AND date <= $3
+  // GROUP BY date
+  // ORDER BY date ASC`;
+  // var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
+
+  // var queryString = `
+  // SELECT date, SUM(total_calories)
+  // FROM nutrition
+  // WHERE user_id = $1 AND date >= $2 AND date <= $3
+  // GROUP BY date
+  // ORDER BY date ASC` ;
+  // var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
+
+  var queryString =
+    `
+    SELECT
+      COALESCE(cb.date, n.date) AS date,
+      COALESCE(cb.sum_calories_burned, 0) AS sum_calories_burned,
+      COALESCE(n.sum_total_calories, 0) AS sum_total_calories
+    FROM
+    (
+      SELECT date, SUM(calories_burned) AS sum_calories_burned
+      FROM caloriesburned
+      WHERE user_id = $1 AND date >= $2 AND date <= $3
+      GROUP BY date
+    ) AS cb
+    FULL OUTER JOIN
+    (
+      SELECT date, SUM(total_calories) AS sum_total_calories
+      FROM nutrition
+      WHERE user_id = $1 AND date >= $2 AND date <= $3
+      GROUP BY date
+    ) AS n
+    ON cb.date = n.date
+    ORDER BY date ASC`;
+
+  var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
 
   db.pool.query(queryString, queryValues, (err, result) => {
     if (err) {
       res.status(400).send('Error occurs once retrieve the total calories' + err);
     } else {
-      res.status(201).send(result.rows);
+      for (var i = 0; i < result.rows.length; i++) {
+        var currDate = result.rows[i].date;
+        currDate = moment.tz(currDate, 'America/Los_Angeles').format('YYYY-MM-DD');
+        xDates.push(currDate); // ['2023-05-13', '2023-05-15', etc] ascending order
+        var currData = Number(result.rows[i].sum_total_calories) - Number(result.rows[i].sum_calories_burned);
+        yCalories.push(currData); // [100, 230, -200, etc]
+      }
+
+      var dateAndCalories = [];
+      dateAndCalories.push(xDates);
+      dateAndCalories.push(yCalories);
+      // console.log('test', dateAndCalories);
+      res.status(201).send(dateAndCalories);
     }
   })
 });

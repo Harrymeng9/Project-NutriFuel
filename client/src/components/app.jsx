@@ -13,6 +13,8 @@ import Progress from './progress/Progress.jsx';
 import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
+import Navigation from './navigation/navigation.jsx';
+
 import socket from '../helpers/socket.js';
 import axios from 'axios';
 
@@ -21,6 +23,7 @@ import Signup from './login&signup/signup/Signup.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase-config.js'
+import StyleSample from './stylesample/stylesample.jsx';
 
 const App = () => {
   const navigate = useNavigate();
@@ -34,7 +37,7 @@ const App = () => {
   useEffect(() => {
 
     onAuthStateChanged(auth, user => {
-      console.log(user);
+      console.log('user', user);
       if (user) {
         if (!user.isAnonymous) {
           userInfo.current.email = user.email;
@@ -56,6 +59,7 @@ const App = () => {
   const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
   const [message, setmessage] = useState(true)
   const [mainpage, setmainpage] = useState(true)
+
   useEffect(() => {
     console.log('????', userInfo)
     socket.auth = { username: userInfo.current.username }
@@ -90,12 +94,10 @@ const App = () => {
     setnotification(n)
   }
 
-
   const backtomain = (a) => {
     navigate(a)
   }
   const deny = () => {
-
     setfriendrequest('')
   }
   const otherpage = (a) => {
@@ -108,44 +110,17 @@ const App = () => {
     })
     setfriendrequest('')
   }
+
   function Dashboard({ auth, signOut, userInfo }) {
 
     console.log('current user', auth.currentUser);
 
-    function goToExercisePage() {
-      navigate('/exerciseMain');
-    }
-    function goToAddExercisePage() {
-      navigate('/addExercise');
-    }
-    function goToNutritionPage() {
-      navigate('/nutrition');
-    }
-    function goToProgressPage() {
-      // Guest cannot access the progress page
-      if (userInfo.current.uid === null) {
-        alert('Please log in to check progress!')
-      } else {
-        navigate('/progress');
-      }
-    }
-    function goToUserProfilePage() {
-      navigate('/profile');
-    }
-    function goToChatPage() {
-      navigate('/friendNChat');
-    }
-
-
     return (
       <div>
         <h1>Welcome to the Nutrifuel!</h1>
-        <div><button onClick={goToExercisePage}>Exercise</button></div>
-        <div><button onClick={goToNutritionPage}>Nutrition</button></div>
-        <div><button onClick={goToProgressPage}>Progress</button></div>
-        <div><button onClick={goToUserProfilePage}>User Profile</button></div>
-        <div><button onClick={goToChatPage}>Friends/Chat</button></div>
-        <div><button onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Sign out</button></div>
+        {!userInfo.current.uid && <button onClick={(e)=> navigate('/login')}>Sign In</button>}
+        {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
+        <Navigation userInfo={userInfo} auth={auth}/>
       </div>
     );
   }
@@ -154,19 +129,19 @@ const App = () => {
     <div>
       <div>
         <Routes>
-          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo}/>} />
+          <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
-          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth}/>} />
-          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth}/>} />
+          <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth} />} />
+          <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth} />} />
           <Route path="/nutrition" element={<Nutrition userInfo={userInfo} auth={auth} />} />
-          <Route path="/nutritionList" element={<NutritionList userInfo={userInfo} auth={auth}/>} />
-          <Route path="/progress" element={<Progress userInfo={userInfo} auth={auth}/>} />
+          <Route path="/nutritionList" element={<NutritionList userInfo={userInfo} auth={auth} />} />
+          <Route path="/progress" element={<Progress userInfo={userInfo} auth={auth} />} />
           <Route path="/profile" element={<Profile userInfo={userInfo} auth={auth} />} />
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
-            backtomain={backtomain} otherpage={otherpage}
+            backtomain={backtomain} otherpage={otherpage} auth={auth}
           />} />
         </Routes>
         <div >{notification && mainpage ? <div >new message!!!!!</div> : null
@@ -177,9 +152,17 @@ const App = () => {
         </div> : null
         }</div>
       </div>
+      {/* <StyleSample /> */}
     </div>
   );
 }
 //newMessage.content === '' ? null :
 
 export default App;
+
+// color
+// 157F1F green
+// 4CB963 light green
+// A0EADE light blue
+// 5C6784 blue
+// 1D263B dark blue

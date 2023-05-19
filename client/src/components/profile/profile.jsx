@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { sendPasswordResetEmail, signOut } from 'firebase/auth';
 const axios = require('axios');
+import Navigation from '../navigation/navigation.jsx';
 
 
 const Profile = ({ userInfo, auth }) => {
@@ -74,6 +75,7 @@ const Profile = ({ userInfo, auth }) => {
         </ListItem>
       </List>
       <Button variant="outlined" onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Log Out</Button>
+      <Navigation userInfo={userInfo} auth={auth} />
     </div>
   )
 }

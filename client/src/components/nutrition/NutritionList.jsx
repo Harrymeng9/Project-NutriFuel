@@ -7,6 +7,7 @@ import Nutrition from './Nutrition.jsx';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Navigation from '../navigation/navigation.jsx';
 
 const NutritionList = (props) => {
 
@@ -47,11 +48,6 @@ const NutritionList = (props) => {
     navigate('/nutrition');
   };
 
-  // Navigate to the Dashboard page
-  function goToDashboardPage() {
-    navigate('/');
-  };
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -79,7 +75,7 @@ const NutritionList = (props) => {
         })}
       </div>
       <button onClick={goToNutritionPage}>Back</button>
-      <button onClick={goToDashboardPage}>Dashboard</button>
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }
