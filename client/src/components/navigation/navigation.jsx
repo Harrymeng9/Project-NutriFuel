@@ -36,7 +36,7 @@ const Navigation = ({ auth, userInfo }) => {
         <BottomNavigationAction label="Exercise" onClick={(e) => navigate('/exerciseMain')} icon={<FitnessCenterIcon />} />
         <BottomNavigationAction label="Nutrition" onClick={(e) => navigate('/nutrition')} icon={<RestaurantIcon />} />
         <BottomNavigationAction label="Progress" onClick={(e) => navigate('/progress')} icon={<ProgressIcon />} />
-        <BottomNavigationAction label="Friends & Chat" onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
+        <BottomNavigationAction label="Community" onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
         <BottomNavigationAction label="Profile" onClick={(e) => navigate('/profile')} icon={<PersonIcon />} />
       </BottomNavigation>
     </Box>
