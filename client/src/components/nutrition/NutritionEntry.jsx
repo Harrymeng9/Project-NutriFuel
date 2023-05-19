@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 const axios = require('axios');
 import { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 
 const NutritionEntry = (props) => {
 
@@ -12,7 +13,7 @@ const NutritionEntry = (props) => {
   const handleToggleEdit = () => {
     // If the adjust qty is different with original qty, then trigger the axios.put request to update it
     if (editable && adjustQty !== props.qty) {
-      axios.put('/NutritionlistUpdate', { nutrition_id: props.nutrition_id, food_name : props.food_name, qty: adjustQty, total_calories: adjustTotalCalories })
+      axios.put('/NutritionlistUpdate', { nutrition_id: props.nutrition_id, food_name: props.food_name, qty: adjustQty, total_calories: adjustTotalCalories })
         .then((data) => {
           console.log('Update it successfully!');
         })
@@ -46,8 +47,8 @@ const NutritionEntry = (props) => {
       ) : (<div>Qty: {props.qty}</div>)}
       </div>
       < div > Total Calories:  {props.total_calories}</div>
-      <button onClick={handleToggleEdit}>{editable ? 'Save' : 'Edit'}</button>
-      <button onClick={deleteFood}>Delete</button>
+      <Button onClick={handleToggleEdit} variant="outlined">{editable ? 'Save' : 'Edit'}</Button>
+      <Button onClick={deleteFood} variant="outlined">Delete</Button>
       <div></div>
       <br></br>
     </div>
