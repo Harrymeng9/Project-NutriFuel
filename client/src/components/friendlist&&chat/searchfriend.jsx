@@ -60,14 +60,16 @@ class SearchFriend extends Component {
                 backgroundColor: 'white'
             }}>
             <TextField variant="outlined" label="Search Friend" sx={{
-                width:'200',
-                background: "white"
+                color: 'white',
+                width: '300',
+
             }} value={this.state.search} onChange={
                 this.inputhandle
             } />
-            <Button variant="contained" sx={{
-                marginLeft: '70px',
+            <Button variant="outlined" margin='dense' sx={{
+                marginLeft: '80px',
                 background: "white",
+                marginTop:1
             }} onClick={this.search}>Search</Button>
             <Divider></Divider>
             {this.state.searchresult === '' ? <Box sx={{
@@ -75,17 +77,24 @@ class SearchFriend extends Component {
                 backgroundColor: 'white',
                 // height: 60,
                 border: "none"
-            }}></Box> : <Box sx={{
+            }}></Box> : <Box margin="dense" sx={{
                 backgroundColor: 'white',
                 height: 60,
-
+                color: 'black',
+                fontSize:20
             }}>
                 {this.state.searchresult}
                 {this.state.searchresult === 'no such person' ? null :
-                    <Button variant="contained" onClick={this.addfriendhandle}>add friend</Button>}
-                <Button variant="contained" sx={{
-                    backgroundColor: 'white',
-                    marginLeft:30
+                    <Button variant="outlined" margin="dense" sx={{
+                        // backgroundColor: 'white',
+                        marginTop: 2,
+                        marginLeft: 15
+                    }} onClick={this.addfriendhandle}>add friend</Button>}
+                <Button variant="outlined" margin="dense" sx={{
+                    display: 'inline-block',
+                    // backgroundColor: 'white',
+                    marginTop: this.state.searchresult === 'no such person' ? -1 : -8,
+                    marginLeft: 35
                 }} onClick={this.handlecancel}>cancel</Button>
             </Box>}
         </Box>)

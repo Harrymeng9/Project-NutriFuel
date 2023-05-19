@@ -14,6 +14,7 @@ import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 import Navigation from './navigation/navigation.jsx';
+import { Box, Button } from '@mui/material';
 
 import socket from '../helpers/socket.js';
 import axios from 'axios';
@@ -61,7 +62,9 @@ const App = () => {
   const [mainpage, setmainpage] = useState(true)
 
   useEffect(() => {
-    console.log('????', userInfo)
+    console.log('????aaaaa', userInfo)
+    setmainpage(true)
+    setnotification(false)
     socket.auth = { username: userInfo.current.username }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
@@ -118,9 +121,10 @@ const App = () => {
     return (
       <div>
         <h1>Welcome to the Nutrifuel!</h1>
-        {!userInfo.current.uid && <button onClick={(e)=> navigate('/login')}>Sign In</button>}
+        {!userInfo.current.uid && <button onClick={(e) => navigate('/login')}>Sign In</button>}
         {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
-        <Navigation userInfo={userInfo} auth={auth}/>
+
+        <Navigation userInfo={userInfo} auth={auth} />
       </div>
     );
   }
@@ -128,6 +132,8 @@ const App = () => {
   return (
     <div>
       <div>
+        <Box >{notification && mainpage ? <Box >new message!!!!!</Box> : null
+        }</Box>
         <Routes>
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
@@ -144,11 +150,10 @@ const App = () => {
             backtomain={backtomain} otherpage={otherpage} auth={auth}
           />} />
         </Routes>
-        <div >{notification && mainpage ? <div >new message!!!!!</div> : null
-        }</div>
+
         <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
-          <button onClick={accept}>accept</button>
-          <button onClick={deny}>deny</button>
+          <Button onClick={accept}>accept</Button>
+          <Button onClick={deny}>deny</Button>
         </div> : null
         }</div>
       </div>

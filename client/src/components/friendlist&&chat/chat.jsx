@@ -2,6 +2,8 @@
 import React, { Component } from "react";
 import socket from "../../helpers/socket";
 import axios from "axios";
+import { Box } from "@mui/system";
+import { Button, TextField, List, ListItem, ListItemText, Avatar, ListItemAvatar } from "@mui/material";
 
 class Chat extends Component {
     constructor(props) {
@@ -70,18 +72,34 @@ class Chat extends Component {
     }
     render() {
         return (
-            <div>
-                <div id="chatbox" style={{ 'height': "100px", 'width': '200px', 'border': '1px solid black', 'overflow': 'scroll' }}>
-                    <button onClick={this.showhistory}>show history</button>
-                    <ul>
+            <Box sx={{
+                height: '680px',
+                backgroundColor: 'white'
+            }}>
+                <Box id="chatbox" sx={{ height: "100%", width: '100%', border: '1px solid green', borderRadius: '5px', overflow: 'scroll', 'backgroundColor': 'white', color: 'black' }}>
+                    <Button onClick={this.showhistory}>show history</Button>
+                    <List>
                         {this.state.chatHistory.map((item) => {
-                            return <li>{item.from}:{item.content}</li>
+                            return <ListItem>
+                                <Avatar>{item.from}</Avatar>
+                                <ListItemText sx={{
+                                    backgroundColor: 'white',
+                                    fontSize: 30,
+                                    color: 'black',
+                                    marginLeft: 2
+                                }} primary={item.content} /></ListItem>
                         })}
-                    </ul>
-                </div>
-                <input onChange={this.textareahandle} value={this.state.content}></input>
-                <button onClick={this.send}>send</button>
-            </div>
+                    </List>
+                </Box>
+                <TextField variant="outlined" sx={{
+                    width: '70%',
+                    height: 42
+                }} onChange={this.textareahandle} value={this.state.content}></TextField>
+                <Button variant="outlined" sx={{
+                    height: 56,
+                    width: '30%'
+                }} onClick={this.send}>send</Button>
+            </Box>
         )
     }
 }
