@@ -8,7 +8,8 @@ import {useRef, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -23,11 +24,12 @@ export default function Login ({userInfo, auth}){
 
   return (
     <>
-      <Stack spacing={12} justifyContent="space-between">
-        <Title/>
+      <Title/>
+
+      <Container sx={{display:'flex', justifyContent: "center"}}>
         <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
         <Error showError={showError}/>
-      </Stack>
+      </Container>
     </>
   )
 }
@@ -35,7 +37,11 @@ export default function Login ({userInfo, auth}){
 
 var Title = function (){
   return (
-    <div id='Title'>NutriFuel</div>
+    <>
+    <Box sx={{width:'100vw'}}>
+
+    </Box>
+    </>
   );
 };
 
@@ -73,8 +79,8 @@ var LoginSection = function ({userInfo, auth, setShowError}){
 
   const navigate = useNavigate();
   return (
-    <div id="LoginSection" >
-      <Grid container spacing={2}>
+    <>
+      <Grid container spacing={2} sx={{mt:'30vh', maxWidth: '500px'}}>
         <Grid item xs={12}>
           <TextField fullWidth label={'Email'} onChange={(e)=>{loginInfo.current.email = e.target.value}}/>
         </Grid>
@@ -93,7 +99,7 @@ var LoginSection = function ({userInfo, auth, setShowError}){
       </Grid>
 
 
-    </div>
+    </>
   );
 };
 
