@@ -4,7 +4,7 @@ import Friend from "./subcomponents/friend.jsx";
 import SearchFriend from "./searchfriend.jsx";
 import axios from "axios";
 import socket from "../../helpers/socket.js";
-import { List, ListItem,Divider} from "@mui/material";
+import { List, ListItem, Divider, Box } from "@mui/material";
 
 {/* <ListItemButton component="a" href="#simple-list">
   <ListItemText primary="Spam" />
@@ -45,12 +45,14 @@ class FriendList extends Component {
         })
     }
     render() {
-        return (<div>
+        return (<Box sx={{
+            backgroundColor: 'white'
+        }}>
             <SearchFriend />
-            <List>
-                <Divider/>
+            <List >
+                <Divider />
                 {this.state.friendlist.length === 0 ? null : this.state.friendlist.map((friend1) => {
-                    return <ListItem divider={true}><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
+                    return <ListItem disablePadding divider={true}><Friend statHandler={this.props.statHandler} friend={friend1} newMessage={
                         friend1 === this.state.newMessage.from ? this.state.newMessage : { content: '', from: '' }
                     }
                         clearnewmessage={this.clearnewmessage}
@@ -59,7 +61,7 @@ class FriendList extends Component {
                     </ListItem>
                 })}
             </List>
-        </div>)
+        </Box>)
 
 
     }
