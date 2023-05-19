@@ -10,6 +10,8 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 
 
 import { useNavigate } from 'react-router-dom';
@@ -27,8 +29,10 @@ export default function Login ({userInfo, auth}){
       <Title/>
 
       <Container sx={{display:'flex', justifyContent: "center"}}>
-        <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
-        <Error showError={showError}/>
+        <Stack direction="column" justifyContent="center" alignItems="center">
+          <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
+          <Error showError={showError}/>
+        </Stack>
       </Container>
     </>
   )
@@ -38,8 +42,8 @@ export default function Login ({userInfo, auth}){
 var Title = function (){
   return (
     <>
-    <Box sx={{width:'100vw'}}>
-
+    <Box sx={{width:'100vw', 'text-align': 'center' }}>
+      <h1>NutriFuel</h1>
     </Box>
     </>
   );
@@ -88,7 +92,7 @@ var LoginSection = function ({userInfo, auth, setShowError}){
         <TextField fullWidth label={'Password'} onChange={(e)=>{loginInfo.current.password = e.target.value}} type={'password'}/>
         </Grid>
         <Grid item xs={12}>
-          <Button variant='contained' onClick={sendLogin}>Login</Button>
+          <Button variant='contained' onClick={sendLogin} sx={{width:'100%'}}>Login</Button>
         </Grid>
         <Grid item l={6}>
           <Button variant='contained' onClick={()=>{navigate('/signup')}}>Create Account</Button>
@@ -106,9 +110,7 @@ var LoginSection = function ({userInfo, auth, setShowError}){
 var Error = function ({showError}){
   if (showError) {
     return (
-      <div>
-        incorrect email or password
-      </div>
+      <Alert severity="error" sx={{mt: '10px'}}>Incorrect email or password</Alert>
     );
   }
 }
