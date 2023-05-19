@@ -95,10 +95,10 @@ var LoginSection = function ({userInfo, auth, setShowError}){
           <Button variant='contained' onClick={sendLogin} sx={{width:'100%'}}>Login</Button>
         </Grid>
         <Grid item l={6}>
-          <Button variant='contained' onClick={()=>{navigate('/signup')}}>Create Account</Button>
+          <Button variant='outlined' onClick={()=>{navigate('/signup')}}>Create Account</Button>
         </Grid>
         <Grid item l={6}>
-          <Button variant='contained' onClick={loginAsGuest}>Login as Guest</Button>
+          <Button variant='outlined' onClick={loginAsGuest}>Login as Guest</Button>
         </Grid>
       </Grid>
 
