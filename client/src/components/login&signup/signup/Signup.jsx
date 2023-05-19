@@ -94,7 +94,6 @@ var SignupSection = function ({userInfo, auth, setShowError}){
               });
           })
           .catch((error)=>{
-            console.log(error);
             setShowError(error.code);
           });
       } else {
