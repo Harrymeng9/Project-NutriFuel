@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 import Profile from './profile.jsx';
+import Navigation from '../navigation/navigation.jsx';
 
 
 
@@ -121,7 +122,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
         </Box>
 
       </Container>
-
+      <Navigation />
     </div>
   )
 }

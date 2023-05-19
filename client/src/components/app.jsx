@@ -23,6 +23,7 @@ import Signup from './login&signup/signup/Signup.jsx';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase-config.js'
+import StyleSample from './stylesample/stylesample.jsx';
 
 const App = () => {
   const navigate = useNavigate();
@@ -180,9 +181,17 @@ const App = () => {
         </div> : null
         }</div>
       </div>
+      {/* <StyleSample /> */}
     </div>
   );
 }
 //newMessage.content === '' ? null :
 
 export default App;
+
+// color
+// 157F1F green
+// 4CB963 light green
+// A0EADE light blue
+// 5C6784 blue
+// 1D263B dark blue

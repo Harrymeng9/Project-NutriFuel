@@ -247,12 +247,45 @@ app.get('/ProgressNutrition', async (req, res) => {
   var xDates = []; // start date to end date
   var yCalories = []; // total calories for each date
 
-  var queryString = `
-  SELECT date, SUM(total_calories)
-  FROM nutrition
-  WHERE user_id = $1 AND date >= $2 AND date <= $3
-  GROUP BY date
-  ORDER BY date ASC` ;
+  // var queryString = `
+  // SELECT date, SUM(calories_burned)
+  // FROM caloriesburned
+  // WHERE user_id = $1 AND date >= $2 AND date <= $3
+  // GROUP BY date
+  // ORDER BY date ASC`;
+  // var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
+
+  // var queryString = `
+  // SELECT date, SUM(total_calories)
+  // FROM nutrition
+  // WHERE user_id = $1 AND date >= $2 AND date <= $3
+  // GROUP BY date
+  // ORDER BY date ASC` ;
+  // var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
+
+  var queryString =
+    `
+    SELECT
+      COALESCE(cb.date, n.date) AS date,
+      COALESCE(cb.sum_calories_burned, 0) AS sum_calories_burned,
+      COALESCE(n.sum_total_calories, 0) AS sum_total_calories
+    FROM
+    (
+      SELECT date, SUM(calories_burned) AS sum_calories_burned
+      FROM caloriesburned
+      WHERE user_id = $1 AND date >= $2 AND date <= $3
+      GROUP BY date
+    ) AS cb
+    FULL OUTER JOIN
+    (
+      SELECT date, SUM(total_calories) AS sum_total_calories
+      FROM nutrition
+      WHERE user_id = $1 AND date >= $2 AND date <= $3
+      GROUP BY date
+    ) AS n
+    ON cb.date = n.date
+    ORDER BY date ASC`;
+
   var queryValues = [user_id, startDatePacificTime, endDatePacificTime];
 
   db.pool.query(queryString, queryValues, (err, result) => {
@@ -262,14 +295,15 @@ app.get('/ProgressNutrition', async (req, res) => {
       for (var i = 0; i < result.rows.length; i++) {
         var currDate = result.rows[i].date;
         currDate = moment.tz(currDate, 'America/Los_Angeles').format('YYYY-MM-DD');
-        xDates.push(currDate);
-        var currData = Number(result.rows[i].sum);
-        yCalories.push(currData);
+        xDates.push(currDate); // ['2023-05-13', '2023-05-15', etc] ascending order
+        var currData = Number(result.rows[i].sum_total_calories) - Number(result.rows[i].sum_calories_burned);
+        yCalories.push(currData); // [100, 230, -200, etc]
       }
 
       var dateAndCalories = [];
       dateAndCalories.push(xDates);
       dateAndCalories.push(yCalories);
+      // console.log('test', dateAndCalories);
       res.status(201).send(dateAndCalories);
     }
   })
