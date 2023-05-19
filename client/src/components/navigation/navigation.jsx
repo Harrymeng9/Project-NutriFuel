@@ -16,6 +16,16 @@ const Navigation = ({ auth, userInfo }) => {
   const [value, setValue] = useState("");
   const navigate = useNavigate();
 
+  function goToProgressPage() {
+    // Guest cannot access the progress page
+    var userId = userInfo.current.uid;
+    if (userId === null) {
+      alert('Please log in');
+    } else {
+      navigate('/progress')
+    }
+  };
+
   return (
     <Box
       style={{
@@ -35,7 +45,7 @@ const Navigation = ({ auth, userInfo }) => {
         <BottomNavigationAction label="Home" onClick={(e) => navigate('/')} icon={<GridViewIcon />} />
         <BottomNavigationAction label="Exercise" onClick={(e) => navigate('/exerciseMain')} icon={<FitnessCenterIcon />} />
         <BottomNavigationAction label="Nutrition" onClick={(e) => navigate('/nutrition')} icon={<RestaurantIcon />} />
-        <BottomNavigationAction label="Progress" onClick={(e) => navigate('/progress')} icon={<ProgressIcon />} />
+        <BottomNavigationAction label="Progress" onClick={goToProgressPage} icon={<ProgressIcon />} />
         <BottomNavigationAction label="Community" onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
         <BottomNavigationAction label="Profile" onClick={(e) => navigate('/profile')} icon={<PersonIcon />} />
       </BottomNavigation>
