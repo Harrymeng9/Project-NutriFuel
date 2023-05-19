@@ -148,8 +148,7 @@ const App = () => {
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
         <div><button onClick={goToChatPage}>Friends/Chat</button></div> */}
         <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div>
-        <Navigation auth={auth} signOut={signOut} />
-
+        <Navigation userInfo={userInfo} auth={auth} signOut={signOut} />
       </div>
     );
   }
