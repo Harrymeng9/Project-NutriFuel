@@ -47,7 +47,7 @@ export default function Signup ({userInfo, auth}){
 var Title = function (){
   return (
     <>
-    <Box sx={{width:'100vw', 'text-align': 'center' }}>
+    <Box sx={{width:'100vw', 'textAlign': 'center' }}>
       <h1>NutriFuel</h1>
     </Box>
     </>
