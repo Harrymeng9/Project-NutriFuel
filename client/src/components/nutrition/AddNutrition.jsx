@@ -4,6 +4,10 @@ const axios = require('axios');
 import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import NutritionList from './NutritionList.jsx';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
 
 const AddNutrition = (props) => {
 
@@ -89,15 +93,32 @@ const AddNutrition = (props) => {
 
   return (
     <div>
-      <input type="text" placeholder="Please enter the food" value={foodSearchName} onChange={(e) => { setFoodSearchName(e.target.value) }} />
-      <button onClick={searchFood}>Search</button>
+      {/* <input type="text" placeholder="Please enter the food" value={foodSearchName} onChange={(e) => { setFoodSearchName(e.target.value) }} /> */}
+      <div>
+        <TextField
+          id="outlined-search"
+          label="Please search the food"
+          type="search"
+          value={foodSearchName}
+          onChange={(e) => { setFoodSearchName(e.target.value) }} />
+        <Button onClick={searchFood} variant="outlined">Search</Button>
+      </div >
+      <div></div>
+      <br></br>
       <div>Food: {foodName}</div>
+      <br></br>
       <div>Serving Size (g): {servingSize}</div>
+      <br></br>
       <div>Calories: {calories}</div>
-      <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
+      <br></br>
+      <div>Qty: <input type='number' value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
+      <div></div>
+      <br></br>
       <div>Total Calories: {totalCalories.toFixed(1)}</div>
-      <button onClick={addFood}>Add Food</button>
-      <button onClick={goToNutritionList}>Nutrition List</button>
+      <br></br>
+      <Button onClick={addFood} variant="outlined">Add Food</Button>
+      <Button onClick={goToNutritionList} variant="outlined">Nutrition List</Button>
+      {/* <button onClick={goToNutritionList}>Nutrition List</button> */}
     </div>
   )
 }
