@@ -48,7 +48,7 @@ class FriendNChat extends Component {
                 {this.state.stat === 'friendlist' ? null : <button onClick={(e) => {
                     this.statHandler(e.target.innerHTML)
                 }}>BACK</button>}
-                <Navigation />
+                <Navigation userInfo={this.props.userInfo} auth={this.props.auth} />
             </div>
         )
     }

@@ -91,7 +91,7 @@ const Progress = (props) => {
       <div>
         <Line data={data} options={options}></Line>
       </div>
-      <Navigation />
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }

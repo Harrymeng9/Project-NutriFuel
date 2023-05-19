@@ -75,7 +75,7 @@ const NutritionList = (props) => {
         })}
       </div>
       <button onClick={goToNutritionPage}>Back</button>
-      <Navigation />
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }

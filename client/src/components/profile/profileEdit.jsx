@@ -122,7 +122,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
         </Box>
 
       </Container>
-      <Navigation />
+      <Navigation userInfo={userInfo} auth={auth} />
     </div>
   )
 }
