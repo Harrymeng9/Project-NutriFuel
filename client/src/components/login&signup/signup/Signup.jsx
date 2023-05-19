@@ -8,6 +8,11 @@ import {useRef, useState} from 'react';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 
 // import '../style.css';
 
@@ -25,8 +30,14 @@ export default function Signup ({userInfo, auth}){
   return (
     <>
       <Title/>
-      <SignupSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
-      <Error showError={showError} />
+
+      <Container sx={{display:'flex', justifyContent: "center"}}>
+        <Stack direction="column" justifyContent="center" alignItems="center">
+          <SignupSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
+          <Error showError={showError} />
+        </Stack>
+      </Container>
+
 
     </>
   )
@@ -35,7 +46,11 @@ export default function Signup ({userInfo, auth}){
 
 var Title = function (){
   return (
-    <div id='Title'>NutriFuel</div>
+    <>
+    <Box sx={{width:'100vw', 'textAlign': 'center' }}>
+      <h1>NutriFuel</h1>
+    </Box>
+    </>
   );
 };
 
@@ -79,8 +94,7 @@ var SignupSection = function ({userInfo, auth, setShowError}){
               });
           })
           .catch((error)=>{
-            console.log(error);
-            setShowError('password is too weak');
+            setShowError(error.code);
           });
       } else {
         setShowError('please enter a username');
@@ -94,22 +108,33 @@ var SignupSection = function ({userInfo, auth, setShowError}){
   };
 
   return (
-    <div id="SigninSection" >
-      <TextField label={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}}/>
-      <TextField label={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}}/>
-      <TextField label={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} type="password"/>
-      <TextField label={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} type="password"/>
-      <Button variant='contained' onClick={sendSignupInfo}>Signup</Button>
-    </div>
+    <>
+    <Grid container spacing={2} sx={{mt:'30vh', maxWidth: '500px'}}>
+        <Grid item xs={12}>
+        <TextField label={'Username'} onChange={(e)=>{signupInfo.current.username = e.target.value}} fullWidth/>
+        </Grid>
+        <Grid item xs={12}>
+        <TextField label={'Email'} onChange={(e)=>{signupInfo.current.email = e.target.value}} fullWidth/>
+        </Grid>
+        <Grid item xs={12}>
+        <TextField label={'Password'} onChange={(e)=>{signupInfo.current.password = e.target.value}} type="password" fullWidth/>
+        </Grid>
+        <Grid item xs={12}>
+        <TextField label={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} type="password" fullWidth/>
+        </Grid>
+        <Grid item l={6}>
+        <Button variant='contained' onClick={sendSignupInfo}>Signup</Button>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
 var Error = function ({showError}){
   if (showError) {
     return (
-      <div>
-        {showError}
-      </div>
+      <Alert severity="error" sx={{mt: '10px'}}>{showError}</Alert>
+
     );
   }
 }
