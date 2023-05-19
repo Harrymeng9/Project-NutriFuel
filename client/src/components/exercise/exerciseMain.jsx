@@ -4,6 +4,7 @@ import AddExercise from './addExercise.jsx';
 import axios from 'axios';
 import ExerciseLogCard from './exerciseLogCard.jsx';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
+import Navigation from '../navigation/navigation.jsx';
 
 const ExerciseMain = (userInfo) => {
   const [exerciseLog, setExerciseLog] = useState([]);
@@ -27,10 +28,6 @@ const ExerciseMain = (userInfo) => {
     // ReactDOM.render(<AddExercise />, document.getElementById('app'));
   };
 
-  function goToDashboardPage() {
-    navigate('/');
-  };
-
   return (
     <div>
       <h1>Exercise Log</h1>
@@ -45,7 +42,7 @@ const ExerciseMain = (userInfo) => {
         })}
       </div>
       <button onClick={goToAddExercisePage}>Add Exercise</button>
-      <button onClick={goToDashboardPage}>Back to Dashboard</button>
+      <Navigation />
     </div>
   )
 }

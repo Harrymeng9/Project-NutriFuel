@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Chat from "./chat.jsx";
 import FriendList from "./friendlist.jsx";
+import Navigation from '../navigation/navigation.jsx';
 
 
 
@@ -46,8 +47,7 @@ class FriendNChat extends Component {
                 {this.state.stat === 'friendlist' ? null : <button onClick={(e) => {
                     this.statHandler(e.target.innerHTML)
                 }}>BACK</button>}
-                <button onClick={this.backtodashboard}>dashboard</button>
-
+                <Navigation />
             </div>
         )
     }

@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ExerciseCard from './exerciseCard.jsx';
-import { useLocation } from 'react-router-dom';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
+import Navigation from '../navigation/navigation.jsx';
 
 const AddExercise = (userInfo) => {
   const [exerciseList, setExerciseList] = useState([]);
-  const location = useLocation();
   const [uid, setUid] = useState()
 
   useEffect(() => {
     setUid(userInfo.userInfo.current.uid);
   }, [])
-
-  function goToDashboardPage() {
-    navigate('/');
-  };
-
-  function goToExercisePage() {
-    navigate('/exerciseMain');
-  };
 
   function fetchExercises(e) {
     var muscle = e.target.id;
@@ -31,7 +22,6 @@ const AddExercise = (userInfo) => {
       .catch(err => {
         console.log('fetchExercise err', err);
       })
-
   }
 
   return (
@@ -39,27 +29,26 @@ const AddExercise = (userInfo) => {
       <h1>Add Exercise</h1>
       <h2>Select muscle group</h2>
       <div>
-        <button onClick={fetchExercises} id='chest'>Chest</button><br></br>
-        <button onClick={fetchExercises} id='lats'>Back</button><br></br>
-        <button onClick={fetchExercises} id='shoulders'>Shoulders</button><br></br>
-        <button onClick={fetchExercises} id='quadriceps'>Quadriceps</button><br></br>
-        <button onClick={fetchExercises} id='hamstrings'>Hamstrings</button><br></br>
-        <button onClick={fetchExercises} id='glutes'>Glutes</button><br></br>
-        <button onClick={fetchExercises} id='biceps'>Biceps</button><br></br>
+        <button onClick={fetchExercises} id='chest'>Chest</button>
+        <button onClick={fetchExercises} id='lats'>Back</button>
+        <button onClick={fetchExercises} id='shoulders'>Shoulders</button>
+        <button onClick={fetchExercises} id='quadriceps'>Quadriceps</button>
+        <button onClick={fetchExercises} id='hamstrings'>Hamstrings</button>
+        <button onClick={fetchExercises} id='glutes'>Glutes</button>
+        <button onClick={fetchExercises} id='biceps'>Biceps</button>
         <button onClick={fetchExercises} id='triceps'>Triceps</button><br></br>
-        <button onClick={goToExercisePage}>Back to Exercise Log</button><br></br>
-        <button onClick={goToDashboardPage}>Back to Dashboard</button><br></br>
       </div>
       <div>
         {exerciseList.map(entry => {
           // console.log('test', entry);
           return (
             <div className="exerciseCard" key={entry.name}>
-              <ExerciseCard exercise={entry} uid={uid}/>
+              <ExerciseCard exercise={entry} uid={uid} />
             </div>
           );
         })}
       </div>
+      <Navigation />
     </div>
   )
 }

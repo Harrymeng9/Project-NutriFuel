@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
+import './exerciseCss.css';
 
 const ExerciseCard = (props) => {
   const [time, setTime] = useState();
@@ -30,7 +31,7 @@ const ExerciseCard = (props) => {
         <p>{props.exercise.instructions}</p>
         {/* <form> */}
         <input type='number' placeholder='Input Time in Minutes' onChange={handleTimeInput} />
-        <button onClick={() => {addToLog(props.exercise.name, props.uid)}}>Add to Log</button>
+        <button className='button' onClick={() => {addToLog(props.exercise.name, props.uid)}}>Add to Log</button>
         {/* </form> */}
       </section>
     </div>

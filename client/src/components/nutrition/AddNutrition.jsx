@@ -43,7 +43,6 @@ const AddNutrition = (props) => {
   }, [foodSearchName]);
 
   function addFood() {
-
     // Guest cannot add any food into the database
     if (props.userId === null) {
       alert('Please log in!');
@@ -88,11 +87,6 @@ const AddNutrition = (props) => {
     }
   }
 
-  // Navigate to the Dashboard page
-  function goToDashboardPage() {
-    navigate('/');
-  };
-
   return (
     <div>
       <input type="text" placeholder="Please enter the food" value={foodSearchName} onChange={(e) => { setFoodSearchName(e.target.value) }} />
@@ -103,7 +97,6 @@ const AddNutrition = (props) => {
       <div>Qty: <input type="text" value={qty} onChange={(e) => { setQty(e.target.value) }} /></div>
       <div>Total Calories: {totalCalories.toFixed(1)}</div>
       <button onClick={addFood}>Add Food</button>
-      <button onClick={goToDashboardPage}>Dashboard</button>
       <button onClick={goToNutritionList}>Nutrition List</button>
     </div>
   )

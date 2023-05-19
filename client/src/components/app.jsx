@@ -138,15 +138,14 @@ const App = () => {
       navigate('/friendNChat');
     }
 
-
     return (
       <div>
         <h1>Welcome to the Nutrifuel!</h1>
-        <div><button onClick={goToExercisePage}>Exercise</button></div>
+        {/* <div><button onClick={goToExercisePage}>Exercise</button></div>
         <div><button onClick={goToNutritionPage}>Nutrition</button></div>
         <div><button onClick={goToProgressPage}>Progress</button></div>
         <div><button onClick={goToUserProfilePage}>User Profile</button></div>
-        <div><button onClick={goToChatPage}>Friends/Chat</button></div>
+        <div><button onClick={goToChatPage}>Friends/Chat</button></div> */}
         <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div>
         <Navigation auth={auth} signOut={signOut} />
 

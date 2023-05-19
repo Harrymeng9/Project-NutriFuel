@@ -1,0 +1,30 @@
+button {
+  background-color: #157F1F; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+div {
+  background-color: #1D263B;
+  color: #A0EADE;
+}
+
+h1 {
+  color: #4CB963;
+}
+
+input {
+  width: 25%;
+  background-color: #157F1F;
+  box-sizing: border-box;
+  padding: 15px 32px;
+}
+
+::placeholder {
+  color: white;
+}
