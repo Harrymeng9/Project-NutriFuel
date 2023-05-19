@@ -103,7 +103,10 @@ const postExercise = async (user_id, name, time) => {
 const postCaloriesBurned = async (user_id, calories_burned) => {
   //console.log(user_id, calories_burned)
   var date = new Date();
-  date = date.toUTCString();
+  const options = { timeZone: 'America/Los_Angeles' };
+  const pacificTime = date.toLocaleString('en-US', options);
+  date = pacificTime;
+
   return new Promise(function(resolve, reject) {
     pool.query(`select * from caloriesburned where user_id='${user_id}' and date='${date}'`, (err, res) => {
       //console.log(res.rows[0])
