@@ -6,12 +6,12 @@ import ExerciseLogCard from './exerciseLogCard.jsx';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import Navigation from '../navigation/navigation.jsx';
 
-const ExerciseMain = (userInfo) => {
+const ExerciseMain = ({userInfo,auth}) => {
   const [exerciseLog, setExerciseLog] = useState([]);
   const [timeEx, setTimeEx] = useState(0);
 
   useEffect(() => {
-    axios.get('/exerciseLog', { params: { user_id: userInfo.userInfo.current.uid } })
+    axios.get('/exerciseLog', { params: { user_id: userInfo.current.uid } })
       .then(data => {
         //console.log('useEffect data', data);
         setExerciseLog(data.data);
@@ -42,7 +42,7 @@ const ExerciseMain = (userInfo) => {
         })}
       </div>
       <button onClick={goToAddExercisePage}>Add Exercise</button>
-      <Navigation />
+      <Navigation userInfo={userInfo} auth={auth} />
     </div>
   )
 }

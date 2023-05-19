@@ -4,12 +4,12 @@ import ExerciseCard from './exerciseCard.jsx';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import Navigation from '../navigation/navigation.jsx';
 
-const AddExercise = (userInfo) => {
+const AddExercise = ({userInfo, auth}) => {
   const [exerciseList, setExerciseList] = useState([]);
   const [uid, setUid] = useState()
 
   useEffect(() => {
-    setUid(userInfo.userInfo.current.uid);
+    setUid(userInfo.current.uid);
   }, [])
 
   function fetchExercises(e) {
@@ -48,7 +48,7 @@ const AddExercise = (userInfo) => {
           );
         })}
       </div>
-      <Navigation />
+      <Navigation userInfo={userInfo} auth={auth} />
     </div>
   )
 }

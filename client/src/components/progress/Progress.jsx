@@ -75,23 +75,27 @@ const Progress = (props) => {
     <div>
       <h2>Progress Section</h2>
       <div>Please select the start date</div>
+      <br></br>
       <div>
         <DatePicker
           selected={startDate}
           onChange={handleStartDateChange}
           dateFormat="yyyy-MM-dd" />
       </div>
+      <br></br>
       <div>Please select the end date</div>
+      <br></br>
       <div>
         <DatePicker
           selected={endDate}
           onChange={handleEndDateChange}
           dateFormat="yyyy-MM-dd" />
       </div>
+      <br></br>
       <div>
         <Line data={data} options={options}></Line>
       </div>
-      <Navigation />
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }

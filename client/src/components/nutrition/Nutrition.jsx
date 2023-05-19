@@ -12,7 +12,7 @@ const Nutrition = (props) => {
     <div>
       <h2>Nutrition Section</h2>
       <AddNutrition userId = {props.userInfo.current.uid}/>
-      <Navigation />
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }

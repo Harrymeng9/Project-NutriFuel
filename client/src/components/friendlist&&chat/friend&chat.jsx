@@ -49,7 +49,7 @@ class FriendNChat extends Component {
                     this.statHandler(e.target.innerHTML)
                 }}>BACK</button>}
                 <Navigation />
-            </Box>
+            </div>
         )
     }
 }

@@ -1,0 +1,4 @@
+#scrollContainer {
+  height: 800px; /* Set a fixed height for the container */
+  overflow-y: scroll; /* Enable vertical scrolling */
+}

@@ -70,18 +70,18 @@ app.get('/exerciseLog', async (req, res) => {
           },
           contentType: 'application/json'
         })
-        .then(result => {
-          //console.log('result', result.data)
-          data.push({ calories: result.data[0].total_calories })
-          //console.log('result', data)
-          db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
-          res.status(200).send(data)
-        })
-        .catch(err => {
-          if (err) {
-            console.log('exercise log server err', err)
-          }
-        })
+          .then(result => {
+            //console.log('result', result.data)
+            data.push({ calories: result.data[0].total_calories })
+            //console.log('result', data)
+            db.postCaloriesBurned(req.query.user_id, result.data[0].total_calories)
+            res.status(200).send(data)
+          })
+          .catch(err => {
+            if (err) {
+              console.log('exercise log server err', err)
+            }
+          })
       }
     })
 });
@@ -144,15 +144,32 @@ app.post('/Nutrition', async (req, res) => {
   var qty = req.body.qty;
   var total_calories = req.body.totalCalories;
 
-  var queryString = `INSERT INTO nutrition (user_id, date, food_name, qty, total_calories) VALUES($1,$2,$3,$4,$5)`;
-  db.pool.query(queryString, [user_id, date, food_name, qty, total_calories], (err, result) => {
+  var queryStringExistFood = `SELECT nutrition_id FROM nutrition WHERE user_id = $1 AND date = $2 AND food_name = $3`;
+  var queryValuesExistFood = [user_id, date, food_name];
+
+  db.pool.query(queryStringExistFood, queryValuesExistFood, (err, result) => {
     if (err) {
       res.status(400).send('Error occues once add the food' + err);
     } else {
-      res.status(201).send('Add the food successfully!');
+      // If the food does not exist in the database, then insert a new record. Otherwise, update the existing data
+      if (result.rows.length === 0) {
+        var queryString = `INSERT INTO nutrition (user_id, date, food_name, qty, total_calories) VALUES($1,$2,$3,$4,$5)`;
+        var queryValues = [user_id, date, food_name, qty, total_calories];
+      } else {
+        var nutrition_id = result.rows[0].nutrition_id;
+        var queryString = `UPDATE nutrition SET qty = qty + $1, total_calories = total_calories + $2 WHERE nutrition_id = $3`;
+        var queryValues = [qty, total_calories, nutrition_id];
+      }
+      db.pool.query(queryString, queryValues, (err, result) => {
+        if (err) {
+          res.status(400).send('Error occues once add the food' + err);
+        } else {
+          res.status(201).send('Add the food successfully!');
+        }
+      })
     }
   })
-});
+})
 
 // GET REQUEST to retrieve all nutrition list for the current user
 app.get('/NutritionList', async (req, res) => {

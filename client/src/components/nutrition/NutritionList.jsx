@@ -42,18 +42,12 @@ const NutritionList = (props) => {
       })
   }, [nutritionList, selectedDate]);
 
-  const navigate = useNavigate();
-  // Navigate to the Nutrition page
-  function goToNutritionPage() {
-    navigate('/nutrition');
-  };
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
   return (
-    <div>
+    <div id="scrollContainer">
       <h2>Nutrition List</h2>
       <h3>Please select a date</h3>
       <div>
@@ -74,8 +68,7 @@ const NutritionList = (props) => {
           )
         })}
       </div>
-      <button onClick={goToNutritionPage}>Back</button>
-      <Navigation />
+      <Navigation userInfo={props.userInfo} auth={props.auth} />
     </div>
   )
 }
