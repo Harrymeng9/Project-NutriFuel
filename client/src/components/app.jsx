@@ -37,7 +37,7 @@ const App = () => {
   useEffect(() => {
 
     onAuthStateChanged(auth, user => {
-      console.log(user);
+      console.log('user', user);
       if (user) {
         if (!user.isAnonymous) {
           userInfo.current.email = user.email;
@@ -59,6 +59,7 @@ const App = () => {
   const [accpetfriendrequest, setaccpetfriendrequest] = useState('')
   const [message, setmessage] = useState(true)
   const [mainpage, setmainpage] = useState(true)
+
   useEffect(() => {
     console.log('????', userInfo)
     socket.auth = { username: userInfo.current.username }
@@ -93,12 +94,10 @@ const App = () => {
     setnotification(n)
   }
 
-
   const backtomain = (a) => {
     navigate(a)
   }
   const deny = () => {
-
     setfriendrequest('')
   }
   const otherpage = (a) => {
@@ -111,44 +110,17 @@ const App = () => {
     })
     setfriendrequest('')
   }
+
   function Dashboard({ auth, signOut, userInfo }) {
 
     console.log('current user', auth.currentUser);
 
-    function goToExercisePage() {
-      navigate('/exerciseMain');
-    }
-    function goToAddExercisePage() {
-      navigate('/addExercise');
-    }
-    function goToNutritionPage() {
-      navigate('/nutrition');
-    }
-    function goToProgressPage() {
-      // Guest cannot access the progress page
-      if (userInfo.current.uid === null) {
-        alert('Please log in to check progress!')
-      } else {
-        navigate('/progress');
-      }
-    }
-    function goToUserProfilePage() {
-      navigate('/profile');
-    }
-    function goToChatPage() {
-      navigate('/friendNChat');
-    }
-
     return (
       <div>
         <h1>Welcome to the Nutrifuel!</h1>
-        {/* <div><button onClick={goToExercisePage}>Exercise</button></div>
-        <div><button onClick={goToNutritionPage}>Nutrition</button></div>
-        <div><button onClick={goToProgressPage}>Progress</button></div>
-        <div><button onClick={goToUserProfilePage}>User Profile</button></div>
-        <div><button onClick={goToChatPage}>Friends/Chat</button></div> */}
-        <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div>
-        <Navigation userInfo={userInfo} auth={auth} signOut={signOut} />
+        {!userInfo.current.uid && <button onClick={(e)=> navigate('/login')}>Sign In</button>}
+        {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
+        <Navigation userInfo={userInfo} auth={auth}/>
       </div>
     );
   }
@@ -169,7 +141,7 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
-            backtomain={backtomain} otherpage={otherpage}
+            backtomain={backtomain} otherpage={otherpage} auth={auth}
           />} />
         </Routes>
         <div >{notification && mainpage ? <div >new message!!!!!</div> : null

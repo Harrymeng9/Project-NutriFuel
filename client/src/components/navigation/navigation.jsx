@@ -18,11 +18,20 @@ const Navigation = ({ auth, userInfo }) => {
 
   function goToProgressPage() {
     // Guest cannot access the progress page
-    var userId = userInfo.current.uid;
-    if (userId === null) {
+    console.log('test', userInfo);
+    if ( userInfo === undefined || userInfo.current.uid === null) {
       alert('Please log in');
     } else {
       navigate('/progress')
+    }
+  };
+
+  function goToProfilePage() {
+    // Guest cannot access the profile page
+    if ( userInfo === undefined || userInfo.current.uid === null) {
+      alert('Please log in');
+    } else {
+      navigate('/profile');
     }
   };
 
@@ -47,7 +56,7 @@ const Navigation = ({ auth, userInfo }) => {
         <BottomNavigationAction label="Nutrition" onClick={(e) => navigate('/nutrition')} icon={<RestaurantIcon />} />
         <BottomNavigationAction label="Progress" onClick={goToProgressPage} icon={<ProgressIcon />} />
         <BottomNavigationAction label="Community" onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
-        <BottomNavigationAction label="Profile" onClick={(e) => navigate('/profile')} icon={<PersonIcon />} />
+        <BottomNavigationAction label="Profile" onClick={goToProfilePage} icon={<PersonIcon />} />
       </BottomNavigation>
     </Box>
   );

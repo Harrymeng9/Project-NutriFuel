@@ -75,7 +75,7 @@ const Profile = ({ userInfo, auth }) => {
         </ListItem>
       </List>
       <Button variant="outlined" onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Log Out</Button>
-      <Navigation />
+      <Navigation userInfo={userInfo} auth={auth} />
     </div>
   )
 }
