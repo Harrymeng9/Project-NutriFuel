@@ -4,13 +4,8 @@ import {useRef, useState} from 'react';
 
 
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
+import {Button, TextField, Grid, Box, Container, Stack, Alert, Typography} from '@mui/material/';
+
 
 
 import { useNavigate } from 'react-router-dom';
@@ -28,9 +23,10 @@ export default function Login ({userInfo, auth}){
       <Title/>
 
       <Container sx={{display:'flex', justifyContent: "center"}}>
-        <Stack direction="column" justifyContent="center" alignItems="center">
+        <Stack direction="column" justifyContent="space-between" alignItems="center" sx={{height: '85vh'}}>
           <LoginSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
           <Error showError={showError}/>
+          <FPButton/>
         </Stack>
       </Container>
     </>
@@ -113,3 +109,12 @@ var Error = function ({showError}){
     );
   }
 }
+
+var FPButton = function (){
+
+  const navigate = useNavigate();
+
+  return (
+    <Typography variant="body1" sx={{color: 'text.secondary'}} onClick={()=>{navigate('/forgotpassword')}}>Forgot password?</Typography>
+  );
+};
