@@ -33,7 +33,7 @@ const App = () => {
   const userInfo = useRef({
     uid: null,
     email: null,
-    username: 'jack',
+    username: null,
   });
 
   useEffect(() => {
@@ -151,8 +151,8 @@ const App = () => {
           />} />
         </Routes>
 
-        <Box >{friendrequest !== '' ? <Box>new friend request from:{friendrequest}
-          <Button variant="outlined" onClick={accept}>accept</Button>
+        <Box sx={{ color: 'green', marginTop: 85 }}>{friendrequest !== '' ? <Box>new friend request from:{friendrequest}
+          <Button sx={{ marginLeft: 3 }} variant="outlined" onClick={accept}>accept</Button>
           <Button variant="outlined" onClick={deny}>deny</Button>
         </Box> : null
         }</Box>
