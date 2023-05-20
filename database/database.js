@@ -131,11 +131,26 @@ const postCaloriesBurned = async (user_id, calories_burned) => {
   })
 }
 
+const deleteExercise = (user_id, exercise_id) => {
+  return new Promise(function(resolve, reject) {
+    pool.query(`DELETE FROM exercise  WHERE user_id='${user_id}' AND exercise_id=${exercise_id}`, (err, res) => {
+      //console.log(res.rows[0])
+      if (err) {
+        reject(err)
+      }
+      //console.log('res', res.rows)
+      resolve(res.rows);
+    })
+  })
+}
+
 
 module.exports = {
   getExerciseLog,
   postExercise,
   postCaloriesBurned,
+  getCaloriesBurned,
+  deleteExercise,
   pool
 }
 
