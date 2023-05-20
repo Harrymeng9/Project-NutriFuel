@@ -12,10 +12,11 @@ export default function ForgotPassword ({auth}){
 
   return (
     <>
-      <Title/>
+
 
       <Container sx={{display:'flex', justifyContent: "center"}}>
         <Stack direction="column" justifyContent="center" alignItems="center">
+        <Title/>
           <EmailEntry email={email} auth={auth} setShowSuccess={setShowSuccess}/>
           <SuccessMessage showSuccess={showSuccess}/>
         </Stack>
@@ -28,11 +29,7 @@ export default function ForgotPassword ({auth}){
 
 var Title = function (){
   return (
-    <>
-    <Box sx={{width:'100vw', 'textAlign': 'center' }}>
-      <h1>NutriFuel</h1>
-    </Box>
-    </>
+    <img src="/image.png" width="100%"/>
   );
 };
 
