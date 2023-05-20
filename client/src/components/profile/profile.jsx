@@ -23,6 +23,9 @@ const Profile = ({ userInfo, auth }) => {
         setProfileData(data.data);
         setFriendsCount(0);
         axios.get('/friendlist', { params: { "user": String(data.data.username) } })
+        .then((data)=>{
+          setFriendsCount(data.data.length);
+        })
           .catch((err) => {
             console.log('err', err);
           });
