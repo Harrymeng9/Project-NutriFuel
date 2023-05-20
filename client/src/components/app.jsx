@@ -14,6 +14,7 @@ import FriendNChat from './friendlist&&chat/friend&chat.jsx';
 import Profile from './profile/profile.jsx';
 import ProfileEdit from './profile/profileEdit.jsx';
 import Navigation from './navigation/navigation.jsx';
+import { Box, Button } from '@mui/material';
 
 import socket from '../helpers/socket.js';
 import axios from 'axios';
@@ -62,7 +63,8 @@ const App = () => {
   const [mainpage, setmainpage] = useState(true)
 
   useEffect(() => {
-    console.log('????', userInfo)
+    console.log('????aaaaa', userInfo)
+    setmainpage(true)
     socket.auth = { username: userInfo.current.username }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
@@ -76,6 +78,7 @@ const App = () => {
     });
     if (message) {
       socket.on("private message", ({ content, from }) => {
+        console.log('message')
         setnotification(true)
         setnewMessage({
           content: content,
@@ -91,6 +94,7 @@ const App = () => {
     setnewMessage({ content: '', from: '' })
   }
   const turnoffnotification = (n) => {
+    console.log('???/something')
     // let a = notification
     setnotification(n)
   }
@@ -114,20 +118,22 @@ const App = () => {
 
   function Dashboard({ auth, signOut, userInfo }) {
 
+
     console.log('current user', auth.currentUser);
 
     return (
       <div>
         <h1>Welcome to the Nutrifuel!</h1>
-        {!userInfo.current.uid && <button onClick={(e)=> navigate('/login')}>Sign In</button>}
+        {!userInfo.current.uid && <button onClick={(e) => navigate('/login')}>Sign In</button>}
         {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
-        <Navigation userInfo={userInfo} auth={auth}/>
+        <Navigation userInfo={userInfo} auth={auth} notification={notification} mainpage={mainpage}/>
       </div>
     );
   }
 
   return (
     <div>
+
       <div>
         <Routes>
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
@@ -143,14 +149,13 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
-            backtomain={backtomain} otherpage={otherpage} auth={auth}
+            backtomain={backtomain} otherpage={otherpage} auth={auth} 
           />} />
         </Routes>
-        <div >{notification && mainpage ? <div >new message!!!!!</div> : null
-        }</div>
+
         <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
-          <button onClick={accept}>accept</button>
-          <button onClick={deny}>deny</button>
+          <Button onClick={accept}>accept</Button>
+          <Button onClick={deny}>deny</Button>
         </div> : null
         }</div>
       </div>
