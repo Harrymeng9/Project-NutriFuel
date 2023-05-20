@@ -131,6 +131,19 @@ const postCaloriesBurned = async (user_id, calories_burned) => {
   })
 }
 
+const getCaloriesBurned = (user_id, startDate, endDate) => {
+  return new Promise(function(resolve, reject) {
+    pool.query(`SELECT date, SUM(calories_burned) FROM caloriesburned WHERE user_id='${user_id}' AND date>='${startDate}' AND date<='${endDate}' GROUP BY date ORDER BY date ASC`, (err, res) => {
+      //console.log(res.rows[0])
+      if (err) {
+        reject(err)
+      }
+      //console.log('res', res.rows)
+      resolve(res.rows);
+    })
+  })
+};
+
 const deleteExercise = (user_id, exercise_id) => {
   return new Promise(function(resolve, reject) {
     pool.query(`DELETE FROM exercise  WHERE user_id='${user_id}' AND exercise_id=${exercise_id}`, (err, res) => {
