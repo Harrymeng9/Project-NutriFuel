@@ -19,8 +19,9 @@ import { Box, Button } from '@mui/material';
 import socket from '../helpers/socket.js';
 import axios from 'axios';
 
-import Login from './login&signup/login/Login.jsx';
-import Signup from './login&signup/signup/Signup.jsx';
+import Login from './login&signup/Login.jsx';
+import Signup from './login&signup/Signup.jsx';
+import ForgotPassword from './login&signup/ForgotPassword.jsx'
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase-config.js'
@@ -137,6 +138,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
+          <Route path="/forgotpassword" element={<ForgotPassword auth={auth}/>} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth} />} />
           <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth} />} />
