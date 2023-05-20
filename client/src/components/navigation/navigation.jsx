@@ -11,15 +11,16 @@ import PersonIcon from '@mui/icons-material/Person';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ChatIcon from '@mui/icons-material/Chat';
 import ProgressIcon from '@mui/icons-material/ShowChart';
+import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
 
-const Navigation = ({ auth, userInfo }) => {
+const Navigation = ({ auth, userInfo, notification, mainpage }) => {
   const [value, setValue] = useState("");
   const navigate = useNavigate();
 
   function goToProgressPage() {
     // Guest cannot access the progress page
     console.log('test', userInfo);
-    if ( userInfo === undefined || userInfo.current.uid === null) {
+    if (userInfo === undefined || userInfo.current.uid === null) {
       alert('Please log in');
     } else {
       navigate('/progress')
@@ -28,7 +29,7 @@ const Navigation = ({ auth, userInfo }) => {
 
   function goToProfilePage() {
     // Guest cannot access the profile page
-    if ( userInfo === undefined || userInfo.current.uid === null) {
+    if (userInfo === undefined || userInfo.current.uid === null) {
       alert('Please log in');
     } else {
       navigate('/profile');
@@ -37,11 +38,13 @@ const Navigation = ({ auth, userInfo }) => {
 
   return (
     <Box
-      style={{
+      sx={{
         position: 'fixed',
         bottom: 0,
+        left: 0,
         width: '100%',
         zIndex: 999,
+        zoom: screen.width > 480 ? 1 : screen.width / 480,
       }}>
 
       <BottomNavigation
@@ -55,7 +58,9 @@ const Navigation = ({ auth, userInfo }) => {
         <BottomNavigationAction label="Exercise" onClick={(e) => navigate('/exerciseMain')} icon={<FitnessCenterIcon />} />
         <BottomNavigationAction label="Nutrition" onClick={(e) => navigate('/nutrition')} icon={<RestaurantIcon />} />
         <BottomNavigationAction label="Progress" onClick={goToProgressPage} icon={<ProgressIcon />} />
-        <BottomNavigationAction label="Community" onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
+        <BottomNavigationAction label="Community" sx={{
+          color: notification && mainpage ? 'red' : 'none'
+        }} onClick={(e) => navigate('/friendNChat')} icon={<ChatIcon />} />
         <BottomNavigationAction label="Profile" onClick={goToProfilePage} icon={<PersonIcon />} />
       </BottomNavigation>
     </Box>

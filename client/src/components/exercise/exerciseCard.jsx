@@ -3,10 +3,24 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import './exerciseCss.css';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const ExerciseCard = (props) => {
   const [time, setTime] = useState();
   const navigate = useNavigate();
+  const theme = createTheme({
+    palette: {
+      primary: {
+        light: "#4CB963",
+        main: '#157F1F',
+        dark: "#1D263B",
+        contrastText: "#5C67B4"
+      }
+    },
+  });
 
   function handleTimeInput(e) {
     setTime(e.target.value);
@@ -26,14 +40,10 @@ const ExerciseCard = (props) => {
 
   return (
     <div>
-      <section>
-        <h4>{props.exercise.name}</h4>
+        <Typography variant='h6'>{props.exercise.name}</Typography>
         <p>{props.exercise.instructions}</p>
-        {/* <form> */}
-        <input type='number' placeholder='Input Time in Minutes' onChange={handleTimeInput} />
-        <button className='button' onClick={() => {addToLog(props.exercise.name, props.uid)}}>Add to Log</button>
-        {/* </form> */}
-      </section>
+        <TextField type='number' placeholder='Input Time in Minutes' onChange={handleTimeInput} />
+        <Button variant='outlined' onClick={() => {addToLog(props.exercise.name, props.uid)}}>Add to Log</Button>
     </div>
   )
 }
