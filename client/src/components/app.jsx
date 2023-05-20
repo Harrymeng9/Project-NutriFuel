@@ -32,7 +32,7 @@ const App = () => {
   const userInfo = useRef({
     uid: null,
     email: null,
-    username: 'jack',
+    username: null,
   });
 
   useEffect(() => {
@@ -64,7 +64,6 @@ const App = () => {
   useEffect(() => {
     console.log('????aaaaa', userInfo)
     setmainpage(true)
-    setnotification(false)
     socket.auth = { username: userInfo.current.username }
     const sessionID = localStorage.getItem("sessionID");
     if (sessionID) {
@@ -78,6 +77,7 @@ const App = () => {
     });
     if (message) {
       socket.on("private message", ({ content, from }) => {
+        console.log('message')
         setnotification(true)
         setnewMessage({
           content: content,
@@ -93,6 +93,7 @@ const App = () => {
     setnewMessage({ content: '', from: '' })
   }
   const turnoffnotification = (n) => {
+    console.log('???/something')
     // let a = notification
     setnotification(n)
   }
@@ -116,6 +117,7 @@ const App = () => {
 
   function Dashboard({ auth, signOut, userInfo }) {
 
+
     console.log('current user', auth.currentUser);
 
     return (
@@ -123,17 +125,15 @@ const App = () => {
         <h1>Welcome to the Nutrifuel!</h1>
         {!userInfo.current.uid && <button onClick={(e) => navigate('/login')}>Sign In</button>}
         {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
-
-        <Navigation userInfo={userInfo} auth={auth} />
+        <Navigation userInfo={userInfo} auth={auth} notification={notification} mainpage={mainpage}/>
       </div>
     );
   }
 
   return (
     <div>
+
       <div>
-        <Box >{notification && mainpage ? <Box >new message!!!!!</Box> : null
-        }</Box>
         <Routes>
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
@@ -147,7 +147,7 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
-            backtomain={backtomain} otherpage={otherpage} auth={auth}
+            backtomain={backtomain} otherpage={otherpage} auth={auth} 
           />} />
         </Routes>
 
