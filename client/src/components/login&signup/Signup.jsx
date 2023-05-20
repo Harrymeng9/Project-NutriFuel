@@ -117,6 +117,9 @@ var SignupSection = function ({userInfo, auth, setShowError}){
         <TextField label={'Confirm Password'} onChange={(e)=>{signupInfo.current.confirmPassword = e.target.value}} type="password" fullWidth/>
         </Grid>
         <Grid item l={6}>
+        <Button variant='outlined' onClick={()=>{navigate('/login')}}>Back</Button>
+        </Grid>
+        <Grid item l={6}>
         <Button variant='contained' onClick={sendSignupInfo}>Signup</Button>
         </Grid>
       </Grid>
