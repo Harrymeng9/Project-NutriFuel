@@ -38,7 +38,7 @@ const Navigation = ({ auth, userInfo, notification, mainpage }) => {
 
   return (
     <Box
-      style={{
+      sx={{
         position: 'fixed',
         bottom: 0,
         width: '100%',
