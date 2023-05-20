@@ -3,11 +3,10 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import ProfileEdit from './profileEdit.jsx';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import { Avatar, Button, List, ListItem, ListItemText, Divider, Container, Typography, Box, Grid, Collapse, Alert, IconButton} from '@mui/material/';
+import CloseIcon from '@mui/icons-material/Close';
+
+
 import { sendPasswordResetEmail, signOut } from 'firebase/auth';
 const axios = require('axios');
 import Navigation from '../navigation/navigation.jsx';
@@ -16,6 +15,7 @@ import Navigation from '../navigation/navigation.jsx';
 const Profile = ({ userInfo, auth }) => {
   const [profileData, setProfileData] = useState({});
   const [friendsCount, setFriendsCount] = useState(0);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     axios.get('/profile', { params: { "uid": userInfo.current.uid } })
@@ -23,9 +23,9 @@ const Profile = ({ userInfo, auth }) => {
         setProfileData(data.data);
         setFriendsCount(0);
         axios.get('/friendlist', { params: { "user": String(data.data.username) } })
-        .then((data)=>{
-          setFriendsCount(data.data.length);
-        })
+          .then((data) => {
+            setFriendsCount(data.data.length);
+          })
           .catch((err) => {
             console.log('err', err);
           });
@@ -37,48 +37,87 @@ const Profile = ({ userInfo, auth }) => {
     , []);
   return (
     <div>
-      <h2>Profile</h2>
-      <Avatar
-        alt={profileData.username}
-        src={profileData.photo}
-        sx={{
-          width: 100,
-          height: 100,
-          border: '1px solid',
-          fontWeight: 'bold',
-        }}
-      />
-      <h3>{profileData.username}</h3>
-      <div>{friendsCount} Friends</div>
-      <></>
+
+
+      <Grid container justifyContent="center" >
+        <Typography component="h1" variant="h5" sx={{ width: '100vw', 'textAlign': 'center' }}>
+          Profile
+        </Typography>
+        <Avatar
+          alt={profileData.username}
+          src={profileData.photo}
+          sx={{
+            width: 120,
+            height: 120,
+            border: '3px solid',
+            fontWeight: 'bold',
+            align: "center"
+          }}
+        />
+      </Grid>
+      <Typography variant="h4" sx={{ 'textAlign': 'center' }} >
+        {profileData.username}
+      </Typography>
+      <Typography variant="subtitle1" sx={{ 'textAlign': 'center' }} >
+        {friendsCount} Friends
+      </Typography>
+      <br></br>
+
+
       <div>
         <Link to="/profileedit">
-          <Button variant="outlined">Edit</Button>
+          <Button variant="outlined">Edit Profile</Button>
         </Link>
-        <Button variant="outlined" onClick={() => {
-          sendPasswordResetEmail(auth, userInfo.current.email)
-            .then(() => {
-              console.log('password reset email sent!')
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-            });
-        }}>Reset Password</Button>
       </div>
       <List>
+
         <ListItem>
-          <ListItemText primary="email" secondary={userInfo.current.email} />
+          <ListItemText primary="Email" secondary={userInfo.current.email} />
         </ListItem>
+        <Divider />
         <ListItem>
           <ListItemText primary="Favorite Food" secondary={profileData.food_favor} />
         </ListItem>
+        <Divider />
         <ListItem>
           <ListItemText primary="Favorite Exersice" secondary={profileData.exercise_favor} />
         </ListItem>
+        <Divider />
       </List>
-      <Button variant="outlined" onClick={() => { userInfo.current = {uid: null, email: null}; signOut(auth) }}>Log Out</Button>
-      <Navigation userInfo={userInfo} auth={auth} />
+      <Button variant="outlined" onClick={() => {
+        sendPasswordResetEmail(auth, userInfo.current.email)
+          .then(() => {
+            setOpen(true)
+            console.log('password reset email sent!')
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
+      }}>Reset Password</Button>
+      <Button variant="outlined" onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Log Out</Button>
+      <Navigation userInfo={userInfo} auth={auth} alignItems="center" />
+
+      <Box sx={{ width: '100%' }}>
+          <Collapse in={open}>
+            <Alert
+              action={
+                <IconButton
+                  aria-label="close"
+                  size="small"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              Password reset email sent!
+            </Alert>
+          </Collapse>
+        </Box>
     </div>
   )
 }
