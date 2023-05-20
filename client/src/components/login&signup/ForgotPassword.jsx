@@ -1,6 +1,7 @@
 import React from 'react';
 import {useRef, useState} from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 import {Button, TextField, Grid, Box, Container, Stack, Alert} from '@mui/material/';
 
@@ -35,6 +36,8 @@ var Title = function (){
 
 var EmailEntry = function ({email, auth, setShowSuccess}){
 
+  const navigate = useNavigate();
+
   var sendEmail = function (){
     sendPasswordResetEmail(auth, email.current)
             .then(() => {
@@ -53,6 +56,9 @@ var EmailEntry = function ({email, auth, setShowSuccess}){
         </Grid>
         <Grid item xs={12}>
           <Button variant='contained' sx={{width:'100%'}} onClick={sendEmail}>Send Email</Button>
+        </Grid>
+        <Grid item l={6}>
+        <Button variant='outlined' onClick={()=>{navigate('/login')}}>Back</Button>
         </Grid>
       </Grid>
   );
