@@ -73,7 +73,7 @@ const Progress = (props) => {
 
   return (
     <div>
-      <h2>Progress Section</h2>
+      <h1>Progress Section</h1>
       <div>Please select the start date</div>
       <br></br>
       <div>

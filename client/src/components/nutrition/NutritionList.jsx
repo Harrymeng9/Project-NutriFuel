@@ -48,7 +48,7 @@ const NutritionList = (props) => {
 
   return (
     <div id="scrollContainer">
-      <h2>Nutrition List</h2>
+      <h1>Nutrition List</h1>
       <h3>Please select a date</h3>
       <div>
         <DatePicker
