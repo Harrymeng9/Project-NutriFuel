@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
 import Profile from './profile.jsx';
 import Navigation from '../navigation/navigation.jsx';
@@ -62,7 +63,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
 
   return (
     <div>
-      <Typography component="h1" variant="h5">
+      <Typography component="h1" variant="h5" sx={{width:'100vw', 'textAlign': 'center' }}>
         Edit Profile
       </Typography>
       <Container component="main">
@@ -76,7 +77,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
           noValidate
           autoComplete="off"
         >
-          <div>
+          <Stack direction="column" justifyContent="space-between" alignItems="center" >
             <TextField
               multiline
               variant="filled"
@@ -104,7 +105,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
 
 
 
-          </div>
+          </Stack>
 
           <div>
             <Button
