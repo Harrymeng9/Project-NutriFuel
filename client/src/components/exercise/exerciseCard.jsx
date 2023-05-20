@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { useNavigate, Routes, Route, Link } from 'react-router-dom';
 import './exerciseCss.css';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const ExerciseCard = (props) => {
   const [time, setTime] = useState();
