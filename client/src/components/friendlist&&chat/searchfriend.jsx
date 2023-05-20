@@ -2,6 +2,11 @@ import React from "react";
 import { Component } from "react";
 import axios from "axios";
 import socket from "../../helpers/socket";
+import Button from '@mui/material/Button';
+import { border, Box } from "@mui/system";
+import TextField from '@mui/material/TextField';
+import { Divider } from "@mui/material";
+
 
 class SearchFriend extends Component {
     constructor(props) {
@@ -32,35 +37,67 @@ class SearchFriend extends Component {
         })
     }
     addfriendhandle = (e) => {
-        socket.emit('addfriend',{
-            from:'tom',
+        socket.emit('addfriend', {
+            from: 'tom',
             to: this.state.searchresult
         })
         this.setState({
-            searchresult:''
+            searchresult: ''
         })
     }
     handlecancel = () => {
         this.setState({
-            searchresult:''
+            searchresult: ''
         })
     }
 
     render() {
-        return (<div>
-            <input type="text" value={this.state.search} onChange={
+        return (<Box
+            component='from'
+            noValidate
+            autoComplete="off"
+            sx={{
+                backgroundColor: 'white'
+            }}>
+            <TextField variant="outlined" label="Search Friend" sx={{
+                color: 'white',
+                width: '300',
+
+            }} value={this.state.search} onChange={
                 this.inputhandle
             } />
-            <button onClick={this.search}>search friend</button>
-            {this.state.searchresult === '' ? null : <div>
+            <Button variant="outlined" margin='dense' sx={{
+                marginLeft: '80px',
+                background: "white",
+                marginTop:1
+            }} onClick={this.search}>Search</Button>
+            <Divider></Divider>
+            {this.state.searchresult === '' ? <Box sx={{
+                height: 60,
+                backgroundColor: 'white',
+                // height: 60,
+                border: "none"
+            }}></Box> : <Box margin="dense" sx={{
+                backgroundColor: 'white',
+                height: 60,
+                color: 'black',
+                fontSize:20
+            }}>
                 {this.state.searchresult}
-                {this.state.searchresult === 'no such person' ? null : <div>
-                    <button onClick={this.addfriendhandle}>add friend</button>
-                    
-                </div>}
-                <button onClick={this.handlecancel}>cancel</button>
-            </div>}
-        </div>)
+                {this.state.searchresult === 'no such person' ? null :
+                    <Button variant="outlined" margin="dense" sx={{
+                        // backgroundColor: 'white',
+                        marginTop: 2,
+                        marginLeft: 15
+                    }} onClick={this.addfriendhandle}>add friend</Button>}
+                <Button variant="outlined" margin="dense" sx={{
+                    display: 'inline-block',
+                    // backgroundColor: 'white',
+                    marginTop: this.state.searchresult === 'no such person' ? -1 : -8,
+                    marginLeft: 35
+                }} onClick={this.handlecancel}>cancel</Button>
+            </Box>}
+        </Box>)
     }
 }
 export default SearchFriend

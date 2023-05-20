@@ -27,10 +27,10 @@ export default function Signup ({userInfo, auth}){
 
   return (
     <>
-      <Title/>
 
       <Container sx={{display:'flex', justifyContent: "center"}}>
         <Stack direction="column" justifyContent="center" alignItems="center">
+      <Title/>
           <SignupSection userInfo={userInfo} auth={auth} setShowError={setShowError}/>
           <Error showError={showError} />
         </Stack>
@@ -44,11 +44,7 @@ export default function Signup ({userInfo, auth}){
 
 var Title = function (){
   return (
-    <>
-    <Box sx={{width:'100vw', 'textAlign': 'center' }}>
-      <h1>NutriFuel</h1>
-    </Box>
-    </>
+    <img src="/image.png" width="100%"/>
   );
 };
 

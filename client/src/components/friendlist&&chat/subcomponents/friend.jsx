@@ -1,7 +1,7 @@
-
-
 import React, { Component } from "react";
 import socket from "../../../helpers/socket";
+import { Avatar, Button, ListItemIcon, ListItemButton, ListItemText } from "@mui/material";
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 
 class Friend extends Component {
     constructor(props) {
@@ -26,23 +26,25 @@ class Friend extends Component {
         })
     }
     changestate = (e) => {
-        if (e.target.innerHTML === 'chat') {
-            console.log('??????chat')
-            this.props.clearnewmessage()
-            this.props.setrecipient(this.props.friend)
-            this.setState({ newMessage: { content: '', from: '' } })
-        }
-        this.props.statHandler(e.target.innerHTML)
+
+        this.props.clearnewmessage()
+        this.props.setrecipient(this.props.friend)
+        this.setState({ newMessage: { content: '', from: '' } })
+
+        this.props.statHandler('chat')
 
     }
     render() {
-        return <div>{this.props.friend}
-            <button onClick={this.changestate}>compete</button>
-            <button onClick={this.changestate} friend={this.props.friend}>chat</button>
-            {this.state.newMessage.content !== '' ? <span>new message</span> : null}
-        </div>
+        return <ListItemButton onClick={this.changestate}><Avatar sx={{ width: 42, height: 42 }}>{this.props.friend[0]}</Avatar>
+            <ListItemText sx={{
+                backgroundColor: 'white',
+                color: 'black',
+                margin: '30px'
+            }} primary={this.props.friend} />
+            {this.state.newMessage.content !== '' ? < ChatBubbleIcon /> : null}
+        </ListItemButton>
 
     }
 }
-
+//friend={this.props.friend}
 export default Friend

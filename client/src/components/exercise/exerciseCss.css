@@ -10,8 +10,8 @@ button {
 }
 
 div {
-  background-color: #1D263B;
-  color: #A0EADE;
+  /* background-color: #1D263B; */
+  /* color: #A0EADE; */
 }
 
 h1 {
@@ -20,7 +20,7 @@ h1 {
 
 input {
   width: 25%;
-  background-color: #157F1F;
+  /* background-color: #157F1F; */
   box-sizing: border-box;
   padding: 15px 32px;
 }
