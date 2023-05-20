@@ -94,8 +94,6 @@ const App = () => {
     setnewMessage({ content: '', from: '' })
   }
   const turnoffnotification = (n) => {
-    console.log('???/something')
-    // let a = notification
     setnotification(n)
   }
 
@@ -108,7 +106,7 @@ const App = () => {
   const otherpage = (a) => {
     setmainpage(a)
   }
-  const accept = () => {
+  const accept = (friend) => {
     socket.emit('makefriend', {
       from: 'jack',
       to: 'tom'
@@ -126,7 +124,7 @@ const App = () => {
         <h1>Welcome to the Nutrifuel!</h1>
         {!userInfo.current.uid && <button onClick={(e) => navigate('/login')}>Sign In</button>}
         {/* <div><button onClick={() => { userInfo.current = { uid: null, email: null }; signOut(auth) }}>Sign out</button></div> */}
-        <Navigation userInfo={userInfo} auth={auth} notification={notification} mainpage={mainpage}/>
+        <Navigation userInfo={userInfo} auth={auth} notification={notification} mainpage={mainpage} />
       </div>
     );
   }
@@ -138,7 +136,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Dashboard auth={auth} signOut={signOut} userInfo={userInfo} />} />
           <Route path="/login" element={<Login userInfo={userInfo} auth={auth} />} />
-          <Route path="/forgotpassword" element={<ForgotPassword auth={auth}/>} />
+          <Route path="/forgotpassword" element={<ForgotPassword auth={auth} />} />
           <Route path="/signup" element={<Signup userInfo={userInfo} auth={auth} />} />
           <Route path="/exerciseMain" element={<ExerciseMain userInfo={userInfo} auth={auth} />} />
           <Route path="/addExercise" element={<AddExercise userInfo={userInfo} auth={auth} />} />
@@ -149,15 +147,15 @@ const App = () => {
           <Route path="/profileedit" element={<ProfileEdit userInfo={userInfo} auth={auth} />} />
           <Route path="/friendNChat" element={<FriendNChat newMessage={newMessage} resetNewMessage={resetNewMessage}
             turnoffnotification={turnoffnotification} accpetfriendrequest={accpetfriendrequest} userInfo={userInfo}
-            backtomain={backtomain} otherpage={otherpage} auth={auth} 
+            backtomain={backtomain} otherpage={otherpage} auth={auth}
           />} />
         </Routes>
 
-        <div >{friendrequest !== '' ? <div>new friend request from:{friendrequest}
-          <Button onClick={accept}>accept</Button>
-          <Button onClick={deny}>deny</Button>
-        </div> : null
-        }</div>
+        <Box sx={{ color: 'green', marginTop: 85 }}>{friendrequest !== '' ? <Box>new friend request from:{friendrequest}
+          <Button sx={{ marginLeft: 3 }} variant="outlined" onClick={accept}>accept</Button>
+          <Button variant="outlined" onClick={deny}>deny</Button>
+        </Box> : null
+        }</Box>
       </div>
       {/* <StyleSample /> */}
     </div>
