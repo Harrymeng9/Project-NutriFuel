@@ -20,7 +20,7 @@ h1 {
 
 input {
   width: 25%;
-  background-color: #157F1F;
+  /* background-color: #157F1F; */
   box-sizing: border-box;
   padding: 15px 32px;
 }

@@ -41,8 +41,10 @@ const Navigation = ({ auth, userInfo, notification, mainpage }) => {
       style={{
         position: 'fixed',
         bottom: 0,
+        left: 0,
         width: '100%',
         zIndex: 999,
+        zoom: screen.width > 480 ? 1 : screen.width / 480,
       }}>
 
       <BottomNavigation
