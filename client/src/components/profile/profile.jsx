@@ -55,7 +55,7 @@ const Profile = ({ userInfo, auth }) => {
           }}
         />
       </Grid>
-      <Typography variant="h4" sx={{ 'textAlign': 'center' }} >
+      <Typography variant="h6" sx={{ 'textAlign': 'center' }} >
         {profileData.username}
       </Typography>
       <Typography variant="subtitle1" sx={{ 'textAlign': 'center' }} >
