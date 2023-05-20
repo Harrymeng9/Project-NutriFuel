@@ -63,7 +63,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
 
   return (
     <div>
-      <Typography component="h1" variant="h5" sx={{width:'100vw', 'textAlign': 'center' }}>
+      <Typography component="h1" variant="h5" >
         Edit Profile
       </Typography>
       <Container component="main">
@@ -77,7 +77,7 @@ const ProfileEdit = ({ auth, userInfo }) => {
           noValidate
           autoComplete="off"
         >
-          <Stack direction="column" justifyContent="space-between" alignItems="center" >
+          <Stack direction="column" justifyContent="space-between" alignItems="center">
             <TextField
               multiline
               variant="filled"

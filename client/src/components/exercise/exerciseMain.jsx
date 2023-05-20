@@ -43,9 +43,8 @@ const ExerciseMain = ({userInfo,auth}) => {
 
   return (
     <div>
-      <Typography variant='h4'>
-        Exercise Log
-      </Typography>
+      <h1>Exercise Log</h1>
+
       <div>
         {exerciseLog.map(entry => {
           //console.log(entry)
